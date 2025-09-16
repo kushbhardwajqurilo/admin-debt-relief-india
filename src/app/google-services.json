@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "437111713629",
+    "project_id": "nativ-fcm-test",
+    "storage_bucket": "nativ-fcm-test.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:437111713629:android:5bb9f9cfc1b58c8b31c2b4",
+        "android_client_info": {
+          "package_name": "native.test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfp_6ygxVFuPDS85VB5ctkoGPAaHtDEsU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
