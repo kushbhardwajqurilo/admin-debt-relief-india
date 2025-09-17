@@ -88,7 +88,7 @@ export default function ReviewAssignModal({
             <div className="w-1/3 border p-4 rounded-lg shadow">
               <div className="flex flex-col items-center">
                 <Image
-                  src={userData.profile || "/user1.jpg"}
+                  src={`${userData.profile || "/user1.jpg"}`}
                   width={80}
                   height={80}
                   alt="User"
@@ -139,20 +139,20 @@ export default function ReviewAssignModal({
 
             {/* Aadhar / PAN */}
             <div className="w-1/3 flex flex-col justify-around gap-4 max-h-[350px] overflow-auto">
-              {userData?.image?.map((Image, idx) => (
+              {userData?.image?.map((e, idx) => (
                 <div
                   key={idx}
                   className="border rounded-lg p-3 shadow cursor-pointer"
-                  onClick={() => setPreviewImage(Image)}
+                  onClick={() => setPreviewImage(e)}
                 >
                   <Image
-                    src={`${Image}`}
-                    alt={Image.label}
+                    src={e}
+                    alt={`KYC-${idx}`}
                     width={300}
                     height={100}
                     className="rounded-md"
                   />
-                  <p className="text-center text-xs mt-1">{Image.label}</p>
+                  <p className="text-center text-xs mt-1">{e?.label}</p>
                 </div>
               ))}
             </div>
@@ -222,6 +222,8 @@ export default function ReviewAssignModal({
             <Image
               src={previewImage}
               alt="Preview"
+              width={800}
+              height={600}
               className="rounded-lg max-h-[80vh] object-contain"
             />
           </div>
