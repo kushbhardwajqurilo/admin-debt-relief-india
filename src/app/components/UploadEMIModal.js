@@ -10,6 +10,8 @@ import { getStroage } from "@/url/storage";
 import { toTitleCase } from "@/utlis/string";
 import toast from "react-hot-toast";
 import LoanEMIForm from "./uploadManualEmiModal";
+import { useRouter } from "next/navigation";
+import CloseEMI from "./CloseEMI";
 
 export default function UploadEMIModal({ isOpen, onClose, mode }) {
   const isUploadMode = mode.view === "upload";
@@ -22,7 +24,8 @@ export default function UploadEMIModal({ isOpen, onClose, mode }) {
   const [file, setFile] = useState(null);
   const [sendEmi, setSendEMi] = useState({ phone: "", file: null });
   const [showLoanForm, setShowLoanForm] = useState({ status: false, id: "" });
-
+  const [closeUser, setCloseUser] = useState(false);
+  const router = useRouter();
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -82,6 +85,7 @@ export default function UploadEMIModal({ isOpen, onClose, mode }) {
         `${API_BASE_URL}${ApiRute.advocate.single}/${id}`
       );
       const result = await res.json();
+      console.log("advocate assign", result);
       if (result?.success) setAdvocate(result?.data);
     } catch (err) {
       console.error(err);
@@ -231,6 +235,14 @@ export default function UploadEMIModal({ isOpen, onClose, mode }) {
                     <p>
                       <strong>E-mail ID:</strong> {userData?.kyc?.email}
                     </p>
+                    <p
+                      className="underline text-blue-500 cursor-pointer"
+                      onClick={() =>
+                        router.push(`./components/${userData?.phone}`)
+                      }
+                    >
+                      <strong>View Details</strong>
+                    </p>
                   </div>
                 </div>
 
@@ -239,12 +251,17 @@ export default function UploadEMIModal({ isOpen, onClose, mode }) {
                   <div className="w-full flex">
                     <div className="bg-white rounded-xl w-full shadow-md p-4 flex items-center gap-4">
                       <Image
-                        src={`${advocate?.advocateImage}`}
+                        src={
+                          advocate?.advocateImage
+                            ? advocate.advocateImage
+                            : "/default-avatar.png"
+                        }
                         alt="Advocate"
                         width={50}
                         height={50}
                         className="rounded-full"
                       />
+
                       <div>
                         <p className="font-semibold text-sm">
                           Assigned Advocate
@@ -285,6 +302,17 @@ export default function UploadEMIModal({ isOpen, onClose, mode }) {
                   <div className="flex justify-end items-end gap-4">
                     <button
                       className="bg-[#1172da] text-white px-6 py-2 rounded-lg font-bold cursor-pointer"
+                      onClick={() =>
+                        setCloseUser({
+                          status: true,
+                          id: userData?.kyc?.user_id,
+                        })
+                      }
+                    >
+                      {load ? "Closing..." : "Close EMI"}
+                    </button>
+                    <button
+                      className="bg-[#1172da] text-white px-6 py-2 rounded-lg font-bold cursor-pointer"
                       onClick={markAsPaid}
                     >
                       {load ? "Marking..." : "Mark as Paid"}
@@ -320,6 +348,14 @@ export default function UploadEMIModal({ isOpen, onClose, mode }) {
           handleClose={() => setShowLoanForm({ status: false })}
           phone={mode?.phone}
           id={showLoanForm.id}
+        />
+      )}
+      {closeUser && (
+        <CloseEMI
+          show={closeUser.status}
+          handleClose={() => setCloseUser({ status: false })}
+          phone={mode?.phone}
+          id={closeUser.id}
         />
       )}
     </Dialog>

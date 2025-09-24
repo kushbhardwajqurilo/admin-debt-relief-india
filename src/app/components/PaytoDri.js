@@ -79,8 +79,8 @@ export default function PayToDri({ phone, show, handleClose }) {
               className="w-full border rounded px-2 py-1 mt-1"
             >
               <option value="">Select</option>
-              <option>Credit Loan</option>
-              <option>Personal Loan</option>
+              <option value="Credit Cards">Credit Card</option>
+              <option value="Personal Loan">Personal Loan</option>
             </select>
           </div>
           <div>
@@ -89,7 +89,7 @@ export default function PayToDri({ phone, show, handleClose }) {
             </label>
             <input
               type="text"
-              name="settlementAount" // ✅ matches state key
+              name="settlementAount" //
               value={formData.settlementAount}
               onChange={handleChange}
               className="w-full border rounded px-2 py-1 mt-1"

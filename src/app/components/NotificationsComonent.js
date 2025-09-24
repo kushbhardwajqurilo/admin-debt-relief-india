@@ -19,7 +19,7 @@ export default function NotificationModal({
         >
           {/* Modal Box */}
           <motion.div
-            className="relative w-5xl  rounded-2xl bg-white p-6 shadow-xl"
+            className="relative w-5xl max-screen rounded-2xl bg-white p-6 shadow-xl overflow-auto "
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}

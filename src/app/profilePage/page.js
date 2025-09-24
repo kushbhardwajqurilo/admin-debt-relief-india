@@ -49,6 +49,7 @@ export default function UserProfileAndAccount() {
       );
       const resp = await banner.json();
       if (resp.success) {
+        console.log("admin", resp);
         setBanner(resp?.data);
       }
       const result = await response.json();
@@ -106,9 +107,6 @@ export default function UserProfileAndAccount() {
   //   try {
   //     const file = e.target.files[0];
   //     if (!file) return;
-
-  //     setSelectedImage(file);
-  //     setIsUploading(true);
 
   //     const formData = new FormData();
   //     formData.append("image", file);
@@ -282,7 +280,16 @@ export default function UserProfileAndAccount() {
                 hidden
               />
             </label>
-
+            {/* <label className="cursor-pointer flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-full mb-6 hover:bg-blue-600 transition-colors text-sm font-medium shadow-md">
+              <FaCloudUploadAlt className="h-4 w-4" />
+              <span>Upload background Image</span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAdminBackground}
+                hidden
+              />
+            </label> */}
             <div
               className="w-full  flex flex-col items-center gap-2"
               style={{

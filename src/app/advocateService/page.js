@@ -18,33 +18,6 @@ function date(newdate) {
   }).format(x_date);
   return formatted;
 }
-const getAdvocates = async () => {
-  const res = await fetch(`${API_BASE_URL}${ApiRute.advocate.getAll}`, {
-    method: "GET",
-    headers: {
-      "content-type": "application/json",
-      authorization: `Bearer ${getStroage().token}`,
-    },
-  });
-  const result = await res.json();
-  if (!result.success) throw new Error("Failed to fetch advocates");
-  return result;
-};
-
-const addAdvocate = async (formData) => {
-  console.log("form", formData);
-  const res = await fetch(`${API_BASE_URL}${ApiRute.advocate.add}`, {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${getStroage().token}`,
-    },
-    body: formData,
-  });
-
-  const result = await res.json();
-  if (!result.success) throw new Error("Failed to add advocate");
-  return result;
-};
 
 export default function AdvocateService() {
   const [advocates, setAdvocates] = useState([]);
@@ -57,7 +30,64 @@ export default function AdvocateService() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [customeAdvocate, setCustomeAdvocate] = useState({
+    message: "",
+  });
+  const [timing, setTiming] = useState("");
+  const [loads, setLoadings] = useState(false);
+  const getAdvocates = async () => {
+    const res = await fetch(`${API_BASE_URL}${ApiRute.advocate.getAll}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${getStroage().token}`,
+      },
+    });
+    const result = await res.json();
+    if (!result.success) throw new Error("Failed to fetch advocates");
+    return result;
+  };
 
+  const addAdvocate = async (formData) => {
+    console.log("form", formData);
+    const res = await fetch(`${API_BASE_URL}${ApiRute.advocate.add}`, {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${getStroage().token}`,
+      },
+      body: formData,
+    });
+
+    const result = await res.json();
+    if (!result.success) throw new Error("Failed to add advocate");
+    return result;
+  };
+
+  const callYourAdvoateSetup = async (e) => {
+    e.preventDefault();
+    try {
+      setLoadings(true);
+      console.log(customeAdvocate.message);
+      const res = await fetch(`${API_BASE_URL}${ApiRute.advocate.call_now}`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${getStroage().token}`,
+        },
+        body: JSON.stringify({ message: customeAdvocate.message }),
+      });
+      const result = await res.json();
+      if (result?.success) {
+        toast.success(result?.message);
+      } else {
+        toast.error(result?.message);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadings(false);
+    }
+  };
   useEffect(() => {
     const fetchAdvocates = async () => {
       try {
@@ -117,12 +147,31 @@ export default function AdvocateService() {
     }
   };
 
+  const handleTiming = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`${API_BASE_URL}${ApiRute.advocate.timing}`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${getStroage().token}`,
+        },
+        body: JSON.stringify({ timing: timing }),
+      });
+      const result = await res.json();
+      if (result?.success) toast.success(result?.message);
+      else toast.error(result?.message);
+    } catch (error) {
+      console.error("advocate error", error);
+      toast.error("An error occurred.");
+    }
+  };
   return (
     <div>
       <Header />
-      <div className="min-h-screen bg-gradient-to-b from-[#edf0ff] to-[#edf0ff] flex justify-center text-black">
-        <div className="w-[450px] flex flex-col items-center gap-6 pt-10">
-          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm">
+      <div className="min-h-screen bg-gradient-to-b from-[#edf0ff] to-[#edf0ff] flex justify-center text-black gap-2 p-5">
+        <div className="w-full  flex flex-row items-center  h-[500px] justify-center gap-6">
+          <div className="w-[30%] bg-white rounded-xl shadow-xl p-6 mt-10  h-[425px] ">
             <div className="flex flex-col items-center gap-3">
               <div className="w-30 h-30 rounded-full bg-gray-500 p-[2px]">
                 <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center">
@@ -192,75 +241,109 @@ export default function AdvocateService() {
               </button>
             </div>
           </div>
-          {/* Static Contact Info */}
-          {/* <div className="bg-white rounded-xl shadow p-4 w-full max-w-sm">
-            <h2 className="text-xl font-bold mb-3">Advocate Contact</h2>
-            <div className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded mb-2">
-              <div className="flex items-center gap-2 text-gray-700">
-                <Phone className="text-blue-600" /> +91 0110101011
-              </div>
-              <Pencil size={16} className="text-gray-600 cursor-pointer" />
-            </div>
-            <div className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded">
-              <div className="flex items-center gap-2 text-gray-700">
-                <MessageCircle className="text-green-500" /> +91 0110101011
-              </div>
-              <Pencil size={16} className="text-gray-600 cursor-pointer" />
-            </div>
-          </div> */}
-        </div>
 
-        {/* Advocate List */}
-        <div className="w-[45%] bg-white rounded-xl shadow-xl p-6 mt-10 mr-6 h-[425px]">
-          <div className="flex justify-between items-center border-b pb-2 mb-4 ">
-            <h2 className="text-xl font-bold">Advocate List</h2>
-            <h2 className="text-xl font-bold">No. of Users</h2>
-          </div>
+          {/* Advocate List */}
+          <div className="w-[30%] bg-white rounded-xl shadow-xl p-6 mt-10  h-[425px]">
+            <div className="flex justify-between items-center border-b pb-2 mb-4 ">
+              <h2 className="text-xl font-bold">Advocate List</h2>
+              <h2 className="text-xl font-bold">No. of Users</h2>
+            </div>
 
-          {loading && <p>Loading advocates...</p>}
-          {error && <p className="text-red-500">{error}</p>}
-          {!loading && !error && (
-            <div className="space-y-4 h-[320]  overflow-x-hidden overflow-y-auto pr-2 shadow-amber-50">
-              {advocates?.length > 0 ? (
-                advocates.map((adv, idx) => (
-                  <div
-                    key={idx}
-                    className="flex justify-between items-center border-b pb-2"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-full p-[2px] bg-gradient-to-r from-[#A020F0] to-[#00E0D0]">
-                        <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
-                          <Image
-                            src={`${
-                              adv?.advocateImage || "/user-placeholder.png"
-                            }`}
-                            width={44}
-                            height={44}
-                            alt={adv?.name}
-                            className="rounded-full"
-                          />
+            {loading && <p>Loading advocates...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+            {!loading && !error && (
+              <div className="space-y-4 h-[320]  overflow-x-hidden overflow-y-auto pr-2 shadow-amber-50">
+                {advocates?.length > 0 ? (
+                  advocates.map((adv, idx) => (
+                    <div
+                      key={idx}
+                      className="flex justify-between items-center border-b pb-2"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-full p-[2px] bg-gradient-to-r from-[#A020F0] to-[#00E0D0]">
+                          <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
+                            <Image
+                              src={`${
+                                adv?.advocateImage || "/user-placeholder.png"
+                              }`}
+                              width={44}
+                              height={44}
+                              alt={adv?.name}
+                              className="rounded-full"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-black text-[16px] leading-4">
+                            {adv?.name}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {new Date(adv?.date).toLocaleString()}
+                          </p>
                         </div>
                       </div>
-                      <div>
-                        <p className="font-semibold text-black text-[16px] leading-4">
-                          {adv?.name}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          {new Date(adv?.date).toLocaleString()}
-                        </p>
+                      <div className="bg-[#004AAD] text-white px-4 py-1 rounded-lg text-lg font-bold">
+                        {adv?.assignUsers.length}
                       </div>
                     </div>
-                    <div className="bg-[#004AAD] text-white px-4 py-1 rounded-lg text-lg font-bold">
-                      {adv?.assignUsers.length}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p>No advocates found. Add one above.</p>
-              )}
+                  ))
+                ) : (
+                  <p>No advocates found. Add one above.</p>
+                )}
+              </div>
+            )}
+          </div>
+          {/* Static Contact Info */}
+          <div className="w-[30%] bg-white rounded-xl shadow-xl p-6 mt-10  h-[425px]">
+            <div className=" bg-white mb-5 ">
+              <h2 className="text-xl font-semibold mb-1 capitalize">
+                Service Timing.
+              </h2>
+              <form className="flex flex-col w-full" autoComplete="off">
+                <input
+                  type="text"
+                  placeholder="Available from 9:00 AM - 11:00 AM"
+                  className="flex-1 border rounded w-full p-2 text-sm outline-none focus:ring-2 focus:ring-gray-500 mt-1"
+                  onChange={(e) => setTiming(e.target.value)}
+                />
+                <button
+                  className="w-[100px] mt-2 p-1 capitalize text-center bg-[#004AAD] text-white rounded-sm cursor-pointer hover:bg-white hover:text-[#004AAD] hover:border-1 hover:border-[#004AADD] transition"
+                  onClick={handleTiming}
+                >
+                  Submit
+                </button>
+              </form>
             </div>
-          )}
+            <div>
+              <h2 className="text-xl font-semibold mb-1 capitalize">
+                Call Your Advocate
+              </h2>
+              <form className="flex flex-col w-full" autoComplete="off">
+                <textarea
+                  type="text"
+                  placeholder="Type here..."
+                  name="message"
+                  className="flex-1 border rounded w-full p-1 text-sm outline-none focus:ring-2 focus:ring-gray-500 mt-1 "
+                  onChange={(e) =>
+                    setCustomeAdvocate((prev) => ({
+                      ...prev,
+                      [e.target.name]: e.target.value,
+                    }))
+                  }
+                />
+
+                <button
+                  className="w-[100px] mt-2 p-1 capitalize text-center bg-[#004AAD] text-white rounded-sm cursor-pointer hover:bg-white hover:text-[#004AAD] hover:border-1 hover:border-[#004AADD] transition"
+                  onClick={callYourAdvoateSetup}
+                >
+                  {loads ? "Wait..." : "Submit"}
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
+
+        {/* upper div text */}
       </div>
     </div>
   );
