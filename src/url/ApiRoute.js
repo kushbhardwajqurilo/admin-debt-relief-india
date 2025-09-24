@@ -3,13 +3,14 @@ export const ApiRute = {
     login: "/admin/login",
     getadmindetail: "/admin/get-details",
     updatePRofule: "/admin/profile-update",
-    adminbanner: "/banner/admindashboardbanner",
+    adminbanner: "/admin/admindashboardbanner",
     loginbanner: "/banner/logindashboardbanner",
     updateAdmin: "/admin/update-details",
     getadminBanner: "/admin/getadminBanner",
     requestOtp: "/admin/request-otp",
     verifyOtp: "/admin/verify-otp",
     changepassword: "/admin/change-password",
+    outstanding: "/outstanding/add-outstanding",
   },
   currentImage: {
     upload: "/banner/upload",
@@ -24,6 +25,8 @@ export const ApiRute = {
     add: "/advocate/add",
     getAll: "/advocate/all",
     single: "/advocate/single",
+    call_now: "/admin/call-now-feature",
+    timing: "/advocate/set-timing",
   },
   terms: {
     add: "/tnc/add",
@@ -56,6 +59,7 @@ export const ApiRute = {
     search: "/driuser/search",
     singe: "/driuser/single",
     addUser: "/driuser",
+    delete: "/driuser/delete-user",
   },
   adminProfileImage: "/admin/adminProfileBanner",
   emi: {
@@ -79,6 +83,7 @@ export const ApiRute = {
   },
   bank: {
     getbanks: "/admin/get-banks",
+    addbanks: "/admin/add-banks",
   },
   notifications: {
     all: "/notification/",
@@ -92,5 +97,6 @@ export const ApiRute = {
   },
   subscription: {
     add: "/subcription/add-subscription",
+    getuser: "/subcription/subscription-users",
   },
 };

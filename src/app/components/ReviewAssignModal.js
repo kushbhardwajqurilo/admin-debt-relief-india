@@ -130,7 +130,8 @@ export default function ReviewAssignModal({
                       className="w-[55px] text-center text-blue-700 font-bold underline bg-amber-100 p-1  ml-2"
                     >
                       {" "}
-                      &nbsp;<a href={`${pdf}`}>{`PDF${idx + 1}`}</a>
+                      &nbsp;
+                      <a href={`${pdf}`} target="_blank">{`PDF${idx + 1}`}</a>
                     </span>
                   ))}
                 </div>

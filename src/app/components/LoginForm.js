@@ -67,11 +67,20 @@ export default function LoginForm() {
     setBackground(window.location.origin);
   }, []);
   return (
-    <div className=" h-screen w-full bg-cover bg-center flex items-center justify-center">
+    <div
+      className=" h-screen w-full bg-cover bg-center flex items-center justify-center"
+      style={{ backgroundImage: `url(${backgroud}/banners.jpg)` }}
+    >
       <div className="absolute inset-0 bg-black/4 backdrop-blur-[4px] z-0" />
       <div className="relative z-10 flex flex-col items-center space-y-6">
         <div className="flex flex-col items-center">
-          <div className="w-35 h-35 bg-red-100 rounded-full overflow-hidden shadow-lg"></div>
+          <div
+            className="w-35 h-35 rounded-full overflow-hidden shadow-lg "
+            style={{
+              backgroundImage: `url(${backgroud}/favicon.ico)`,
+              backgroundSize: "cover",
+            }}
+          ></div>
           <h2 className="text-2xl md:text-3xl font-bold text-white mt-4">
             Debt Relief India
           </h2>

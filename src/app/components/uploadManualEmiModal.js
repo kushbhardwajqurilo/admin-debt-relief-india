@@ -10,7 +10,6 @@ export default function LoanEMIForm({ show, handleClose, phone, id }) {
   const [loading, setLoading] = useState(false);
   const [banks, setBanks] = useState();
   const [formData, setFormData] = useState({
-    loanType: "",
     principleAmount: "",
     estimatedSettlement: "",
     bank: "",
@@ -131,12 +130,12 @@ export default function LoanEMIForm({ show, handleClose, phone, id }) {
               <h1 className="font-semibold mb-2">Select Banks</h1>
               <div className="h-[230px] overflow-x-hidden overflow-y-auto border p-2 rounded">
                 {banks?.data?.length > 0 ? (
-                  <ul className="space-y-2">
+                  <ul className="space-y-1">
                     {banks.data.map((val, i) => (
                       <li
                         key={i}
                         onClick={() => handleBankSelect(val)}
-                        className={`flex items-center gap-3 p-2 rounded cursor-pointer transition-colors ${
+                        className={`flex items-center gap-2 p-1 rounded cursor-pointer transition-colors bg-gray-200 border-1 border-gray-300 ${
                           selectedBank === val.bankName
                             ? "bg-blue-100 border border-blue-400"
                             : "hover:bg-gray-100"
@@ -145,8 +144,9 @@ export default function LoanEMIForm({ show, handleClose, phone, id }) {
                         <Image
                           src={val.icon || "/bank-placeholder.png"}
                           alt={val.bankName}
-                          className="w-8 h-8 object-contain rounded"
-                          fill
+                          className="object-contain rounded"
+                          height={20}
+                          width={20}
                         />
                         <span>{val.bankName}</span>
                       </li>

@@ -1,17 +1,16 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
-import Image from "next/image";
+import { useState, useEffect } from "react";
 import Header from "../components/Header";
-import EMIModal from "../components/EMIModal";
 import UploadEMIModal from "../components/UploadEMIModal";
 import { API_BASE_URL } from "@/url/BaseURL";
 import { ApiRute } from "@/url/ApiRoute";
 import ReviewAssignModal from "../components/ReviewAssignModal";
-import LoanEMIForm from "../components/uploadManualEmiModal";
+import PayToDri from "../components/PaytoDri";
 import UploadCSVModal from "../components/uploadUsersFromCSV";
 import { toTitleCase } from "@/utlis/string";
-import PayToDri from "../components/PaytoDri";
+import toast from "react-hot-toast";
+import { getStroage } from "@/url/storage";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("emi");
@@ -27,7 +26,12 @@ export default function DashboardPage() {
   const [search, setSearch] = useState("");
   const [selectedPhone, setPhone] = useState(0);
   const [csvModalOpen, setCsvModalOpen] = useState(false);
-  const [userid, setUseId] = useState("");
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
+  useEffect(() => {
+    GetAllKycUser();
+    getAllDriUers();
+  }, []);
 
   const GetAllKycUser = async () => {
     const res = await fetch(`${API_BASE_URL}${ApiRute.kyc.get}`);
@@ -35,41 +39,29 @@ export default function DashboardPage() {
     setKycUser(result?.data || []);
   };
 
-  async function getAllDriUers() {
-    const res = await fetch(`${API_BASE_URL}${ApiRute.driUser.getAll}`, {
-      method: "GET",
-    });
+  const getAllDriUers = async () => {
+    const res = await fetch(`${API_BASE_URL}${ApiRute.driUser.getAll}`);
     const result = await res.json();
-    if (result?.success) {
-      setEmiUsers(result?.data || []);
-    }
-  }
+    if (result?.success) setEmiUsers(result?.data || []);
+  };
 
   const openModal = (mode) => {
     setModalMode(mode);
     setIsModalOpen(true);
   };
 
-  // manual emi open/close
   const handleShow = (data) => {
     setPhone(data?.phone);
     setShow(true);
   };
-  const handleClose = () => {
-    setShow(false);
-  };
 
-  useEffect(() => {
-    GetAllKycUser();
-    getAllDriUers();
-  }, []);
+  const handleClose = () => setShow(false);
 
   const isEMI = activeTab === "emi";
 
-  // ✅ Filtered Data according to search
   const filteredEmiUsers = emiUsers.filter(
     (user) =>
-      user?.kyc?.id?.toString().includes(search) ||
+      user?.id?.toString().includes(search) ||
       user?.name?.toLowerCase().includes(search.toLowerCase()) ||
       user?.phone?.toString().includes(search)
   );
@@ -84,6 +76,56 @@ export default function DashboardPage() {
         user?.name?.toLowerCase().includes(search.toLowerCase()) ||
         user?.user_id?.phone?.toString().includes(search))
   );
+
+  // ✅ Select All with fallback id -> phone
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      const allIdsOrPhones = filteredEmiUsers.map((u) => u?.id || u?.phone);
+      setSelectedUsers(allIdsOrPhones);
+    } else {
+      setSelectedUsers([]);
+    }
+  };
+
+  // ✅ Single Select with fallback id -> phone
+  const handleSelectOne = (user) => {
+    const idOrPhone = user?.id || user?.phone;
+    setSelectedUsers((prev) =>
+      prev.includes(idOrPhone)
+        ? prev.filter((u) => u !== idOrPhone)
+        : [...prev, idOrPhone]
+    );
+  };
+
+  // ✅ Delete
+  const handleDelete = async () => {
+    if (!selectedUsers.length) {
+      toast.error("No users selected");
+      return;
+    }
+    try {
+      const res = await fetch(`${API_BASE_URL}${ApiRute.driUser.delete}`, {
+        method: "DELETE",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${getStroage().token}`,
+        },
+        body: JSON.stringify({ userIds: selectedUsers }),
+      });
+      const result = await res.json();
+      if (result?.success) {
+        toast.success(result?.message);
+        setSelectedUsers([]);
+        getAllDriUers();
+      } else {
+        toast.error(result?.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong!");
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -101,7 +143,6 @@ export default function DashboardPage() {
           >
             User EMI Summary
           </div>
-
           <div
             onClick={() => setActiveTab("kyc")}
             className={`w-1/2 text-center py-3 font-semibold text-lg cursor-pointer ${
@@ -125,16 +166,20 @@ export default function DashboardPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-
             <div className="flex gap-2">
               <button
+                onClick={handleDelete}
+                className="w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition"
+              >
+                Delete Users
+              </button>
+              <button
                 onClick={() => setCsvModalOpen(true)}
-                className="w-30 bg-[#044b99] rounded text-white cursor-pointer"
+                className="w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition"
               >
                 Add Users
               </button>
 
-              {/* ✅ Status Filter */}
               <select
                 className="border px-4 py-2 rounded-md"
                 value={statusFilter}
@@ -145,7 +190,6 @@ export default function DashboardPage() {
                 <option value="approve">Approved</option>
               </select>
 
-              {/* Gender Filter */}
               <select
                 className="border px-4 py-2 rounded-md"
                 value={genderFilter}
@@ -163,6 +207,17 @@ export default function DashboardPage() {
             <table className="w-full text-sm border text-center">
               <thead className="bg-gray-100">
                 <tr className="text-center">
+                  <th className="p-3">
+                    <input
+                      type="checkbox"
+                      onChange={handleSelectAll}
+                      checked={
+                        selectedUsers.length ===
+                          filteredEmiUsers.filter((u) => u?.id || u?.phone)
+                            .length && filteredEmiUsers.length > 0
+                      }
+                    />
+                  </th>
                   <th className="p-3">User ID</th>
                   <th className="p-3">DRI User</th>
                   <th className="p-3">Gender</th>
@@ -174,85 +229,92 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {filteredEmiUsers?.map((user, idx) => (
-                  <tr key={idx} className="border-t text-center">
-                    <td className="p-3">{user?.kyc?.id}</td>
-                    <td className="p-3 flex items-center gap-3">
-                      {user?.name}
-                    </td>
-                    <td>{toTitleCase(user?.gender)}</td>
-                    <td className="p-3">
-                      {/* {new Date(user.kyc?.date).toLocaleDateString("en-IN", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })} */}
-                      {user.kyc?.date}
-                    </td>
-                    <td className="p-3">{user?.phone}</td>
-                    <td className="p-3">
-                      {user?.emiPay}/{user?.totalEmi}
-                    </td>
-                    <td className="p-3">
-                      <span>
-                        <span
-                          className={
-                            user?.status?.toLowerCase() === "pending"
-                              ? "bg-red-500 font-semibold"
-                              : user?.status?.toLowerCase() === "paid"
-                              ? "bg-green-500 font-semibold"
-                              : "bg-blue-500"
-                          }
-                          style={{
-                            width: "10px",
-                            height: "10px",
-                            display: "inline-block",
-                            padding: "5px",
-                            borderRadius: "50%",
-                            marginRight: "5px",
-                          }}
-                        ></span>
-                        <span>{user?.status}</span>
-                      </span>
-                    </td>
-                    <td className="p-3 flex gap-3 justify-center">
-                      <button
-                        onClick={() =>
-                          openModal({ view: "upload", phone: user?.phone })
-                        }
-                        className="bg-[#044B99] text-white px-3 py-1 rounded"
-                      >
-                        Upload File
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleShow({
-                            phone: user?.phone,
-                            id: user?.kyc?.user_id,
-                          })
-                        }
-                        className="bg-[#044B99] text-white px-3 py-1 rounded"
-                      >
-                        Upload EMI
-                      </button>
-                      <button
-                        onClick={() =>
-                          openModal({
-                            view: "view",
-                            phone: user?.phone,
-                          })
-                        }
-                        className="font-semibold px-3 py-1 rounded"
-                      >
-                        View
-                      </button>
+                {filteredEmiUsers.length === 0 ? (
+                  <tr>
+                    <td colSpan={9} className="p-4 text-center">
+                      No Users Found
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  filteredEmiUsers.map((user, idx) => (
+                    <tr key={idx} className="border-t text-center">
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedUsers.includes(
+                            user?.id || user?.phone
+                          )}
+                          onChange={() => handleSelectOne(user)}
+                        />
+                      </td>
+                      <td className="p-3">{user?.id}</td>
+                      <td className="p-3 flex items-center gap-3">
+                        {user?.name}
+                      </td>
+                      <td>{toTitleCase(user?.gender)}</td>
+                      <td className="p-3">{user.kyc?.date}</td>
+                      <td className="p-3">{user?.phone}</td>
+                      <td className="p-3">
+                        {user?.emiPay}/{user?.totalEmi}
+                      </td>
+                      <td className="p-3">
+                        <span
+                          className={`inline-flex items-center gap-2 ${
+                            user.status?.toLowerCase() === "paid"
+                              ? "text-green-600"
+                              : user.status?.toLowerCase() === "pending"
+                              ? "text-red-600"
+                              : "text-blue-600"
+                          }`}
+                        >
+                          <span
+                            className={`h-2 w-2 rounded-full ${
+                              user.status?.toLowerCase() === "paid"
+                                ? "bg-green-500"
+                                : user.status?.toLowerCase() === "pending"
+                                ? "bg-red-500"
+                                : "bg-blue-500"
+                            }`}
+                          ></span>
+                          {user.status}
+                        </span>
+                      </td>
+                      <td className="p-3 flex gap-3 justify-center">
+                        <button
+                          onClick={() =>
+                            openModal({ view: "upload", phone: user?.phone })
+                          }
+                          className="bg-[#044B99] text-white px-3 py-1 rounded"
+                        >
+                          Upload File
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleShow({
+                              phone: user?.phone,
+                              id: user?.kyc?.user_id,
+                            })
+                          }
+                          className="bg-[#044B99] text-white px-3 py-1 rounded"
+                        >
+                          Manual EMI
+                        </button>
+                        <button
+                          onClick={() =>
+                            openModal({ view: "view", phone: user?.phone })
+                          }
+                          className="font-semibold px-3 py-1 rounded"
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           ) : (
-            /* ✅ KYC Table */
+            /* KYC Table */
             <table className="w-full text-sm text-left border">
               <thead className="bg-gray-100">
                 <tr className="text-center">
@@ -265,48 +327,53 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {filteredKycUsers?.map((user, idx) => (
-                  <tr key={idx} className="border-t text-center">
-                    <td className="p-3 flex items-center justify-center gap-3">
-                      <div>
-                        <div className="font-medium">{user?.name}</div>
-                      </div>
-                    </td>
-                    <td>{toTitleCase(user?.gender)}</td>
-                    <td className="p-3">{user?.date}</td>
-                    <td className="p-3">{user?.user_id?.phone}</td>
-                    <td className="p-3">
-                      <span
-                        className={`inline-flex items-center gap-2 ${
-                          user.status?.toLowerCase() === "approve"
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }`}
-                      >
-                        <span
-                          className={`h-2 w-2 rounded-full ${
-                            user.status?.toLowerCase() === "approve"
-                              ? "bg-green-500"
-                              : "bg-red-500"
-                          }`}
-                        ></span>
-                        {user.status}
-                        {console.log("dri", user)}
-                      </span>
-                    </td>
-                    <td className="p-3">
-                      <button
-                        onClick={() => {
-                          setSelectedUser(user);
-                          setReviewModalOpen(true);
-                        }}
-                        className="bg-[#044B99] text-white px-4 py-1 rounded-lg"
-                      >
-                        Review & Assign
-                      </button>
+                {filteredKycUsers.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="p-4 text-center">
+                      No Users Found
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  filteredKycUsers.map((user, idx) => (
+                    <tr key={idx} className="border-t text-center">
+                      <td className="p-3 flex items-center justify-center gap-3">
+                        <div className="font-medium">{user?.name}</div>
+                      </td>
+                      <td>{toTitleCase(user?.gender)}</td>
+                      <td className="p-3">{user?.date}</td>
+                      <td className="p-3">{user?.user_id?.phone}</td>
+                      <td className="p-3">
+                        <span
+                          className={`inline-flex items-center gap-2 ${
+                            user.status?.toLowerCase() === "approve"
+                              ? "text-green-600"
+                              : "text-red-600"
+                          }`}
+                        >
+                          <span
+                            className={`h-2 w-2 rounded-full ${
+                              user.status?.toLowerCase() === "approve"
+                                ? "bg-green-500"
+                                : "bg-red-500"
+                            }`}
+                          ></span>
+                          {user.status}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        <button
+                          onClick={() => {
+                            setSelectedUser(user);
+                            setReviewModalOpen(true);
+                          }}
+                          className="bg-[#044B99] text-white px-4 py-1 rounded-lg"
+                        >
+                          Review & Assign
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           )}
@@ -316,38 +383,29 @@ export default function DashboardPage() {
       {/* Modals */}
       <UploadEMIModal
         isOpen={isModalOpen}
-        id={userid}
-        onClose={() => {
-          setIsModalOpen(false), window.location.reload();
-        }}
+        onClose={() => setIsModalOpen(false)}
         mode={modalMode}
       />
-
       <ReviewAssignModal
         isOpen={reviewModalOpen}
-        onClose={() => {
-          setReviewModalOpen(false), window.location.reload();
-        }}
+        onClose={() => setReviewModalOpen(false)}
         userData={selectedUser}
       />
       <PayToDri
         show={show}
         phone={selectedPhone}
         handleClose={() => {
-          handleClose(),
-            getAllDriUers(),
-            GetAllKycUser(),
-            window.location.reload();
+          handleClose();
+          getAllDriUers();
+          GetAllKycUser();
         }}
       />
-
       <UploadCSVModal
         isOpen={csvModalOpen}
         onClose={() => {
-          setCsvModalOpen(false),
-            getAllDriUers(),
-            GetAllKycUser(),
-            window.location.reload();
+          setCsvModalOpen(false);
+          getAllDriUers();
+          GetAllKycUser();
         }}
       />
     </div>

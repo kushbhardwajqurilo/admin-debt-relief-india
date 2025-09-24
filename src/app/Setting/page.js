@@ -44,6 +44,7 @@ export default function NotificationSettingsPage() {
     kyc_submit: "kyc submit",
     kyc_approve: "kyc approve",
     invoice: "invoice",
+    reminder: "reminder",
   });
 
   //  send notification to all
@@ -663,11 +664,7 @@ export default function NotificationSettingsPage() {
             <div>
               <input
                 className="w-full border-1 p-1 px-2 m-1 border-gray-400 rounded-sm"
-                placeholder={`${
-                  kycmsg?.kyc_submit
-                    ? kycmsg?.kyc_submit
-                    : "Your documents have been submitted. Admin will approve within 24 hours."
-                }`}
+                placeholder={`Set KYC Upload Notification`}
                 // value={kycmsg?.kyc_submit}
                 onChange={(e) => {
                   setKycMsg((prev) => ({
@@ -699,11 +696,7 @@ export default function NotificationSettingsPage() {
             <div>
               <input
                 className="w-full border-1 p-1 px-2 m-1 border-gray-400"
-                placeholder={`${
-                  kycmsg?.kyc_approve
-                    ? kycmsg?.kyc_approve
-                    : "Congratulations ${updateKYC?.name} your KYC Has been approved by admin"
-                }`}
+                placeholder={"Set KYC Approval Notification"}
                 // value={kycmsg.kyc_approve}
                 onChange={(e) => {
                   setKycMsg((prev) => ({
@@ -737,11 +730,7 @@ export default function NotificationSettingsPage() {
             <div>
               <input
                 className="w-full border-1 p-1 px-2 m-1 border-gray-400"
-                placeholder={`${
-                  kycmsg?.invoice
-                    ? kycmsg?.invoice
-                    : "Congratulations ${updateKYC?.name} your KYC Has been approved by admin"
-                }`}
+                placeholder={`Set Invoice Notification`}
                 // value={kycmsg.invoice}
                 onChange={(e) => {
                   setKycMsg((prev) => ({ ...prev, invoice: e.target.value }));
@@ -762,6 +751,38 @@ export default function NotificationSettingsPage() {
                 onClick={() => customNotifications("invoice", 6)}
               >
                 {buttonId === 6 ? "Wait..." : "Add"}
+              </button>
+            </div>
+          </div>
+          <div className="bg-white w-full p-4 border-1 border-gray-400 rounded-sm shadow-xl shadow-gray-100">
+            <p>Payment Remider</p>
+            <div>
+              <input
+                className="w-full border-1 p-1 px-2 m-1 border-gray-400 rounded-sm"
+                placeholder={`Type Reminder Notification`}
+                // value={kycmsg?.kyc_submit}
+                onChange={(e) => {
+                  setKycMsg((prev) => ({
+                    ...prev,
+                    reminder: e.target.value,
+                  }));
+                  setNotification(e.target.value);
+                }}
+              ></input>
+            </div>
+            <div className="mt-2">
+              <button
+                className="border-1 border-[#47ff6c] p-1 px-2 m-1 rounded-sm text-[13px] hover:bg-[#47ff6c] hover:text-white transition cursor-pointer"
+                onClick={() => customNotifications("reminder", 9)}
+              >
+                {buttonId === 9 ? "Updating" : "Update"}
+              </button>
+
+              <button
+                className="border-1 border-blue-500 p-1 px-2 m-1 rounded-sm text-[13px] hover:bg-blue-500 hover:text-white transition cursor-pointer "
+                onClick={() => customNotifications("reminder", 7)}
+              >
+                {buttonId === 7 ? "Waat..." : "Add"}
               </button>
             </div>
           </div>
