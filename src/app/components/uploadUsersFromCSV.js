@@ -4,7 +4,7 @@ import { API_BASE_URL } from "@/url/BaseURL";
 import { ApiRute } from "@/url/ApiRoute";
 import toast from "react-hot-toast";
 
-export default function UploadCSVModal({ isOpen, onClose }) {
+export default function UploadCSVModal({ isOpen, onClose, types }) {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -17,17 +17,33 @@ export default function UploadCSVModal({ isOpen, onClose }) {
       const formData = new FormData();
       formData.append("csv", file);
 
-      const res = await fetch(`${API_BASE_URL}${ApiRute.driUser.addUser}`, {
-        method: "POST",
-        body: formData,
-      });
+      if (types === "user") {
+        const res = await fetch(`${API_BASE_URL}${ApiRute.driUser.addUser}`, {
+          method: "POST",
+          body: formData,
+        });
 
-      const result = await res.json();
-      if (result?.success) {
-        toast.success(result?.message);
-        onClose();
-      } else {
-        toast.error(result?.message || "Upload failed");
+        const result = await res.json();
+        if (result?.success) {
+          toast.success(result?.message);
+          onClose();
+        } else {
+          toast.error(result?.message || "Upload failed");
+        }
+      }
+      if (types === "emi") {
+        const res = await fetch(`${API_BASE_URL}${ApiRute.emi.bulkinsert}`, {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await res.json();
+        if (result?.success) {
+          toast.success(result?.message);
+          onClose();
+        } else {
+          toast.error(result?.message || "Upload failed");
+        }
       }
     } catch (err) {
       console.error(err);

@@ -11,7 +11,16 @@ import UploadCSVModal from "../components/uploadUsersFromCSV";
 import { toTitleCase } from "@/utlis/string";
 import toast from "react-hot-toast";
 import { getStroage } from "@/url/storage";
+import UpdateProfile from "../components/UpdateProfile";
 
+function formatDate(date) {
+  const dateArr = date?.split("-");
+  const dateTime = dateArr[dateArr?.length - 1];
+  const day = dateTime?.split("T")[0];
+  const year = dateArr[0];
+  const month = dateArr[1];
+  return `${day}/${month}/${year}`;
+}
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("emi");
   const [statusFilter, setStatusFilter] = useState("");
@@ -27,6 +36,11 @@ export default function DashboardPage() {
   const [selectedPhone, setPhone] = useState(0);
   const [csvModalOpen, setCsvModalOpen] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [userIds, setUserIds] = useState([]);
+  const [phones, setPhones] = useState([]);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [updateUser, setUpdateUser] = useState(null);
+  const [type, setType] = useState("");
 
   useEffect(() => {
     GetAllKycUser();
@@ -77,24 +91,53 @@ export default function DashboardPage() {
         user?.user_id?.phone?.toString().includes(search))
   );
 
-  // ✅ Select All with fallback id -> phone
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      const allIdsOrPhones = filteredEmiUsers.map((u) => u?.id || u?.phone);
-      setSelectedUsers(allIdsOrPhones);
+      const allUserIds = [];
+      const allPhones = [];
+
+      filteredEmiUsers.forEach((user) => {
+        if (user?.id) {
+          allUserIds.push(user.id);
+        } else if (user?.phone) {
+          allPhones.push(user.phone);
+        }
+      });
+
+      setSelectedUsers([...allUserIds, ...allPhones]);
+      setUserIds(allUserIds);
+      setPhones(allPhones);
     } else {
       setSelectedUsers([]);
+      setUserIds([]);
+      setPhones([]);
     }
   };
 
-  // ✅ Single Select with fallback id -> phone
+  // ✅ Updated handleSelectOne (single checkbox)
   const handleSelectOne = (user) => {
-    const idOrPhone = user?.id || user?.phone;
+    const idOrPhone = user?.id ? user.id : user?.phone;
+
     setSelectedUsers((prev) =>
       prev.includes(idOrPhone)
         ? prev.filter((u) => u !== idOrPhone)
         : [...prev, idOrPhone]
     );
+
+    // Update separate arrays
+    if (user?.id) {
+      setUserIds((prev) =>
+        prev.includes(user.id)
+          ? prev.filter((u) => u !== user.id)
+          : [...prev, user.id]
+      );
+    } else if (user?.phone) {
+      setPhones((prev) =>
+        prev.includes(user.phone)
+          ? prev.filter((p) => p !== user.phone)
+          : [...prev, user.phone]
+      );
+    }
   };
 
   // ✅ Delete
@@ -103,6 +146,7 @@ export default function DashboardPage() {
       toast.error("No users selected");
       return;
     }
+
     try {
       const res = await fetch(`${API_BASE_URL}${ApiRute.driUser.delete}`, {
         method: "DELETE",
@@ -110,12 +154,15 @@ export default function DashboardPage() {
           "content-type": "application/json",
           authorization: `Bearer ${getStroage().token}`,
         },
-        body: JSON.stringify({ userIds: selectedUsers }),
+        body: JSON.stringify({ userIds, phones }),
       });
+
       const result = await res.json();
       if (result?.success) {
         toast.success(result?.message);
         setSelectedUsers([]);
+        setUserIds([]);
+        setPhones([]);
         getAllDriUers();
       } else {
         toast.error(result?.message);
@@ -168,13 +215,25 @@ export default function DashboardPage() {
             />
             <div className="flex gap-2">
               <button
+                onClick={() => {
+                  setCsvModalOpen(true);
+                  setType("emi");
+                }}
+                className="w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition"
+              >
+                Insert EMI&apos;s
+              </button>
+              <button
                 onClick={handleDelete}
                 className="w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition"
               >
                 Delete Users
               </button>
               <button
-                onClick={() => setCsvModalOpen(true)}
+                onClick={() => {
+                  setCsvModalOpen(true);
+                  setType("user");
+                }}
                 className="w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition"
               >
                 Add Users
@@ -280,33 +339,53 @@ export default function DashboardPage() {
                         </span>
                       </td>
                       <td className="p-3 flex gap-3 justify-center">
-                        <button
-                          onClick={() =>
-                            openModal({ view: "upload", phone: user?.phone })
-                          }
-                          className="bg-[#044B99] text-white px-3 py-1 rounded"
-                        >
-                          Upload File
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleShow({
-                              phone: user?.phone,
-                              id: user?.kyc?.user_id,
-                            })
-                          }
-                          className="bg-[#044B99] text-white px-3 py-1 rounded"
-                        >
-                          Manual EMI
-                        </button>
-                        <button
-                          onClick={() =>
-                            openModal({ view: "view", phone: user?.phone })
-                          }
-                          className="font-semibold px-3 py-1 rounded"
-                        >
-                          View
-                        </button>
+                        {selectedUsers.length === 1 &&
+                        selectedUsers.includes(user?.id || user?.phone) ? (
+                          // ✅ Update button
+                          <button
+                            className="bg-[#044B99] text-white px-3 py-1 rounded"
+                            onClick={() => {
+                              setUpdateUser(user); // update modal user
+                              setUpdateModalOpen(true); // open modal
+                            }}
+                          >
+                            Update
+                          </button>
+                        ) : (
+                          // ✅ Default Actions
+                          <>
+                            <button
+                              onClick={() =>
+                                openModal({
+                                  view: "upload",
+                                  phone: user?.phone,
+                                })
+                              }
+                              className="bg-[#044B99] text-white px-3 py-1 rounded"
+                            >
+                              Upload File
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleShow({
+                                  phone: user?.phone,
+                                  id: user?.kyc?.user_id,
+                                })
+                              }
+                              className="bg-[#044B99] text-white px-3 py-1 rounded"
+                            >
+                              Manual EMI
+                            </button>
+                            <button
+                              onClick={() =>
+                                openModal({ view: "view", phone: user?.phone })
+                              }
+                              className="font-semibold px-3 py-1 rounded"
+                            >
+                              View
+                            </button>
+                          </>
+                        )}
                       </td>
                     </tr>
                   ))
@@ -407,7 +486,15 @@ export default function DashboardPage() {
           getAllDriUers();
           GetAllKycUser();
         }}
+        types={type}
       />
+      {updateModalOpen && (
+        <UpdateProfile
+          isOpen={updateModalOpen}
+          onClose={() => setUpdateModalOpen(false)}
+          userData={updateUser}
+        />
+      )}
     </div>
   );
 }
