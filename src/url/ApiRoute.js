@@ -68,6 +68,7 @@ export const ApiRute = {
     mannual: "/emi/manual",
     markaspaid: "/emi/mark-as-paid",
     bulkinsert: "/emi/bulk-insert",
+    outstanding: "/emi/outstand",
   },
   userLoan: {
     addloan: "/loan/create",
