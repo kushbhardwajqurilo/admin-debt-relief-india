@@ -11,7 +11,7 @@ export default function CloseEMI({ show, handleClose, phone, id }) {
   const [personalLoans, setPersonalLoans] = useState([]);
   const [creditCards, setCreditCards] = useState([]);
   const [selectedLoan, setSelectedLoan] = useState(null);
-
+  const [refresh, setRefresh] = useState(false);
   const [formData, setFormData] = useState({
     loanId: "",
     finaloutamount: "",
@@ -34,7 +34,7 @@ export default function CloseEMI({ show, handleClose, phone, id }) {
   const handleAdd = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE_URL}${ApiRute.admin.outstanding}`, {
+      const res = await fetch(`${API_BASE_URL}${ApiRute.emi.outstanding}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,14 +43,25 @@ export default function CloseEMI({ show, handleClose, phone, id }) {
         body: JSON.stringify(formData),
       });
       const result = await res.json();
-      if (result?.success) toast.success(result?.message);
-      else toast.error(result?.message);
+      if (result?.success) {
+        setRefresh((prev) => !prev);
+        toast.success(result?.message);
+      } else toast.error(result?.message);
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
-      handleClose();
+      setFormData({
+        loanId: "",
+        finaloutamount: "",
+        finalsettelement: "",
+        finalpercentage: "",
+        finalsaving: "",
+        phone,
+        user_id: id,
+      });
+      setSelectedLoan(null);
     }
   };
 
@@ -85,13 +96,14 @@ export default function CloseEMI({ show, handleClose, phone, id }) {
             (data.credit_Cards || []).map((cc) => normalize(cc, "credit"))
           );
         }
+        setRefresh(false);
       } catch (err) {
         console.error("Error fetching data", err);
       }
     };
 
     fetchData();
-  }, [phone]);
+  }, [phone, refresh]);
 
   return (
     <Dialog open={show} onClose={handleClose} className="relative z-50">
@@ -132,6 +144,9 @@ export default function CloseEMI({ show, handleClose, phone, id }) {
                         Amount: ₹{loan.amount} | Settlement:{" "}
                         {loan.settlementPercent}%
                       </p>
+                      <p className="text-sm  mt-1 text-red-400">
+                        {loan?.isOutstanding ? " Service Outstanded" : null}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -156,6 +171,9 @@ export default function CloseEMI({ show, handleClose, phone, id }) {
                       <p className="text-sm text-gray-600">
                         Amount: ₹{loan.amount} | Settlement:{" "}
                         {loan.settlementPercent}%
+                      </p>
+                      <p className="text-sm  mt-1 text-red-400">
+                        {loan?.isOutstanding ? " Service Outstanded" : null}
                       </p>
                     </div>
                   ))}
