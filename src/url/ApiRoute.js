@@ -60,12 +60,14 @@ export const ApiRute = {
     singe: "/driuser/single",
     addUser: "/driuser",
     delete: "/driuser/delete-user",
+    update: "/driuser/update-user",
   },
   adminProfileImage: "/admin/adminProfileBanner",
   emi: {
     upload: "/emi/create-emi",
     mannual: "/emi/manual",
     markaspaid: "/emi/mark-as-paid",
+    bulkinsert: "/emi/bulk-insert",
   },
   userLoan: {
     addloan: "/loan/create",

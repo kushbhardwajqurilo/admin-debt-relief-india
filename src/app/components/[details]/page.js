@@ -11,34 +11,34 @@ export default function UserDetails() {
   const [userDetails, setUserDetails] = useState();
   const [creditTotal, setCreditTotal] = useState(0);
   const [persnalLoan, setPersonalLoan] = useState(0);
-  const getUserDetails = async () => {
-    try {
-      const res = await fetch(`${API_BASE_URL}${ApiRute.driUser.singe}`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({ phone: details }),
-      });
-      const result = await res.json();
-      if (result?.success) {
-        console.log(result);
-        setUserDetails(result?.data);
-        const sum = result?.data?.credit_Cards?.reduce((total, card) => {
-          return Number(total) + Number(card?.amount);
-        }, 0);
-        setCreditTotal(sum);
-        const psum = result?.data?.personal_Loans?.reduce((total, card) => {
-          return Number(total) + Number(card?.amount);
-        }, 0);
-        setPersonalLoan(psum);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   useEffect(() => {
+    const getUserDetails = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}${ApiRute.driUser.singe}`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ phone: details }),
+        });
+        const result = await res.json();
+        if (result?.success) {
+          console.log(result);
+          setUserDetails(result?.data);
+          const sum = result?.data?.credit_Cards?.reduce((total, card) => {
+            return Number(total) + Number(card?.amount);
+          }, 0);
+          setCreditTotal(sum);
+          const psum = result?.data?.personal_Loans?.reduce((total, card) => {
+            return Number(total) + Number(card?.amount);
+          }, 0);
+          setPersonalLoan(psum);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
     getUserDetails();
   }, [details]);
   return (
@@ -71,13 +71,13 @@ export default function UserDetails() {
                     </span>
                   </p>
                   <p className="w-full flex justify-between mb-2 mt-2">
-                    <span className="font-bold">Settlement</span>
+                    <span className="font-bold">CC Settlement</span>
                     <span className="text-red-400 font-bold">
                       {val?.settlement}
                     </span>
                   </p>
                   <p className="w-full flex justify-between mb-2 mt-2">
-                    <span className="font-bold">Total</span>
+                    <span className="font-bold">CC Total</span>
                     <span className="text-red-400 font-bold">
                       &#8377;&nbsp;
                       {formatIndianNumber(
@@ -128,13 +128,13 @@ export default function UserDetails() {
                     </span>
                   </p>
                   <p className="w-full flex justify-between mb-2 mt-2">
-                    <span className="font-bold">Settlement</span>
+                    <span className="font-bold">PL Settlement</span>
                     <span className="text-red-400 font-bold">
                       {val?.settlement}
                     </span>
                   </p>
                   <p className="w-full flex justify-between mb-2 mt-2">
-                    <span className="font-bold">Total</span>
+                    <span className="font-bold">PL Total</span>
                     <span className="text-red-400 font-bold">
                       &#8377;&nbsp;
                       {formatIndianNumber(
