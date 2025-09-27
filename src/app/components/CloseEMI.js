@@ -136,16 +136,17 @@ export default function CloseEMI({ show, handleClose, phone, id }) {
           ? "bg-blue-50 border-blue-400"
           : "bg-gray-50 hover:bg-gray-100 border-gray-200"
       }
-      ${loan?.isOutstanding ? "border-red-500" : ""} 
+      ${loan?.isOutstanding ? "" : "border-red-500"} 
     `}
                     >
-                      <p className="font-medium">{loan.bank}</p>
+                      <p className="font-medium">{loan?.bank}</p>
                       <p className="text-sm text-gray-600">
-                        Amount: ₹{loan.amount} | Settlement:{" "}
-                        {loan.settlementPercent}%
+                        Amount: ₹{loan?.amount} | Settlement:{" "}
+                        {loan?.settlementPercent}% | Total:{" "}
+                        {(loan?.amount * loan?.settlementPercent) / 100}
                       </p>
                       <p className="text-sm  mt-1 text-red-400">
-                        {loan?.isOutstanding ? " Service Outstanded" : null}
+                        {loan?.isOutstanding ? null : "Service Closed"}
                       </p>
                     </div>
                   ))}
@@ -165,15 +166,20 @@ export default function CloseEMI({ show, handleClose, phone, id }) {
                         selectedLoan === loan.id
                           ? "bg-blue-50 border-blue-400"
                           : "bg-gray-50 hover:bg-gray-100 border-gray-200"
-                      } ${loan?.isOutstanding ? "border-red-500" : ""} `}
+                      } ${
+                        loan?.isOutstanding
+                          ? ""
+                          : "border-red-500 cursor-not-allowed"
+                      } `}
                     >
                       <p className="font-medium">{loan.bank}</p>
                       <p className="text-sm text-gray-600">
                         Amount: ₹{loan.amount} | Settlement:{" "}
-                        {loan.settlementPercent}%
+                        {loan.settlementPercent}% | Total:{" "}
+                        {(loan?.amount * loan?.settlementPercent) / 100}
                       </p>
                       <p className="text-sm  mt-1 text-red-400">
-                        {loan?.isOutstanding ? " Service Outstanded" : null}
+                        {loan?.isOutstanding ? null : " Service Closed"}
                       </p>
                     </div>
                   ))}
