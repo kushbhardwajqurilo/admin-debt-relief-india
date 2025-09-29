@@ -146,7 +146,7 @@ export default function CloseEMI({ show, handleClose, phone, id }) {
                         {(loan?.amount * loan?.settlementPercent) / 100}
                       </p>
                       <p className="text-sm  mt-1 text-red-400">
-                        {loan?.isOutstanding ? null : "Service Closed"}
+                        {loan?.isOutstanding ? null : "Settlement Closed"}
                       </p>
                     </div>
                   ))}
@@ -179,7 +179,7 @@ export default function CloseEMI({ show, handleClose, phone, id }) {
                         {(loan?.amount * loan?.settlementPercent) / 100}
                       </p>
                       <p className="text-sm  mt-1 text-red-400">
-                        {loan?.isOutstanding ? null : " Service Closed"}
+                        {loan?.isOutstanding ? null : " Settlement Closed"}
                       </p>
                     </div>
                   ))}

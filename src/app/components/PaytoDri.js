@@ -11,7 +11,6 @@ export default function PayToDri({ phone, show, handleClose }) {
     dueDate: "",
     phone,
     settlementAount: "",
-    loanType: "",
   });
   const [load, setLoad] = useState(false);
   useEffect(() => {
@@ -70,19 +69,7 @@ export default function PayToDri({ phone, show, handleClose }) {
               <option>Service_Fees</option>
             </select>
           </div>
-          <div>
-            <label className="block text-sm font-medium">Loan Type</label>
-            <select
-              name="loanType"
-              value={formData.loanType}
-              onChange={handleChange}
-              className="w-full border rounded px-2 py-1 mt-1"
-            >
-              <option value="">Select</option>
-              <option value="Credit Cards">Credit Card</option>
-              <option value="Personal Loan">Personal Loan</option>
-            </select>
-          </div>
+
           <div>
             <label className="block text-sm font-medium">
               Settlement Amount
