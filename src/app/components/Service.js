@@ -55,23 +55,23 @@ export default function ServiceAndSubscription() {
       return false;
     }
     if (!validateDueDate(valid.duedate)) {
-      toast.error("Due date must be in the future");
+      toast.error("Please set a due date that is in the future.");
       return false;
     }
     if (!valid.duedate) {
-      toast.error("Due date is required");
+      toast.error("Due date is require");
       return false;
     }
     if (!valid.client) {
-      toast.error("Client is required");
+      toast.error("Client is require");
       return false;
     }
     if (!valid.subscription) {
-      toast.error("Subscription amount is required");
+      toast.error("Subscription amount is require");
       return false;
     }
     if (!valid.gst) {
-      toast.error("GST is required");
+      toast.error("GST Is require");
       return false;
     }
     return true;
