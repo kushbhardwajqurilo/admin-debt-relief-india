@@ -1959,22 +1959,22 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot
 function validateDueDate(dueDate) {
     const now = new Date();
     const inputDate = new Date(dueDate);
-    if (inputDate <= now) {
-        return false;
-    }
-    return true;
+    return inputDate > now;
 }
 function ServiceAndSubscription() {
-    const [bank, setBank] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({
+    // 🔹 Initial states
+    const initialBank = {
         bankName: "",
         image: ""
-    });
-    const [subscription, setSubscription] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({
+    };
+    const initialSubscription = {
         gst: "",
         duedate: "",
         client: "",
         subscription: ""
-    });
+    };
+    const [bank, setBank] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(initialBank);
+    const [subscription, setSubscription] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(initialSubscription);
     const [clientList, setClientList] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const getUser = async ()=>{
         try {
@@ -1995,7 +1995,7 @@ function ServiceAndSubscription() {
     };
     function validationCheck(valid) {
         if (valid.gst < 0) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("gst should not negative");
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("GST should not be negative");
             return false;
         }
         if (!validateDueDate(valid.duedate)) {
@@ -2003,18 +2003,19 @@ function ServiceAndSubscription() {
             return false;
         }
         if (!valid.duedate) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("due date is required");
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("Due date is required");
+            return false;
         }
         if (!valid.client) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("client is required");
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("Client is required");
             return false;
         }
         if (!valid.subscription) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("subscrint amount is requird");
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("Subscription amount is required");
             return false;
         }
         if (!valid.gst) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("gst required");
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("GST is required");
             return false;
         }
         return true;
@@ -2035,7 +2036,7 @@ function ServiceAndSubscription() {
             const result = await res.json();
             if (result?.success) {
                 __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].success(result?.message);
-                setSubscription("");
+                setSubscription(initialSubscription); // reset
             } else {
                 __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error(result?.message);
             }
@@ -2058,6 +2059,7 @@ function ServiceAndSubscription() {
             const result = await res.json();
             if (result?.success) {
                 __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].success("Bank added");
+                setBank(initialBank); // reset
             }
         } catch (error) {
             console.error(error);
@@ -2074,7 +2076,7 @@ function ServiceAndSubscription() {
                 children: "Banks & Subscriptions"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/Service.js",
-                lineNumber: 128,
+                lineNumber: 134,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2085,15 +2087,16 @@ function ServiceAndSubscription() {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
                                 className: "text-xl font-semibold ml-1",
-                                children: "Monthly Subscription "
+                                children: "Monthly Subscription"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 132,
+                                lineNumber: 138,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                 placeholder: "Subscription Fees",
                                 name: "subscription",
+                                value: subscription.subscription,
                                 onChange: (e)=>setSubscription((prev)=>({
                                             ...prev,
                                             [e.target.name]: e.target.value
@@ -2102,13 +2105,14 @@ function ServiceAndSubscription() {
                                 className: "w-sm border border-gray-400 rounded p-1.5 mt-3 ml-1"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 133,
+                                lineNumber: 140,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                 placeholder: "GST In Numbers (e.g. 18)",
                                 type: "number",
                                 name: "gst",
+                                value: subscription.gst,
                                 onChange: (e)=>setSubscription((prev)=>({
                                             ...prev,
                                             [e.target.name]: e.target.value
@@ -2117,12 +2121,13 @@ function ServiceAndSubscription() {
                                 className: "w-sm border border-gray-400 rounded p-1.5 m-1 mt-3"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 145,
+                                lineNumber: 154,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                 type: "date",
                                 name: "duedate",
+                                value: subscription.duedate,
                                 onChange: (e)=>setSubscription((prev)=>({
                                             ...prev,
                                             [e.target.name]: e.target.value
@@ -2130,29 +2135,27 @@ function ServiceAndSubscription() {
                                 className: "w-sm border border-gray-400 rounded p-1.5 m-1 mt-3"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 158,
+                                lineNumber: 169,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
                                 className: "w-sm border border-gray-400 rounded p-1.5 m-1 mt-3 outline-neutral-50",
-                                size: clientList.length === 0 ? 0 : 5,
-                                onChange: (e)=>{
-                                    setSubscription((prev)=>({
+                                value: subscription.client,
+                                onChange: (e)=>setSubscription((prev)=>({
                                             ...prev,
-                                            [e.target.name]: e.target.value
-                                        }));
-                                },
+                                            client: e.target.value
+                                        })),
                                 name: "client",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                        className: "p-2",
+                                        value: "",
                                         children: "Select Clients"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/Service.js",
-                                        lineNumber: 180,
+                                        lineNumber: 193,
                                         columnNumber: 13
                                     }, this),
-                                    clientList?.map((val, pos)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                    clientList?.map((val)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                             className: "p-2 hover:bg-blue-300 cursor-pointer",
                                             value: val?._id,
                                             children: [
@@ -2161,15 +2164,15 @@ function ServiceAndSubscription() {
                                                 val?.id,
                                                 ")"
                                             ]
-                                        }, pos, true, {
+                                        }, val._id, true, {
                                             fileName: "[project]/src/app/components/Service.js",
-                                            lineNumber: 182,
+                                            lineNumber: 195,
                                             columnNumber: 15
                                         }, this))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 169,
+                                lineNumber: 182,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2178,13 +2181,13 @@ function ServiceAndSubscription() {
                                 children: "add"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 191,
+                                lineNumber: 205,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/Service.js",
-                        lineNumber: 131,
+                        lineNumber: 137,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2195,24 +2198,24 @@ function ServiceAndSubscription() {
                                 children: "Add Banks"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 201,
+                                lineNumber: 215,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                 placeholder: "Bank Name",
                                 type: "text",
                                 name: "bankName",
+                                value: bank.bankName,
                                 onChange: (e)=>{
                                     setBank((pre)=>({
                                             ...pre,
                                             [e.target.name]: e.target.value
                                         }));
-                                    console.log("banks", bank);
                                 },
                                 className: "w-sm border border-gray-400 rounded p-1.5 mt-3 ml-1"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 202,
+                                lineNumber: 217,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2227,7 +2230,7 @@ function ServiceAndSubscription() {
                                 className: "w-sm border border-gray-400 rounded p-1.5 mt-3 ml-1"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 212,
+                                lineNumber: 228,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2236,25 +2239,25 @@ function ServiceAndSubscription() {
                                 children: "add"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 223,
+                                lineNumber: 240,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/Service.js",
-                        lineNumber: 200,
+                        lineNumber: 214,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/Service.js",
-                lineNumber: 129,
+                lineNumber: 135,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/Service.js",
-        lineNumber: 127,
+        lineNumber: 133,
         columnNumber: 5
     }, this);
 }
