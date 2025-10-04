@@ -27,7 +27,8 @@ const ApiRute = {
         recentCard: "/banner/all",
         addrecentCart: "/banner/bannertext",
         update: "/banner/update",
-        addWithTitle: "/banner/bannertext"
+        addWithTitle: "/banner/bannertext",
+        deleteWithTitle: "/banner/del-banner-title"
     },
     advocate: {
         add: "/advocate/add",
@@ -3392,7 +3393,7 @@ function DashboardPage() {
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                                     className: "p-3",
-                                                    children: "Joining Date"
+                                                    children: "User Mob No."
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
                                                     lineNumber: 283,
@@ -3400,7 +3401,7 @@ function DashboardPage() {
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                                     className: "p-3",
-                                                    children: "User Mob No."
+                                                    children: "EMI Progress"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
                                                     lineNumber: 284,
@@ -3408,18 +3409,10 @@ function DashboardPage() {
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                                     className: "p-3",
-                                                    children: "EMI Progress"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 285,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
                                                     children: "Status"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 286,
+                                                    lineNumber: 285,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3427,7 +3420,7 @@ function DashboardPage() {
                                                     children: "Actions"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 287,
+                                                    lineNumber: 286,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
@@ -3449,12 +3442,12 @@ function DashboardPage() {
                                                 children: "No Users Found"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 293,
+                                                lineNumber: 292,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/userController/page.js",
-                                            lineNumber: 292,
+                                            lineNumber: 291,
                                             columnNumber: 19
                                         }, this) : filteredEmiUsers.map((user, idx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
                                                 className: "border-t text-center",
@@ -3466,12 +3459,12 @@ function DashboardPage() {
                                                             onChange: ()=>handleSelectOne(user)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 301,
+                                                            lineNumber: 300,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 300,
+                                                        lineNumber: 299,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3479,7 +3472,7 @@ function DashboardPage() {
                                                         children: user?.id
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 309,
+                                                        lineNumber: 308,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3487,22 +3480,14 @@ function DashboardPage() {
                                                         children: user?.name
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 310,
+                                                        lineNumber: 309,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                         children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utlis$2f$string$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toTitleCase"])(user?.gender)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 313,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "p-3",
-                                                        children: user.kyc?.date || formatDate(user.joinDate)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 314,
+                                                        lineNumber: 312,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3510,7 +3495,7 @@ function DashboardPage() {
                                                         children: user?.phone
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 317,
+                                                        lineNumber: 314,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3522,7 +3507,7 @@ function DashboardPage() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 318,
+                                                        lineNumber: 315,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3534,19 +3519,19 @@ function DashboardPage() {
                                                                     className: `h-2 w-2 rounded-full ${user.status?.toLowerCase() === "paid" ? "bg-green-500" : user.status?.toLowerCase() === "pending" ? "bg-red-500" : "bg-blue-500"}`
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 331,
+                                                                    lineNumber: 328,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 user.status
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 322,
+                                                            lineNumber: 319,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 321,
+                                                        lineNumber: 318,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3561,7 +3546,7 @@ function DashboardPage() {
                                                             children: "Update"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 347,
+                                                            lineNumber: 344,
                                                             columnNumber: 27
                                                         }, this) : // ✅ Default Actions
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -3575,7 +3560,7 @@ function DashboardPage() {
                                                                     children: "Upload File"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 359,
+                                                                    lineNumber: 356,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3587,7 +3572,7 @@ function DashboardPage() {
                                                                     children: "Manual EMI"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 370,
+                                                                    lineNumber: 367,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3599,25 +3584,25 @@ function DashboardPage() {
                                                                     children: "View"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 381,
+                                                                    lineNumber: 378,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, void 0, true)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 343,
+                                                        lineNumber: 340,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, idx, true, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 299,
+                                                lineNumber: 298,
                                                 columnNumber: 21
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 290,
+                                        lineNumber: 289,
                                         columnNumber: 15
                                     }, this)
                                 ]
@@ -3638,7 +3623,7 @@ function DashboardPage() {
                                                     children: "DRI User"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 402,
+                                                    lineNumber: 399,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3646,7 +3631,7 @@ function DashboardPage() {
                                                     children: "Gender"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 403,
+                                                    lineNumber: 400,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3654,7 +3639,7 @@ function DashboardPage() {
                                                     children: "Joining Date"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 404,
+                                                    lineNumber: 401,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3662,7 +3647,7 @@ function DashboardPage() {
                                                     children: "User Mob No."
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 405,
+                                                    lineNumber: 402,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3670,7 +3655,7 @@ function DashboardPage() {
                                                     children: "Status"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 406,
+                                                    lineNumber: 403,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3678,18 +3663,18 @@ function DashboardPage() {
                                                     children: "Actions"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 407,
+                                                    lineNumber: 404,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/userController/page.js",
-                                            lineNumber: 401,
+                                            lineNumber: 398,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 400,
+                                        lineNumber: 397,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -3700,12 +3685,12 @@ function DashboardPage() {
                                                 children: "No Users Found"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 413,
+                                                lineNumber: 410,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/userController/page.js",
-                                            lineNumber: 412,
+                                            lineNumber: 409,
                                             columnNumber: 19
                                         }, this) : filteredKycUsers.map((user, idx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
                                                 className: "border-t text-center",
@@ -3717,19 +3702,19 @@ function DashboardPage() {
                                                             children: user?.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 421,
+                                                            lineNumber: 418,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 420,
+                                                        lineNumber: 417,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                         children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utlis$2f$string$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toTitleCase"])(user?.gender)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 423,
+                                                        lineNumber: 420,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3737,7 +3722,7 @@ function DashboardPage() {
                                                         children: user?.date
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 424,
+                                                        lineNumber: 421,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3745,7 +3730,7 @@ function DashboardPage() {
                                                         children: user?.user_id?.phone
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 425,
+                                                        lineNumber: 422,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3757,19 +3742,19 @@ function DashboardPage() {
                                                                     className: `h-2 w-2 rounded-full ${user.status?.toLowerCase() === "approve" ? "bg-green-500" : "bg-red-500"}`
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 434,
+                                                                    lineNumber: 431,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 user.status
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 427,
+                                                            lineNumber: 424,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 426,
+                                                        lineNumber: 423,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3783,29 +3768,29 @@ function DashboardPage() {
                                                             children: "Review & Assign"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 445,
+                                                            lineNumber: 442,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 444,
+                                                        lineNumber: 441,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, idx, true, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 419,
+                                                lineNumber: 416,
                                                 columnNumber: 21
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 410,
+                                        lineNumber: 407,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/userController/page.js",
-                                lineNumber: 399,
+                                lineNumber: 396,
                                 columnNumber: 13
                             }, this)
                         ]
@@ -3826,7 +3811,7 @@ function DashboardPage() {
                 mode: modalMode
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 465,
+                lineNumber: 462,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ReviewAssignModal$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -3835,7 +3820,7 @@ function DashboardPage() {
                 userData: selectedUser
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 470,
+                lineNumber: 467,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$PaytoDri$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -3848,7 +3833,7 @@ function DashboardPage() {
                 }
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 475,
+                lineNumber: 472,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$uploadUsersFromCSV$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -3861,7 +3846,7 @@ function DashboardPage() {
                 types: type
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 484,
+                lineNumber: 481,
                 columnNumber: 7
             }, this),
             updateModalOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$UpdateProfile$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -3870,7 +3855,7 @@ function DashboardPage() {
                 userData: updateUser
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 494,
+                lineNumber: 491,
                 columnNumber: 9
             }, this)
         ]

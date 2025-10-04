@@ -27,7 +27,8 @@ const ApiRute = {
         recentCard: "/banner/all",
         addrecentCart: "/banner/bannertext",
         update: "/banner/update",
-        addWithTitle: "/banner/bannertext"
+        addWithTitle: "/banner/bannertext",
+        deleteWithTitle: "/banner/del-banner-title"
     },
     advocate: {
         add: "/advocate/add",

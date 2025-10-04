@@ -5,6 +5,8 @@ import { API_BASE_URL } from "@/url/BaseURL";
 import { ApiRute } from "@/url/ApiRoute";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { getStroage } from "@/url/storage";
+
 export default function RecentFeatures() {
   const [features, setFeatures] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -16,6 +18,8 @@ export default function RecentFeatures() {
     imagePreview: null,
   });
 
+  const fileInputsRef = useRef([]);
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -23,9 +27,7 @@ export default function RecentFeatures() {
           `${API_BASE_URL}${ApiRute.currentImage.recentCard}`
         );
         const data = await res.json();
-        if (data?.success) {
-          setFeatures(data.data);
-        }
+        if (data?.success) setFeatures(data.data);
       } catch (error) {
         console.error("API fetch failed:", error);
         setFeatures([]);
@@ -34,8 +36,6 @@ export default function RecentFeatures() {
     fetchData();
   }, []);
 
-  const fileInputsRef = useRef([]);
-
   const handleInputChange = (index, field, value) => {
     const updated = [...features];
     updated[index][field] = value;
@@ -43,9 +43,7 @@ export default function RecentFeatures() {
   };
 
   const handleCameraClick = (index) => {
-    if (fileInputsRef.current[index]) {
-      fileInputsRef.current[index].click();
-    }
+    if (fileInputsRef.current[index]) fileInputsRef.current[index].click();
   };
 
   const handleFileChange = (index, file) => {
@@ -57,18 +55,13 @@ export default function RecentFeatures() {
     setFeatures(updated);
   };
 
-  // ✅ Save (Update existing)
   const handleSave = async (index) => {
     const item = features[index];
     const formData = new FormData();
-
     formData.append("id", item?._id);
     formData.append("title", item?.bannerTitle || "");
     formData.append("hyperLink", item?.hyperLink || "");
-
-    if (item.newImageFile) {
-      formData.append("image", item.newImageFile);
-    }
+    if (item.newImageFile) formData.append("image", item.newImageFile);
 
     try {
       setLoading(true);
@@ -76,13 +69,9 @@ export default function RecentFeatures() {
         method: "PUT",
         body: formData,
       });
-
       const result = await res.json();
-      if (result.success) {
-        toast.success(result.message || "Saved!");
-      } else {
-        toast.error(result.message || "Save failed!");
-      }
+      if (result.success) toast.success(result.message || "Saved!");
+      else toast.error(result.message || "Save failed!");
     } catch (error) {
       console.error("Save failed:", error);
       toast.error("Save failed!");
@@ -91,14 +80,11 @@ export default function RecentFeatures() {
     }
   };
 
-  // ✅ Add (Modal form submit)
   const handleAddSubmit = async () => {
     const formData = new FormData();
     formData.append("title", newItem.bannerTitle || "");
     formData.append("hyperLink", newItem.hyperLink || "");
-    if (newItem.imageFile) {
-      formData.append("image", newItem.imageFile);
-    }
+    if (newItem.imageFile) formData.append("image", newItem.imageFile);
 
     try {
       setLoading(true);
@@ -109,11 +95,15 @@ export default function RecentFeatures() {
           body: formData,
         }
       );
-
       const result = await res.json();
-      if (result.success) {
-        toast.success(result.message || "Added successfully!");
-        setFeatures((prev) => [...prev, result.data]); // ✅ Add to list
+      if (result?.success) {
+        toast.success(result?.message || "Added successfully!");
+        // Add the new item to features with imagePreview set
+        const newFeature = {
+          ...result?.data,
+          imagePreview: result?.data?.bannerImage || null, // use bannerImage from API
+        };
+        setFeatures((prev) => [...prev, newFeature]);
         setShowAddModal(false);
         setNewItem({
           bannerTitle: "",
@@ -121,9 +111,20 @@ export default function RecentFeatures() {
           imageFile: null,
           imagePreview: null,
         });
-      } else {
-        toast.error(result.message || "Add failed!");
+      } else toast.error(result.message || "Add failed!");
+      async function fetchData() {
+        try {
+          const res = await fetch(
+            `${API_BASE_URL}${ApiRute.currentImage.recentCard}`
+          );
+          const data = await res.json();
+          if (data?.success) setFeatures(data.data);
+        } catch (error) {
+          console.error("API fetch failed:", error);
+          setFeatures([]);
+        }
       }
+      fetchData();
     } catch (error) {
       console.error("Add failed:", error);
       toast.error("Add failed!");
@@ -132,41 +133,72 @@ export default function RecentFeatures() {
     }
   };
 
+  const deleteBannerTitle = async (id, public_id) => {
+    try {
+      if (!id || !public_id) {
+        toast.error("Banner information is missing!");
+        return;
+      }
+      const response = await fetch(
+        `${API_BASE_URL}${ApiRute.currentImage.deleteWithTitle}?id=${id}&public=${public_id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${getStroage().token}`,
+          },
+        }
+      );
+      const result = await response.json();
+      if (result?.success) {
+        toast.success(result?.message);
+        setFeatures((prev) => prev.filter((f) => f._id !== id));
+      } else toast.error(result?.message);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-xl shadow mt-10 w-[900px] h-[400px] border-2 border-none overflow-hidden overflow-y-auto">
-      <div className="flex   justify-between items-center mb-6 ">
+      <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Recent Cards</h2>
         <button
           onClick={() => setShowAddModal(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md shadow flex items-center gap-2 "
+          className="bg-blue-500 text-white px-4 py-2 rounded-md shadow flex items-center gap-2"
         >
           <Plus size={16} /> Add New
         </button>
       </div>
 
-      {/* List of features */}
       {features.map((item, index) => (
         <div
-          key={item._id || index}
+          key={item?._id || index}
           className="flex flex-col mb-6 p-4 rounded-lg"
           style={{ boxShadow: "2px 2px 5px 5px #f7f3f2" }}
         >
-          {/* Image Preview */}
           <div className="flex items-center gap-4 mb-4">
-            <a href={`${item?.hyperLink}`}>
+            <a href={`${item?.hyperLink || "#"}`}>
               <div className="w-20 h-20 bg-[#FFF5DC] rounded-lg flex items-center justify-center p-2 overflow-hidden">
-                <Image
-                  src={item?.imagePreview || item?.bannerImage}
-                  alt="Recent"
-                  width={100}
-                  height={100}
-                />
+                {item?.imagePreview || item?.bannerImage ? (
+                  <Image
+                    src={item.imagePreview || item.bannerImage}
+                    alt={item?.bannerTitle || "Recent"}
+                    width={100}
+                    height={100}
+                    style={{ width: "100px", height: "auto" }}
+                    className="object-cover rounded-md"
+                  />
+                ) : (
+                  <div className="w-20 h-20 bg-gray-200 flex items-center justify-center rounded-md">
+                    No Image
+                  </div>
+                )}
               </div>
-            </a>{" "}
-            <span className="text-sm font-medium">{item.bannerTitle}</span>
+            </a>
+            <span className="text-sm font-medium">{item?.bannerTitle}</span>
           </div>
 
-          {/* Title input */}
           <div className="relative mb-3 w-full">
             <input
               value={item?.bannerTitle || ""}
@@ -182,7 +214,6 @@ export default function RecentFeatures() {
             />
           </div>
 
-          {/* Hyperlink input */}
           <div className="relative mb-3 w-full">
             <input
               value={item?.hyperLink || ""}
@@ -195,7 +226,6 @@ export default function RecentFeatures() {
             <Link2 size={16} className="absolute right-3 top-3 text-gray-500" />
           </div>
 
-          {/* Action buttons */}
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -211,19 +241,22 @@ export default function RecentFeatures() {
               ref={(el) => (fileInputsRef.current[index] = el)}
               onChange={(e) => handleFileChange(index, e.target.files[0])}
             />
-
-            {/* Save Button */}
             <button
               onClick={() => handleSave(index)}
               className="bg-green-500 text-white text-sm px-4 py-2 rounded-md shadow cursor-pointer"
             >
-              {loading ? "Saving..." : " Save"}
+              {loading ? "Saving..." : "Save"}
+            </button>
+            <button
+              className="bg-red-500 text-white text-sm px-4 py-2 rounded-md shadow cursor-pointer"
+              onClick={() => deleteBannerTitle(item?._id, item?.public_id)}
+            >
+              Delete
             </button>
           </div>
         </div>
       ))}
 
-      {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50">
           <div className="bg-white w-[400px] p-6 rounded-xl shadow relative">
@@ -234,15 +267,17 @@ export default function RecentFeatures() {
               <X size={20} />
             </button>
 
-            <h3 className="text-xl font-semibold mb-4 ">Add New Feature</h3>
+            <h3 className="text-xl font-semibold mb-4">Add New Feature</h3>
 
-            {/* Image Upload */}
             <div className="mb-4">
               {newItem?.imagePreview ? (
                 <Image
-                  src={newItem?.imagePreview}
+                  src={newItem.imagePreview}
                   alt="Preview"
-                  className="w-32 h-32 object-cover rounded-md mb-2"
+                  width={128}
+                  height={128}
+                  style={{ width: "128px", height: "auto" }}
+                  className="object-cover rounded-md mb-2"
                 />
               ) : (
                 <div className="w-32 h-32 bg-gray-200 flex items-center justify-center rounded-md mb-2">
@@ -265,7 +300,6 @@ export default function RecentFeatures() {
               />
             </div>
 
-            {/* Title */}
             <input
               value={newItem.bannerTitle}
               onChange={(e) =>
@@ -275,7 +309,6 @@ export default function RecentFeatures() {
               className="w-full mb-3 pl-4 py-2 border rounded-md shadow-sm text-sm"
             />
 
-            {/* HyperLink */}
             <input
               value={newItem.hyperLink}
               onChange={(e) =>
@@ -285,12 +318,11 @@ export default function RecentFeatures() {
               className="w-full mb-4 pl-4 py-2 border rounded-md shadow-sm text-sm"
             />
 
-            {/* Add Button */}
             <button
               onClick={handleAddSubmit}
               className="w-full bg-blue-500 text-white py-2 rounded-md"
             >
-              {loading ? "Loading..." : " Add"}
+              {loading ? "Loading..." : "Add"}
             </button>
           </div>
         </div>

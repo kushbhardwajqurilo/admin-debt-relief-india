@@ -44,7 +44,8 @@ const ApiRute = {
         recentCard: "/banner/all",
         addrecentCart: "/banner/bannertext",
         update: "/banner/update",
-        addWithTitle: "/banner/bannertext"
+        addWithTitle: "/banner/bannertext",
+        deleteWithTitle: "/banner/del-banner-title"
     },
     advocate: {
         add: "/advocate/add",
@@ -1574,9 +1575,11 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js_
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/url/ApiRoute.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react-hot-toast/dist/index.mjs [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/url/storage.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 ;
@@ -1594,15 +1597,14 @@ function RecentFeatures() {
         imageFile: null,
         imagePreview: null
     });
+    const fileInputsRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])([]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "RecentFeatures.useEffect": ()=>{
             async function fetchData() {
                 try {
                     const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].currentImage.recentCard));
                     const data = await res.json();
-                    if (data === null || data === void 0 ? void 0 : data.success) {
-                        setFeatures(data.data);
-                    }
+                    if (data === null || data === void 0 ? void 0 : data.success) setFeatures(data.data);
                 } catch (error) {
                     console.error("API fetch failed:", error);
                     setFeatures([]);
@@ -1611,7 +1613,6 @@ function RecentFeatures() {
             fetchData();
         }
     }["RecentFeatures.useEffect"], []);
-    const fileInputsRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])([]);
     const handleInputChange = (index, field, value)=>{
         const updated = [
             ...features
@@ -1620,9 +1621,7 @@ function RecentFeatures() {
         setFeatures(updated);
     };
     const handleCameraClick = (index)=>{
-        if (fileInputsRef.current[index]) {
-            fileInputsRef.current[index].click();
-        }
+        if (fileInputsRef.current[index]) fileInputsRef.current[index].click();
     };
     const handleFileChange = (index, file)=>{
         const updated = [
@@ -1634,16 +1633,13 @@ function RecentFeatures() {
         }
         setFeatures(updated);
     };
-    // ✅ Save (Update existing)
     const handleSave = async (index)=>{
         const item = features[index];
         const formData = new FormData();
         formData.append("id", item === null || item === void 0 ? void 0 : item._id);
         formData.append("title", (item === null || item === void 0 ? void 0 : item.bannerTitle) || "");
         formData.append("hyperLink", (item === null || item === void 0 ? void 0 : item.hyperLink) || "");
-        if (item.newImageFile) {
-            formData.append("image", item.newImageFile);
-        }
+        if (item.newImageFile) formData.append("image", item.newImageFile);
         try {
             setLoading(true);
             const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].currentImage.update), {
@@ -1651,11 +1647,8 @@ function RecentFeatures() {
                 body: formData
             });
             const result = await res.json();
-            if (result.success) {
-                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success(result.message || "Saved!");
-            } else {
-                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(result.message || "Save failed!");
-            }
+            if (result.success) __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success(result.message || "Saved!");
+            else __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(result.message || "Save failed!");
         } catch (error) {
             console.error("Save failed:", error);
             __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error("Save failed!");
@@ -1663,14 +1656,11 @@ function RecentFeatures() {
             setLoading(false);
         }
     };
-    // ✅ Add (Modal form submit)
     const handleAddSubmit = async ()=>{
         const formData = new FormData();
         formData.append("title", newItem.bannerTitle || "");
         formData.append("hyperLink", newItem.hyperLink || "");
-        if (newItem.imageFile) {
-            formData.append("image", newItem.imageFile);
-        }
+        if (newItem.imageFile) formData.append("image", newItem.imageFile);
         try {
             setLoading(true);
             const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].currentImage.addWithTitle), {
@@ -1678,12 +1668,18 @@ function RecentFeatures() {
                 body: formData
             });
             const result = await res.json();
-            if (result.success) {
-                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success(result.message || "Added successfully!");
+            if (result === null || result === void 0 ? void 0 : result.success) {
+                var _result_data;
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success((result === null || result === void 0 ? void 0 : result.message) || "Added successfully!");
+                // Add the new item to features with imagePreview set
+                const newFeature = {
+                    ...result === null || result === void 0 ? void 0 : result.data,
+                    imagePreview: (result === null || result === void 0 ? void 0 : (_result_data = result.data) === null || _result_data === void 0 ? void 0 : _result_data.bannerImage) || null
+                };
                 setFeatures((prev)=>[
                         ...prev,
-                        result.data
-                    ]); // ✅ Add to list
+                        newFeature
+                    ]);
                 setShowAddModal(false);
                 setNewItem({
                     bannerTitle: "",
@@ -1691,9 +1687,18 @@ function RecentFeatures() {
                     imageFile: null,
                     imagePreview: null
                 });
-            } else {
-                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(result.message || "Add failed!");
+            } else __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(result.message || "Add failed!");
+            async function fetchData() {
+                try {
+                    const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].currentImage.recentCard));
+                    const data = await res.json();
+                    if (data === null || data === void 0 ? void 0 : data.success) setFeatures(data.data);
+                } catch (error) {
+                    console.error("API fetch failed:", error);
+                    setFeatures([]);
+                }
             }
+            fetchData();
         } catch (error) {
             console.error("Add failed:", error);
             __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error("Add failed!");
@@ -1701,42 +1706,64 @@ function RecentFeatures() {
             setLoading(false);
         }
     };
+    const deleteBannerTitle = async (id, public_id)=>{
+        try {
+            if (!id || !public_id) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error("Banner information is missing!");
+                return;
+            }
+            const response = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].currentImage.deleteWithTitle, "?id=").concat(id, "&public=").concat(public_id), {
+                method: "DELETE",
+                headers: {
+                    "content-type": "application/json",
+                    authorization: "Bearer ".concat((0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getStroage"])().token)
+                }
+            });
+            const result = await response.json();
+            if (result === null || result === void 0 ? void 0 : result.success) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success(result === null || result === void 0 ? void 0 : result.message);
+                setFeatures((prev)=>prev.filter((f)=>f._id !== id));
+            } else __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(result === null || result === void 0 ? void 0 : result.message);
+        } catch (error) {
+            console.error(error);
+        }
+    };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "bg-white p-6 rounded-xl shadow mt-10 w-[900px] h-[400px] border-2 border-none overflow-hidden overflow-y-auto",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "flex   justify-between items-center mb-6 ",
+                className: "flex justify-between items-center mb-6",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
                         className: "text-2xl font-bold",
                         children: "Recent Cards"
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/RecentFeatures.js",
-                        lineNumber: 138,
+                        lineNumber: 165,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         onClick: ()=>setShowAddModal(true),
-                        className: "bg-blue-500 text-white px-4 py-2 rounded-md shadow flex items-center gap-2 ",
+                        className: "bg-blue-500 text-white px-4 py-2 rounded-md shadow flex items-center gap-2",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
                                 size: 16
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/RecentFeatures.js",
-                                lineNumber: 143,
+                                lineNumber: 170,
                                 columnNumber: 11
                             }, this),
                             " Add New"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/RecentFeatures.js",
-                        lineNumber: 139,
+                        lineNumber: 166,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/RecentFeatures.js",
-                lineNumber: 137,
+                lineNumber: 164,
                 columnNumber: 7
             }, this),
             features.map((item, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1749,42 +1776,53 @@ function RecentFeatures() {
                             className: "flex items-center gap-4 mb-4",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
-                                    href: "".concat(item === null || item === void 0 ? void 0 : item.hyperLink),
+                                    href: "".concat((item === null || item === void 0 ? void 0 : item.hyperLink) || "#"),
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "w-20 h-20 bg-[#FFF5DC] rounded-lg flex items-center justify-center p-2 overflow-hidden",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                            src: (item === null || item === void 0 ? void 0 : item.imagePreview) || (item === null || item === void 0 ? void 0 : item.bannerImage),
-                                            alt: "Recent",
+                                        children: (item === null || item === void 0 ? void 0 : item.imagePreview) || (item === null || item === void 0 ? void 0 : item.bannerImage) ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                            src: item.imagePreview || item.bannerImage,
+                                            alt: (item === null || item === void 0 ? void 0 : item.bannerTitle) || "Recent",
                                             width: 100,
-                                            height: 100
+                                            height: 100,
+                                            style: {
+                                                width: "100px",
+                                                height: "auto"
+                                            },
+                                            className: "object-cover rounded-md"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/RecentFeatures.js",
-                                            lineNumber: 158,
-                                            columnNumber: 17
+                                            lineNumber: 184,
+                                            columnNumber: 19
+                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "w-20 h-20 bg-gray-200 flex items-center justify-center rounded-md",
+                                            children: "No Image"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/components/RecentFeatures.js",
+                                            lineNumber: 193,
+                                            columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/RecentFeatures.js",
-                                        lineNumber: 157,
+                                        lineNumber: 182,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                                    lineNumber: 156,
+                                    lineNumber: 181,
                                     columnNumber: 13
                                 }, this),
-                                " ",
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                     className: "text-sm font-medium",
-                                    children: item.bannerTitle
+                                    children: item === null || item === void 0 ? void 0 : item.bannerTitle
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                                    lineNumber: 166,
+                                    lineNumber: 199,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/RecentFeatures.js",
-                            lineNumber: 155,
+                            lineNumber: 180,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1797,7 +1835,7 @@ function RecentFeatures() {
                                     className: "w-full pl-4 pr-10 py-2 border rounded-md shadow-sm text-sm"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                                    lineNumber: 171,
+                                    lineNumber: 203,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$pencil$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Pencil$3e$__["Pencil"], {
@@ -1805,13 +1843,13 @@ function RecentFeatures() {
                                     className: "absolute right-3 top-3 text-gray-500"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                                    lineNumber: 179,
+                                    lineNumber: 211,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/RecentFeatures.js",
-                            lineNumber: 170,
+                            lineNumber: 202,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1824,7 +1862,7 @@ function RecentFeatures() {
                                     className: "w-full pl-4 pr-10 py-2 border rounded-md shadow-sm text-sm"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                                    lineNumber: 187,
+                                    lineNumber: 218,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$link$2d$2$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Link2$3e$__["Link2"], {
@@ -1832,13 +1870,13 @@ function RecentFeatures() {
                                     className: "absolute right-3 top-3 text-gray-500"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                                    lineNumber: 195,
+                                    lineNumber: 226,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/RecentFeatures.js",
-                            lineNumber: 186,
+                            lineNumber: 217,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1853,12 +1891,12 @@ function RecentFeatures() {
                                         className: "text-white"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/RecentFeatures.js",
-                                        lineNumber: 205,
+                                        lineNumber: 235,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                                    lineNumber: 200,
+                                    lineNumber: 230,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1869,28 +1907,37 @@ function RecentFeatures() {
                                     onChange: (e)=>handleFileChange(index, e.target.files[0])
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                                    lineNumber: 207,
+                                    lineNumber: 237,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     onClick: ()=>handleSave(index),
                                     className: "bg-green-500 text-white text-sm px-4 py-2 rounded-md shadow cursor-pointer",
-                                    children: loading ? "Saving..." : " Save"
+                                    children: loading ? "Saving..." : "Save"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                                    lineNumber: 216,
+                                    lineNumber: 244,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    className: "bg-red-500 text-white text-sm px-4 py-2 rounded-md shadow cursor-pointer",
+                                    onClick: ()=>deleteBannerTitle(item === null || item === void 0 ? void 0 : item._id, item === null || item === void 0 ? void 0 : item.public_id),
+                                    children: "Delete"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/components/RecentFeatures.js",
+                                    lineNumber: 250,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/RecentFeatures.js",
-                            lineNumber: 199,
+                            lineNumber: 229,
                             columnNumber: 11
                         }, this)
                     ]
-                }, item._id || index, true, {
+                }, (item === null || item === void 0 ? void 0 : item._id) || index, true, {
                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                    lineNumber: 149,
+                    lineNumber: 175,
                     columnNumber: 9
                 }, this)),
             showAddModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1905,39 +1952,45 @@ function RecentFeatures() {
                                 size: 20
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/RecentFeatures.js",
-                                lineNumber: 234,
+                                lineNumber: 267,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/RecentFeatures.js",
-                            lineNumber: 230,
+                            lineNumber: 263,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                            className: "text-xl font-semibold mb-4 ",
+                            className: "text-xl font-semibold mb-4",
                             children: "Add New Feature"
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/RecentFeatures.js",
-                            lineNumber: 237,
+                            lineNumber: 270,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "mb-4",
                             children: [
                                 (newItem === null || newItem === void 0 ? void 0 : newItem.imagePreview) ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                    src: newItem === null || newItem === void 0 ? void 0 : newItem.imagePreview,
+                                    src: newItem.imagePreview,
                                     alt: "Preview",
-                                    className: "w-32 h-32 object-cover rounded-md mb-2"
+                                    width: 128,
+                                    height: 128,
+                                    style: {
+                                        width: "128px",
+                                        height: "auto"
+                                    },
+                                    className: "object-cover rounded-md mb-2"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                                    lineNumber: 242,
+                                    lineNumber: 274,
                                     columnNumber: 17
                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "w-32 h-32 bg-gray-200 flex items-center justify-center rounded-md mb-2",
                                     children: "No Image"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                                    lineNumber: 248,
+                                    lineNumber: 283,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1955,13 +2008,13 @@ function RecentFeatures() {
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                                    lineNumber: 252,
+                                    lineNumber: 287,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/RecentFeatures.js",
-                            lineNumber: 240,
+                            lineNumber: 272,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1974,7 +2027,7 @@ function RecentFeatures() {
                             className: "w-full mb-3 pl-4 py-2 border rounded-md shadow-sm text-sm"
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/RecentFeatures.js",
-                            lineNumber: 269,
+                            lineNumber: 303,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1987,37 +2040,37 @@ function RecentFeatures() {
                             className: "w-full mb-4 pl-4 py-2 border rounded-md shadow-sm text-sm"
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/RecentFeatures.js",
-                            lineNumber: 279,
+                            lineNumber: 312,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                             onClick: handleAddSubmit,
                             className: "w-full bg-blue-500 text-white py-2 rounded-md",
-                            children: loading ? "Loading..." : " Add"
+                            children: loading ? "Loading..." : "Add"
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/RecentFeatures.js",
-                            lineNumber: 289,
+                            lineNumber: 321,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/components/RecentFeatures.js",
-                    lineNumber: 229,
+                    lineNumber: 262,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/components/RecentFeatures.js",
-                lineNumber: 228,
+                lineNumber: 261,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/RecentFeatures.js",
-        lineNumber: 136,
+        lineNumber: 163,
         columnNumber: 5
     }, this);
 }
-_s(RecentFeatures, "VqMxu/0HvlAbEFzZd6AA04R62ss=");
+_s(RecentFeatures, "beJ0IxVym7AN9g+1j6n00FvBKMI=");
 _c = RecentFeatures;
 var _c;
 __turbopack_context__.k.register(_c, "RecentFeatures");

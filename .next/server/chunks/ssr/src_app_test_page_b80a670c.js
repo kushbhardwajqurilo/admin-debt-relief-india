@@ -13,23 +13,63 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 ;
 function Home() {
     const [files, setFiles] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
-    const [message, setMessage] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    const [statusMessages, setStatusMessages] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false); // new loading state
     const handleFileChange = (e)=>{
-        setFiles(e.target.files);
+        setFiles(Array.from(e.target.files));
+        setStatusMessages([]); // reset previous messages
     };
     const handleSubmit = async (e)=>{
         e.preventDefault();
         if (!files.length) return alert("Please select files");
-        const formData = new FormData();
-        for(let i = 0; i < files.length; i++){
-            formData.append("files", files[i]);
+        setLoading(true); // start loading
+        try {
+            // 1️⃣ Request presigned URLs from backend
+            const res = await fetch("https://4frnn03l-5000.inc1.devtunnels.ms/api/v1/kyc/get-presignedurl", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    files: files.map((f)=>({
+                            fileName: f.name,
+                            fileType: f.type,
+                            size: f.size
+                        }))
+                })
+            });
+            const urls = await res.json(); // [{uploadURL, fileURL}, ...]
+            const uploadedFiles = [];
+            const newStatus = [];
+            // 2️⃣ Upload each file
+            for(let i = 0; i < files.length; i++){
+                const file = files[i];
+                const url = urls[i].uploadURL;
+                try {
+                    await fetch(url, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": file.type
+                        },
+                        body: file
+                    });
+                    uploadedFiles.push(urls[i].fileURL);
+                } catch  {
+                    newStatus.push(`${file.name} failed`);
+                }
+                setStatusMessages([
+                    ...newStatus
+                ]); // update messages after each file
+            }
+            alert("All files uploaded!");
+            console.log("Uploaded file URLs:", uploadedFiles);
+            setFiles([]);
+        } catch (err) {
+            console.error(err);
+            alert("Some files failed to upload. Check console for details.");
+        } finally{
+            setLoading(false); // stop loading
         }
-        const res = await fetch("/api/upload", {
-            method: "POST",
-            body: formData
-        });
-        const data = await res.json();
-        setMessage(data.message);
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4",
@@ -41,7 +81,7 @@ function Home() {
                     children: "Upload Multiple Files"
                 }, void 0, false, {
                     fileName: "[project]/src/app/test/page.js",
-                    lineNumber: 33,
+                    lineNumber: 75,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -55,41 +95,49 @@ function Home() {
                             className: "border border-gray-300 rounded p-2 cursor-pointer"
                         }, void 0, false, {
                             fileName: "[project]/src/app/test/page.js",
-                            lineNumber: 37,
+                            lineNumber: 79,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                             type: "submit",
-                            className: "bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600 transition",
-                            children: "Upload"
+                            disabled: loading,
+                            className: `bg-blue-500 text-white font-semibold py-2 rounded transition ${loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"}`,
+                            children: loading ? "Uploading..." : "Upload"
                         }, void 0, false, {
                             fileName: "[project]/src/app/test/page.js",
-                            lineNumber: 43,
+                            lineNumber: 85,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/test/page.js",
-                    lineNumber: 36,
+                    lineNumber: 78,
                     columnNumber: 9
                 }, this),
-                message && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                    className: "mt-4 text-green-600 text-center",
-                    children: message
+                statusMessages.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "mt-4",
+                    children: statusMessages.map((msg, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: "text-gray-700",
+                            children: msg
+                        }, i, false, {
+                            fileName: "[project]/src/app/test/page.js",
+                            lineNumber: 99,
+                            columnNumber: 15
+                        }, this))
                 }, void 0, false, {
                     fileName: "[project]/src/app/test/page.js",
-                    lineNumber: 51,
+                    lineNumber: 97,
                     columnNumber: 11
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/test/page.js",
-            lineNumber: 32,
+            lineNumber: 74,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/test/page.js",
-        lineNumber: 31,
+        lineNumber: 73,
         columnNumber: 5
     }, this);
 }
