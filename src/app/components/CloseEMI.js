@@ -86,6 +86,10 @@ export default function CloseEMI({ show, handleClose, phone, id }) {
               parseInt((item?.settlement || "").toString().replace("%", "")) ||
               0,
             type,
+            finalOutstandingAmount: Number(item?.finalOutstandingAmount),
+            finalSettelement: Number(item?.finalSettelement),
+            finalPercentage: Number(item?.finalPercentage),
+            finalSavings: Number(item?.finalSavings),
             isOutstanding: item?.isOutstanding,
           });
 
@@ -140,14 +144,36 @@ export default function CloseEMI({ show, handleClose, phone, id }) {
     `}
                     >
                       <p className="font-medium">{loan?.bank}</p>
-                      <p className="text-sm text-gray-600">
-                        Amount: ₹{loan?.amount} | Settlement:{" "}
-                        {loan?.settlementPercent}% | Total:{" "}
-                        {(loan?.amount * loan?.settlementPercent) / 100}
-                      </p>
-                      <p className="text-sm  mt-1 text-red-400">
-                        {loan?.isOutstanding ? null : "Settlement Closed"}
-                      </p>
+
+                      <div className="text-sm mt-1 text-red-400">
+                        {loan?.isOutstanding ? (
+                          <div className="text-sm text-gray-600">
+                            Amount: ₹{loan?.amount} | Settlement:{" "}
+                            {loan?.settlementPercent}% | Total:{" "}
+                            {(loan?.amount * loan?.settlementPercent) / 100}
+                          </div>
+                        ) : (
+                          <>
+                            <div className="text-sm text-gray-600">
+                              <span>
+                                Final Outstanding Amount:{" "}
+                                {loan?.finalOutstandingAmount}&nbsp; |&nbsp;
+                              </span>
+                              <span>
+                                Final Settlement: {loan?.finalSettelement}{" "}
+                                &nbsp; &nbsp;
+                              </span>
+                              <br />{" "}
+                              <span>
+                                Final Percentage: {loan?.finalPercentage}&nbsp;
+                                |&nbsp;
+                              </span>
+                              <span>Final Saving: {loan?.finalSavings}</span>
+                            </div>
+                            <span className="mt-2">Settlement Close</span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
