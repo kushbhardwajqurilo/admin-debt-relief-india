@@ -280,7 +280,6 @@ export default function DashboardPage() {
                   <th className="p-3">User ID</th>
                   <th className="p-3">DRI User</th>
                   <th className="p-3">Gender</th>
-                  <th className="p-3">Joining Date</th>
                   <th className="p-3">User Mob No.</th>
                   <th className="p-3">EMI Progress</th>
                   <th className="p-3">Status</th>
@@ -311,9 +310,7 @@ export default function DashboardPage() {
                         {user?.name}
                       </td>
                       <td>{toTitleCase(user?.gender)}</td>
-                      <td className="p-3">
-                        {user.kyc?.date || formatDate(user.joinDate)}
-                      </td>
+
                       <td className="p-3">{user?.phone}</td>
                       <td className="p-3">
                         {user?.emiPay}/{user?.totalEmi}
