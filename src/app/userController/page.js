@@ -311,7 +311,9 @@ export default function DashboardPage() {
                         {user?.name}
                       </td>
                       <td>{toTitleCase(user?.gender)}</td>
-                      <td className="p-3">{user.kyc?.date}</td>
+                      <td className="p-3">
+                        {user.kyc?.date || formatDate(user.joinDate)}
+                      </td>
                       <td className="p-3">{user?.phone}</td>
                       <td className="p-3">
                         {user?.emiPay}/{user?.totalEmi}
