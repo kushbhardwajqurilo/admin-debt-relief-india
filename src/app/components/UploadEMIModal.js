@@ -238,7 +238,7 @@ export default function UploadEMIModal({ isOpen, onClose, mode }) {
                     <p
                       className="underline text-blue-500 cursor-pointer"
                       onClick={() =>
-                        router.push(`./components/${userData?.phone}`)
+                        router.push(`./components/${userData?.kyc?.user_id}`)
                       }
                     >
                       <strong>View Details</strong>
