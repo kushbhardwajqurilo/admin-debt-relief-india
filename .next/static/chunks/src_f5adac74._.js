@@ -37,7 +37,9 @@ const ApiRute = {
         getAll: "/advocate/all",
         single: "/advocate/single",
         call_now: "/admin/call-now-feature",
-        timing: "/advocate/set-timing"
+        timing: "/advocate/set-timing",
+        delete: "/advocate/delete-advocate",
+        update: "/advocate/update"
     },
     terms: {
         add: "/tnc/add",
@@ -111,7 +113,10 @@ const ApiRute = {
     },
     subscription: {
         add: "/subcription/add-subscription",
-        getuser: "/subcription/subscription-users"
+        getuser: "/subcription/subscription-users",
+        singerSubscription: "/subcription/get-substouser",
+        markaspaid: "/subcription/markAsPaid",
+        paidSubs: "/subcription/getPaidSubscriptions"
     }
 };
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
@@ -1720,7 +1725,10 @@ function UploadEMIModal(param) {
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 className: "underline text-blue-500 cursor-pointer",
-                                                onClick: ()=>router.push("./components/".concat(userData === null || userData === void 0 ? void 0 : userData.phone)),
+                                                onClick: ()=>{
+                                                    var _userData_kyc;
+                                                    return router.push("./components/".concat(userData === null || userData === void 0 ? void 0 : (_userData_kyc = userData.kyc) === null || _userData_kyc === void 0 ? void 0 : _userData_kyc.user_id));
+                                                },
                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                                     children: "View Details"
                                                 }, void 0, false, {

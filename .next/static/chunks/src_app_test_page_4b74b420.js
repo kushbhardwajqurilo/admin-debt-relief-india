@@ -43,6 +43,7 @@ function Home() {
                 })
             });
             const urls = await res.json(); // [{uploadURL, fileURL}, ...]
+            console.log("urls", urls);
             const uploadedFiles = [];
             const newStatus = [];
             // 2️⃣ Upload each file
@@ -66,7 +67,7 @@ function Home() {
                 ]); // update messages after each file
             }
             alert("All files uploaded!");
-            console.log("Uploaded file URLs:", uploadedFiles);
+            // console.log("Uploaded file URLs:", uploadedFiles);
             setFiles([]);
         } catch (err) {
             console.error(err);
@@ -85,7 +86,7 @@ function Home() {
                     children: "Upload Multiple Files"
                 }, void 0, false, {
                     fileName: "[project]/src/app/test/page.js",
-                    lineNumber: 75,
+                    lineNumber: 74,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -99,7 +100,7 @@ function Home() {
                             className: "border border-gray-300 rounded p-2 cursor-pointer"
                         }, void 0, false, {
                             fileName: "[project]/src/app/test/page.js",
-                            lineNumber: 79,
+                            lineNumber: 78,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -109,13 +110,13 @@ function Home() {
                             children: loading ? "Uploading..." : "Upload"
                         }, void 0, false, {
                             fileName: "[project]/src/app/test/page.js",
-                            lineNumber: 85,
+                            lineNumber: 84,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/test/page.js",
-                    lineNumber: 78,
+                    lineNumber: 77,
                     columnNumber: 9
                 }, this),
                 statusMessages.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -125,23 +126,23 @@ function Home() {
                             children: msg
                         }, i, false, {
                             fileName: "[project]/src/app/test/page.js",
-                            lineNumber: 99,
+                            lineNumber: 98,
                             columnNumber: 15
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/src/app/test/page.js",
-                    lineNumber: 97,
+                    lineNumber: 96,
                     columnNumber: 11
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/test/page.js",
-            lineNumber: 74,
+            lineNumber: 73,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/test/page.js",
-        lineNumber: 73,
+        lineNumber: 72,
         columnNumber: 5
     }, this);
 }

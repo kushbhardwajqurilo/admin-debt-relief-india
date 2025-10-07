@@ -35,7 +35,9 @@ const ApiRute = {
         getAll: "/advocate/all",
         single: "/advocate/single",
         call_now: "/admin/call-now-feature",
-        timing: "/advocate/set-timing"
+        timing: "/advocate/set-timing",
+        delete: "/advocate/delete-advocate",
+        update: "/advocate/update"
     },
     terms: {
         add: "/tnc/add",
@@ -109,7 +111,10 @@ const ApiRute = {
     },
     subscription: {
         add: "/subcription/add-subscription",
-        getuser: "/subcription/subscription-users"
+        getuser: "/subcription/subscription-users",
+        singerSubscription: "/subcription/get-substouser",
+        markaspaid: "/subcription/markAsPaid",
+        paidSubs: "/subcription/getPaidSubscriptions"
     }
 };
 }),
@@ -387,12 +392,18 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$upload$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Upload$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/upload.js [app-ssr] (ecmascript) <export default as Upload>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$md$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react-icons/md/index.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fi$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react-icons/fi/index.mjs [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$Header$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/app/components/Header.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/url/BaseURL.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/url/ApiRoute.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/url/storage.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react-hot-toast/dist/index.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$ri$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react-icons/ri/index.mjs [app-ssr] (ecmascript)");
 "use client";
+;
+;
+;
 ;
 ;
 ;
@@ -411,6 +422,170 @@ function date(newdate) {
     }).format(x_date);
     return formatted;
 }
+// ✅ Fixed Modal Component
+function Modal({ isOpen, onClose, onUpdate, advocate }) {
+    const [updateForm, setUpdateForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({
+        name: "",
+        contactNumber: ""
+    });
+    const [file, setFile] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        if (advocate) {
+            setUpdateForm({
+                name: advocate.name || "",
+                contactNumber: advocate.contactNumber || ""
+            });
+            setFile(null);
+        }
+    }, [
+        advocate
+    ]);
+    const handleChange = (e)=>{
+        setUpdateForm({
+            ...updateForm,
+            [e.target.name]: e.target.value
+        });
+    };
+    const handleFileChange = (e)=>{
+        setFile(e.target.files[0]);
+    };
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+        try {
+            const formData = new FormData();
+            formData.append("name", updateForm?.name);
+            formData.append("contact", updateForm?.contactNumber);
+            formData.append("id", advocate?._id);
+            if (file) formData.append("image", file);
+            const response = await fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["API_BASE_URL"]}${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApiRute"].advocate.update}`, {
+                method: "PUT",
+                headers: {
+                    authorization: `Bearer ${(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getStroage"])().token}`
+                },
+                body: formData
+            });
+            const result = await response.json();
+            if (result?.success) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].success(result?.message);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    if (!isOpen) return null;
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "fixed inset-0 bg-black/40 flex items-center justify-center z-50",
+        children: [
+            " ",
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "bg-white p-6 rounded-xl w-[400px] relative",
+                children: [
+                    " ",
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        onClick: onClose,
+                        className: "absolute top-2 right-2 text-gray-600",
+                        children: [
+                            " ",
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$md$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["MdClose"], {
+                                size: 22
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/advocateService/page.js",
+                                lineNumber: 85,
+                                columnNumber: 11
+                            }, this),
+                            " "
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/advocateService/page.js",
+                        lineNumber: 80,
+                        columnNumber: 9
+                    }, this),
+                    " ",
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                        className: "text-xl font-bold mb-4",
+                        children: "Update Advocate"
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/advocateService/page.js",
+                        lineNumber: 87,
+                        columnNumber: 9
+                    }, this),
+                    " ",
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                        onSubmit: handleSubmit,
+                        className: "flex flex-col gap-3",
+                        children: [
+                            " ",
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                type: "text",
+                                name: "name",
+                                value: updateForm.name,
+                                onChange: handleChange,
+                                placeholder: "Name",
+                                className: "border px-3 py-2 rounded"
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/advocateService/page.js",
+                                lineNumber: 90,
+                                columnNumber: 11
+                            }, this),
+                            " ",
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                type: "text",
+                                name: "contactNumber",
+                                value: updateForm.contactNumber,
+                                onChange: handleChange,
+                                placeholder: "Contact Number",
+                                className: "border px-3 py-2 rounded"
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/advocateService/page.js",
+                                lineNumber: 98,
+                                columnNumber: 11
+                            }, this),
+                            " ",
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                type: "file",
+                                onChange: handleFileChange,
+                                className: "border px-3 py-2 rounded"
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/advocateService/page.js",
+                                lineNumber: 106,
+                                columnNumber: 11
+                            }, this),
+                            " ",
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                type: "submit",
+                                className: "bg-blue-600 text-white py-2 rounded mt-2",
+                                children: [
+                                    " ",
+                                    "Update",
+                                    " "
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/app/advocateService/page.js",
+                                lineNumber: 111,
+                                columnNumber: 11
+                            }, this),
+                            " "
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/advocateService/page.js",
+                        lineNumber: 88,
+                        columnNumber: 9
+                    }, this),
+                    " "
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/advocateService/page.js",
+                lineNumber: 78,
+                columnNumber: 7
+            }, this),
+            " "
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/app/advocateService/page.js",
+        lineNumber: 76,
+        columnNumber: 5
+    }, this);
+}
 function AdvocateService() {
     const [advocates, setAdvocates] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [form, setForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({
@@ -427,6 +602,11 @@ function AdvocateService() {
     });
     const [timing, setTiming] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
     const [loads, setLoadings] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [isDelet, setIsDelete] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    // ✅ Modal State
+    const [isModalOpen, setIsModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [selectedAdvocate, setSelectedAdvocate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [deletingId, setDeletingId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const getAdvocates = async ()=>{
         const res = await fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["API_BASE_URL"]}${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApiRute"].advocate.getAll}`, {
             method: "GET",
@@ -440,7 +620,6 @@ function AdvocateService() {
         return result;
     };
     const addAdvocate = async (formData)=>{
-        console.log("form", formData);
         const res = await fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["API_BASE_URL"]}${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApiRute"].advocate.add}`, {
             method: "POST",
             headers: {
@@ -448,15 +627,12 @@ function AdvocateService() {
             },
             body: formData
         });
-        const result = await res.json();
-        if (!result.success) throw new Error("Failed to add advocate");
-        return result;
+        return res.json();
     };
     const callYourAdvoateSetup = async (e)=>{
         e.preventDefault();
         try {
             setLoadings(true);
-            console.log(customeAdvocate.message);
             const res = await fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["API_BASE_URL"]}${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApiRute"].advocate.call_now}`, {
                 method: "POST",
                 headers: {
@@ -468,15 +644,42 @@ function AdvocateService() {
                 })
             });
             const result = await res.json();
+            result?.success ? __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].success(result?.message) : __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error(result?.message);
+        } catch (error) {
+            console.error(error);
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("Something went wrong");
+        } finally{
+            setLoadings(false);
+        }
+    };
+    const handleDeleteAdvocate = async (id)=>{
+        try {
+            const response = await fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["API_BASE_URL"]}${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApiRute"].advocate.delete}/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "content-type": "application/json",
+                    authorization: `Bearer ${(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getStroage"])().token}`
+                }
+            });
+            const result = await response.json();
             if (result?.success) {
                 __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].success(result?.message);
+                const fetchAdvocates = async ()=>{
+                    try {
+                        const result = await getAdvocates();
+                        setAdvocates(result.data);
+                    } catch (e) {
+                        setError("Failed to load advocates. Please try again.");
+                    } finally{
+                        setLoading(false);
+                    }
+                };
+                fetchAdvocates();
             } else {
-                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error(result?.message);
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error(result?.error);
             }
         } catch (error) {
             console.error(error);
-        } finally{
-            setLoadings(false);
         }
     };
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
@@ -507,15 +710,13 @@ function AdvocateService() {
     };
     const handleSubmit = async ()=>{
         if (!form.name || !form.contactNumber) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].success("All fields are required");
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("All fields are required");
             return;
         }
         const data = new FormData();
         data.append("name", form.name);
         data.append("contactNumber", form.contactNumber);
-        if (selectedImage) {
-            data.append("image", selectedImage);
-        }
+        if (selectedImage) data.append("image", selectedImage);
         try {
             setButtonLoading(true);
             const result = await addAdvocate(data);
@@ -525,15 +726,15 @@ function AdvocateService() {
                     contactNumber: ""
                 });
                 setSelectedImage(null);
-                setAdvocates((prev)=>[
-                        result.data,
-                        ...prev
-                    ]);
                 setPreviewUrl("/user-placeholder.png");
                 __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].success("Advocate added successfully!");
-                window.location.reload();
+                // ✅ Refresh the full advocate list after success
+                const updatedList = await getAdvocates();
+                if (updatedList?.success) {
+                    setAdvocates(updatedList.data);
+                }
             } else {
-                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("Upload failed.");
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error(result?.message || "Upload failed.");
             }
         } catch (error) {
             console.error("advocate error", error);
@@ -552,31 +753,76 @@ function AdvocateService() {
                     authorization: `Bearer ${(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getStroage"])().token}`
                 },
                 body: JSON.stringify({
-                    timing: timing
+                    timing
                 })
             });
             const result = await res.json();
-            if (result?.success) __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].success(result?.message);
-            else __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error(result?.message);
+            result?.success ? __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].success(result?.message) : __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error(result?.message);
         } catch (error) {
             console.error("advocate error", error);
             __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("An error occurred.");
         }
     };
+    // ✅ Update Advocate
+    const handleUpdate = (updatedData)=>{
+        setAdvocates((prev)=>prev.map((a)=>a._id === selectedAdvocate._id ? {
+                    ...a,
+                    ...updatedData
+                } : a));
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].success("Advocate updated!");
+        setIsModalOpen(false);
+    };
+    //  Delete Advocate
+    const handleDelete = async (advocate)=>{
+        try {
+            setDeletingId(advocate._id); // only this button shows loading
+            // make your delete API call here
+            const res = await fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["API_BASE_URL"]}${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApiRute"].advocate.delete}?id=${advocate._id}`, {
+                method: "DELETE",
+                headers: {
+                    authorization: `Bearer ${(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getStroage"])().token}`
+                }
+            });
+            const result = await res.json();
+            if (result?.success) {
+                setAdvocates((prev)=>prev.filter((a)=>a._id !== advocate._id));
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].success("Advocate deleted!");
+            } else {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error(result?.message || "Delete failed.");
+            }
+        } catch (error) {
+            console.error(error);
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("Something went wrong");
+        } finally{
+            setDeletingId(null); // reset loading
+        }
+    };
+    //
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$Header$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/advocateService/page.js",
-                lineNumber: 171,
+                lineNumber: 344,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Modal, {
+                isOpen: isModalOpen,
+                onClose: ()=>setIsModalOpen(false),
+                onUpdate: handleUpdate,
+                onDelete: handleDelete,
+                advocate: selectedAdvocate
+            }, void 0, false, {
+                fileName: "[project]/src/app/advocateService/page.js",
+                lineNumber: 346,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "min-h-screen bg-gradient-to-b from-[#edf0ff] to-[#edf0ff] flex justify-center text-black gap-2 p-5",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "w-full  flex flex-row items-center  h-[500px] justify-center gap-6",
+                    className: "w-full flex flex-row items-center h-[500px] justify-center gap-6",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "w-[30%] bg-white rounded-xl shadow-xl p-6 mt-10  h-[425px] ",
+                            className: "w-[30%] bg-white rounded-xl shadow-xl p-6 mt-10 h-[425px]",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "flex flex-col items-center gap-3",
@@ -585,7 +831,7 @@ function AdvocateService() {
                                             className: "w-30 h-30 rounded-full bg-gray-500 p-[2px]",
                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "w-full h-full rounded-full bg-gray-200 flex items-center justify-center",
-                                                children: previewUrl ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                                     src: previewUrl,
                                                     alt: "Preview",
                                                     width: 100,
@@ -593,24 +839,17 @@ function AdvocateService() {
                                                     className: "rounded-full"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/advocateService/page.js",
-                                                    lineNumber: 179,
-                                                    columnNumber: 21
-                                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    className: "text-gray-400",
-                                                    children: "No Image"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/advocateService/page.js",
-                                                    lineNumber: 187,
-                                                    columnNumber: 21
+                                                    lineNumber: 361,
+                                                    columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/advocateService/page.js",
-                                                lineNumber: 177,
+                                                lineNumber: 360,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/advocateService/page.js",
-                                            lineNumber: 176,
+                                            lineNumber: 359,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -624,13 +863,13 @@ function AdvocateService() {
                                                             size: 16
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/advocateService/page.js",
-                                                            lineNumber: 195,
+                                                            lineNumber: 372,
                                                             columnNumber: 26
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/advocateService/page.js",
-                                                    lineNumber: 194,
+                                                    lineNumber: 371,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -641,25 +880,26 @@ function AdvocateService() {
                                                     name: "image"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/advocateService/page.js",
-                                                    lineNumber: 197,
+                                                    lineNumber: 374,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/advocateService/page.js",
-                                            lineNumber: 193,
+                                            lineNumber: 370,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/advocateService/page.js",
-                                    lineNumber: 175,
+                                    lineNumber: 358,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "mt-6 space-y-3 flex flex-col justify-center items-center",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                            autoComplete: "off",
                                             type: "text",
                                             name: "name",
                                             value: form?.name,
@@ -668,10 +908,11 @@ function AdvocateService() {
                                             className: "w-full px-4 py-2 rounded-xl bg-gray-100 border border-gray-300"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/advocateService/page.js",
-                                            lineNumber: 208,
+                                            lineNumber: 385,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                            autoComplete: "off",
                                             type: "text",
                                             name: "contactNumber",
                                             value: form?.contactNumber,
@@ -680,54 +921,42 @@ function AdvocateService() {
                                             className: "w-full px-4 py-2 rounded-xl bg-gray-100 border border-gray-300"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/advocateService/page.js",
-                                            lineNumber: 216,
+                                            lineNumber: 394,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                             onClick: handleSubmit,
                                             className: "w-[250px] bg-red-600 text-white py-2 rounded-2xl mt-2 hover:bg-red-700 font-bold shadow",
-                                            children: buttonLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                children: "Processing...."
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/advocateService/page.js",
-                                                lineNumber: 237,
-                                                columnNumber: 19
-                                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                children: " Add Advocate"
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/advocateService/page.js",
-                                                lineNumber: 239,
-                                                columnNumber: 19
-                                            }, this)
+                                            children: buttonLoading ? "Processing..." : "Add Advocate"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/advocateService/page.js",
-                                            lineNumber: 232,
+                                            lineNumber: 403,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/advocateService/page.js",
-                                    lineNumber: 207,
+                                    lineNumber: 384,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/advocateService/page.js",
-                            lineNumber: 174,
+                            lineNumber: 357,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "w-[30%] bg-white rounded-xl shadow-xl p-6 mt-10  h-[425px]",
+                            className: "w-[30%] bg-white rounded-xl shadow-xl p-6 mt-10 h-[425px]",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "flex justify-between items-center border-b pb-2 mb-4 ",
+                                    className: "flex justify-between items-center border-b pb-2 mb-4",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
                                             className: "text-xl font-bold",
                                             children: "Advocate List"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/advocateService/page.js",
-                                            lineNumber: 248,
+                                            lineNumber: 415,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -735,20 +964,20 @@ function AdvocateService() {
                                             children: "No. of Users"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/advocateService/page.js",
-                                            lineNumber: 249,
+                                            lineNumber: 416,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/advocateService/page.js",
-                                    lineNumber: 247,
+                                    lineNumber: 414,
                                     columnNumber: 13
                                 }, this),
                                 loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     children: "Loading advocates..."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/advocateService/page.js",
-                                    lineNumber: 252,
+                                    lineNumber: 419,
                                     columnNumber: 25
                                 }, this),
                                 error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -756,11 +985,11 @@ function AdvocateService() {
                                     children: error
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/advocateService/page.js",
-                                    lineNumber: 253,
+                                    lineNumber: 420,
                                     columnNumber: 23
                                 }, this),
                                 !loading && !error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "space-y-4 h-[320]  overflow-x-hidden overflow-y-auto pr-2 shadow-amber-50",
+                                    className: "space-y-4 h-[320px] overflow-y-auto pr-2",
                                     children: advocates?.length > 0 ? advocates.map((adv, idx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "flex justify-between items-center border-b pb-2",
                                             children: [
@@ -772,24 +1001,24 @@ function AdvocateService() {
                                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "w-full h-full bg-white rounded-full flex items-center justify-center",
                                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                                                    src: `${adv?.advocateImage || "/user-placeholder.png"}`,
+                                                                    src: adv?.advocateImage || "/user-placeholder.png",
                                                                     width: 44,
                                                                     height: 44,
                                                                     alt: adv?.name,
                                                                     className: "rounded-full"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/advocateService/page.js",
-                                                                    lineNumber: 265,
+                                                                    lineNumber: 432,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/advocateService/page.js",
-                                                                lineNumber: 264,
+                                                                lineNumber: 431,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/advocateService/page.js",
-                                                            lineNumber: 263,
+                                                            lineNumber: 430,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -799,7 +1028,7 @@ function AdvocateService() {
                                                                     children: adv?.name
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/advocateService/page.js",
-                                                                    lineNumber: 277,
+                                                                    lineNumber: 444,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -807,64 +1036,109 @@ function AdvocateService() {
                                                                     children: new Date(adv?.date).toLocaleString()
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/advocateService/page.js",
-                                                                    lineNumber: 280,
+                                                                    lineNumber: 447,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/advocateService/page.js",
-                                                            lineNumber: 276,
+                                                            lineNumber: 443,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/advocateService/page.js",
-                                                    lineNumber: 262,
+                                                    lineNumber: 429,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "bg-[#004AAD] text-white px-4 py-1 rounded-lg text-lg font-bold",
-                                                    children: adv?.assignUsers.length
-                                                }, void 0, false, {
+                                                    className: "flex items-center flex-row",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "bg-[#004AAD] text-white px-2 py-1 rounded-lg text-lg font-bold",
+                                                            children: adv?.assignUsers?.length || 0
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/app/advocateService/page.js",
+                                                            lineNumber: 453,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            className: "text-[#004AAD] px-2 py-1 rounded-lg text-lg cursor-pointer font-bold",
+                                                            onClick: ()=>{
+                                                                setSelectedAdvocate(adv);
+                                                                setIsModalOpen(true);
+                                                            },
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fi$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FiEdit"], {}, void 0, false, {
+                                                                fileName: "[project]/src/app/advocateService/page.js",
+                                                                lineNumber: 463,
+                                                                columnNumber: 27
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/app/advocateService/page.js",
+                                                            lineNumber: 456,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            className: "text-[#004AAD] px-2 py-1 rounded-lg text-lg cursor-pointer font-bold hover:text-red-400",
+                                                            onClick: ()=>handleDeleteAdvocate(adv?._id),
+                                                            children: deletingId === adv?._id ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-[12px]",
+                                                                children: "Wait.."
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/advocateService/page.js",
+                                                                lineNumber: 470,
+                                                                columnNumber: 29
+                                                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$ri$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["RiDeleteBin6Line"], {}, void 0, false, {
+                                                                fileName: "[project]/src/app/advocateService/page.js",
+                                                                lineNumber: 472,
+                                                                columnNumber: 29
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/app/advocateService/page.js",
+                                                            lineNumber: 465,
+                                                            columnNumber: 25
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
                                                     fileName: "[project]/src/app/advocateService/page.js",
-                                                    lineNumber: 285,
+                                                    lineNumber: 452,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, idx, true, {
                                             fileName: "[project]/src/app/advocateService/page.js",
-                                            lineNumber: 258,
+                                            lineNumber: 425,
                                             columnNumber: 21
                                         }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         children: "No advocates found. Add one above."
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/advocateService/page.js",
-                                        lineNumber: 291,
+                                        lineNumber: 479,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/advocateService/page.js",
-                                    lineNumber: 255,
+                                    lineNumber: 422,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/advocateService/page.js",
-                            lineNumber: 246,
+                            lineNumber: 413,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "w-[30%] bg-white rounded-xl shadow-xl p-6 mt-10  h-[425px]",
+                            className: "w-[30%] bg-white rounded-xl shadow-xl p-6 mt-10 h-[425px]",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: " bg-white mb-5 ",
+                                    className: "mb-5",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                            className: "text-xl font-semibold mb-1 capitalize",
-                                            children: "Service Timing."
+                                            className: "text-xl font-semibold mb-1",
+                                            children: "Service Timing"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/advocateService/page.js",
-                                            lineNumber: 299,
+                                            lineNumber: 488,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -878,38 +1152,38 @@ function AdvocateService() {
                                                     onChange: (e)=>setTiming(e.target.value)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/advocateService/page.js",
-                                                    lineNumber: 303,
+                                                    lineNumber: 490,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                    className: "w-[100px] mt-2 p-1 capitalize text-center bg-[#004AAD] text-white rounded-sm cursor-pointer hover:bg-white hover:text-[#004AAD] hover:border-1 hover:border-[#004AADD] transition",
+                                                    className: "w-[100px] mt-2 p-1 bg-[#004AAD] text-white rounded-sm cursor-pointer hover:bg-white hover:text-[#004AAD] border transition",
                                                     onClick: handleTiming,
                                                     children: "Submit"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/advocateService/page.js",
-                                                    lineNumber: 309,
+                                                    lineNumber: 496,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/advocateService/page.js",
-                                            lineNumber: 302,
+                                            lineNumber: 489,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/advocateService/page.js",
-                                    lineNumber: 298,
+                                    lineNumber: 487,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                            className: "text-xl font-semibold mb-1 capitalize",
+                                            className: "text-xl font-semibold mb-1",
                                             children: "Call Your Advocate"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/advocateService/page.js",
-                                            lineNumber: 318,
+                                            lineNumber: 505,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -917,61 +1191,60 @@ function AdvocateService() {
                                             autoComplete: "off",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
-                                                    type: "text",
                                                     placeholder: "Type here...",
                                                     name: "message",
-                                                    className: "flex-1 border rounded w-full p-1 text-sm outline-none focus:ring-2 focus:ring-gray-500 mt-1 ",
+                                                    className: "flex-1 border rounded w-full p-1 text-sm outline-none focus:ring-2 focus:ring-gray-500 mt-1",
                                                     onChange: (e)=>setCustomeAdvocate((prev)=>({
                                                                 ...prev,
                                                                 [e.target.name]: e.target.value
                                                             }))
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/advocateService/page.js",
-                                                    lineNumber: 322,
+                                                    lineNumber: 507,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                    className: "w-[100px] mt-2 p-1 capitalize text-center bg-[#004AAD] text-white rounded-sm cursor-pointer hover:bg-white hover:text-[#004AAD] hover:border-1 hover:border-[#004AADD] transition",
+                                                    className: "w-[100px] mt-2 p-1 bg-[#004AAD] text-white rounded-sm cursor-pointer hover:bg-white hover:text-[#004AAD] border transition",
                                                     onClick: callYourAdvoateSetup,
                                                     children: loads ? "Wait..." : "Submit"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/advocateService/page.js",
-                                                    lineNumber: 335,
+                                                    lineNumber: 518,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/advocateService/page.js",
-                                            lineNumber: 321,
+                                            lineNumber: 506,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/advocateService/page.js",
-                                    lineNumber: 317,
+                                    lineNumber: 504,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/advocateService/page.js",
-                            lineNumber: 297,
+                            lineNumber: 486,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/advocateService/page.js",
-                    lineNumber: 173,
+                    lineNumber: 355,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/advocateService/page.js",
-                lineNumber: 172,
+                lineNumber: 354,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/advocateService/page.js",
-        lineNumber: 170,
+        lineNumber: 343,
         columnNumber: 5
     }, this);
 }

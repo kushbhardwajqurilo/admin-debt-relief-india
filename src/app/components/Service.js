@@ -41,6 +41,7 @@ export default function ServiceAndSubscription() {
         }
       );
       const result = await res.json();
+      console.log("result", result);
       if (result?.success) {
         setClientList(result?.data);
       }

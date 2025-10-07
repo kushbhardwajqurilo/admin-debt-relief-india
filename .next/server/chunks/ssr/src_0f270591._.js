@@ -44,7 +44,9 @@ const ApiRute = {
         getAll: "/advocate/all",
         single: "/advocate/single",
         call_now: "/admin/call-now-feature",
-        timing: "/advocate/set-timing"
+        timing: "/advocate/set-timing",
+        delete: "/advocate/delete-advocate",
+        update: "/advocate/update"
     },
     terms: {
         add: "/tnc/add",
@@ -118,7 +120,10 @@ const ApiRute = {
     },
     subscription: {
         add: "/subcription/add-subscription",
-        getuser: "/subcription/subscription-users"
+        getuser: "/subcription/subscription-users",
+        singerSubscription: "/subcription/get-substouser",
+        markaspaid: "/subcription/markAsPaid",
+        paidSubs: "/subcription/getPaidSubscriptions"
     }
 };
 }),
@@ -2038,6 +2043,7 @@ function ServiceAndSubscription() {
                 }
             });
             const result = await res.json();
+            console.log("result", result);
             if (result?.success) {
                 setClientList(result?.data);
             }
@@ -2128,7 +2134,7 @@ function ServiceAndSubscription() {
                 children: "Banks & Subscriptions"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/Service.js",
-                lineNumber: 134,
+                lineNumber: 135,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2142,7 +2148,7 @@ function ServiceAndSubscription() {
                                 children: "Monthly Subscription"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 138,
+                                lineNumber: 139,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2157,7 +2163,7 @@ function ServiceAndSubscription() {
                                 className: "w-sm border border-gray-400 rounded p-1.5 mt-3 ml-1"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 140,
+                                lineNumber: 141,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2173,7 +2179,7 @@ function ServiceAndSubscription() {
                                 className: "w-sm border border-gray-400 rounded p-1.5 m-1 mt-3"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 154,
+                                lineNumber: 155,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2187,7 +2193,7 @@ function ServiceAndSubscription() {
                                 className: "w-sm border border-gray-400 rounded p-1.5 m-1 mt-3"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 169,
+                                lineNumber: 170,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2204,7 +2210,7 @@ function ServiceAndSubscription() {
                                         children: "Select Clients"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/Service.js",
-                                        lineNumber: 193,
+                                        lineNumber: 194,
                                         columnNumber: 13
                                     }, this),
                                     clientList?.map((val)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2218,13 +2224,13 @@ function ServiceAndSubscription() {
                                             ]
                                         }, val._id, true, {
                                             fileName: "[project]/src/app/components/Service.js",
-                                            lineNumber: 195,
+                                            lineNumber: 196,
                                             columnNumber: 15
                                         }, this))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 182,
+                                lineNumber: 183,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2233,13 +2239,13 @@ function ServiceAndSubscription() {
                                 children: "add"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 205,
+                                lineNumber: 206,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/Service.js",
-                        lineNumber: 137,
+                        lineNumber: 138,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2250,7 +2256,7 @@ function ServiceAndSubscription() {
                                 children: "Add Banks"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 215,
+                                lineNumber: 216,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2267,7 +2273,7 @@ function ServiceAndSubscription() {
                                 className: "w-sm border border-gray-400 rounded p-1.5 mt-3 ml-1"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 217,
+                                lineNumber: 218,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2282,7 +2288,7 @@ function ServiceAndSubscription() {
                                 className: "w-sm border border-gray-400 rounded p-1.5 mt-3 ml-1"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 228,
+                                lineNumber: 229,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2291,25 +2297,25 @@ function ServiceAndSubscription() {
                                 children: "add"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/Service.js",
-                                lineNumber: 240,
+                                lineNumber: 241,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/Service.js",
-                        lineNumber: 214,
+                        lineNumber: 215,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/Service.js",
-                lineNumber: 135,
+                lineNumber: 136,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/Service.js",
-        lineNumber: 133,
+        lineNumber: 134,
         columnNumber: 5
     }, this);
 }

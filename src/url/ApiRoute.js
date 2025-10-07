@@ -28,6 +28,8 @@ export const ApiRute = {
     single: "/advocate/single",
     call_now: "/admin/call-now-feature",
     timing: "/advocate/set-timing",
+    delete: "/advocate/delete-advocate",
+    update: "/advocate/update",
   },
   terms: {
     add: "/tnc/add",
@@ -102,5 +104,8 @@ export const ApiRute = {
   subscription: {
     add: "/subcription/add-subscription",
     getuser: "/subcription/subscription-users",
+    singerSubscription: "/subcription/get-substouser",
+    markaspaid: "/subcription/markAsPaid",
+    paidSubs: "/subcription/getPaidSubscriptions",
   },
 };

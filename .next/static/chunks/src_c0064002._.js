@@ -37,7 +37,9 @@ const ApiRute = {
         getAll: "/advocate/all",
         single: "/advocate/single",
         call_now: "/admin/call-now-feature",
-        timing: "/advocate/set-timing"
+        timing: "/advocate/set-timing",
+        delete: "/advocate/delete-advocate",
+        update: "/advocate/update"
     },
     terms: {
         add: "/tnc/add",
@@ -111,7 +113,10 @@ const ApiRute = {
     },
     subscription: {
         add: "/subcription/add-subscription",
-        getuser: "/subcription/subscription-users"
+        getuser: "/subcription/subscription-users",
+        singerSubscription: "/subcription/get-substouser",
+        markaspaid: "/subcription/markAsPaid",
+        paidSubs: "/subcription/getPaidSubscriptions"
     }
 };
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {

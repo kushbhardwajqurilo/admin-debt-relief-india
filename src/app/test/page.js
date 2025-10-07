@@ -17,7 +17,7 @@ export default function Home() {
 
     setLoading(true); // start loading
     try {
-      // 1️⃣ Request presigned URLs from backend
+      // 1️ Request presigned URLs from backend
       const res = await fetch(
         "https://4frnn03l-5000.inc1.devtunnels.ms/api/v1/kyc/get-presignedurl",
         {
@@ -32,13 +32,12 @@ export default function Home() {
           }),
         }
       );
-
       const urls = await res.json(); // [{uploadURL, fileURL}, ...]
-
+      console.log("urls", urls);
       const uploadedFiles = [];
       const newStatus = [];
 
-      // 2️⃣ Upload each file
+      // Upload each file
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const url = urls[i].uploadURL;
@@ -59,7 +58,7 @@ export default function Home() {
       }
 
       alert("All files uploaded!");
-      console.log("Uploaded file URLs:", uploadedFiles);
+      // console.log("Uploaded file URLs:", uploadedFiles);
       setFiles([]);
     } catch (err) {
       console.error(err);
