@@ -41,12 +41,16 @@ export default function DashboardPage() {
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [updateUser, setUpdateUser] = useState(null);
   const [type, setType] = useState("");
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     GetAllKycUser();
     getAllDriUers();
   }, []);
-
+  useEffect(() => {
+    GetAllKycUser();
+    getAllDriUers();
+  }, [refresh]);
   const GetAllKycUser = async () => {
     const res = await fetch(`${API_BASE_URL}${ApiRute.kyc.get}`);
     const result = await res.json();
@@ -173,6 +177,11 @@ export default function DashboardPage() {
     }
   };
 
+  // refresh function
+
+  const handleRefresh = () => {
+    setRefresh((prev) => !prev);
+  };
   return (
     <div>
       <Header />
@@ -414,11 +423,14 @@ export default function DashboardPage() {
                 ) : (
                   filteredKycUsers.map((user, idx) => (
                     <tr key={idx} className="border-t text-center">
+                      {console.log("user", user)}
                       <td className="p-3 flex items-center justify-center gap-3">
                         <div className="font-medium">{user?.name}</div>
                       </td>
                       <td>{toTitleCase(user?.gender)}</td>
-                      <td className="p-3">{user?.date}</td>
+                      <td className="p-3">
+                        {user?.date || formatDate(user?.joinDate)}
+                      </td>
                       <td className="p-3">{user?.user_id?.phone}</td>
                       <td className="p-3">
                         <span
@@ -463,6 +475,7 @@ export default function DashboardPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         mode={modalMode}
+        refreshFun={handleRefresh}
       />
       <ReviewAssignModal
         isOpen={reviewModalOpen}
