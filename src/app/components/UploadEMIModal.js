@@ -13,7 +13,7 @@ import LoanEMIForm from "./uploadManualEmiModal";
 import { useRouter } from "next/navigation";
 import CloseEMI from "./CloseEMI";
 
-export default function UploadEMIModal({ isOpen, onClose, mode }) {
+export default function UploadEMIModal({ isOpen, onClose, mode, refreshFun }) {
   const isUploadMode = mode.view === "upload";
   const [userData, setUserData] = useState();
   const [loading, setLoading] = useState(false);
@@ -55,6 +55,7 @@ export default function UploadEMIModal({ isOpen, onClose, mode }) {
     } catch (err) {
       console.error("Upload failed:", err);
     } finally {
+      refreshFun();
       setUploading(false);
       setTimeout(() => {
         onClose();
@@ -120,6 +121,7 @@ export default function UploadEMIModal({ isOpen, onClose, mode }) {
     } catch (err) {
       console.error(err);
     } finally {
+      refreshFun();
       setOff(false);
       setFile(null);
     }
@@ -143,6 +145,7 @@ export default function UploadEMIModal({ isOpen, onClose, mode }) {
     } catch (err) {
       console.error(err);
     } finally {
+      refreshFun();
       setLoad(false);
     }
   };

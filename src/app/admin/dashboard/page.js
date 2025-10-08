@@ -15,7 +15,7 @@ export default function AdminPage() {
   useEffect(() => {
     const time = setTimeout(() => {
       setSkeleton(false);
-    }, 3000);
+    }, 1000);
     return () => clearTimeout(time);
   }, []);
   return (

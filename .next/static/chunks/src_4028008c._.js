@@ -2717,7 +2717,7 @@ function AdminPage() {
                 "AdminPage.useEffect.time": ()=>{
                     setSkeleton(false);
                 }
-            }["AdminPage.useEffect.time"], 3000);
+            }["AdminPage.useEffect.time"], 1000);
             return ({
                 "AdminPage.useEffect": ()=>clearTimeout(time)
             })["AdminPage.useEffect"];

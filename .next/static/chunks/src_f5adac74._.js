@@ -1347,7 +1347,7 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 function UploadEMIModal(param) {
-    let { isOpen, onClose, mode } = param;
+    let { isOpen, onClose, mode, refreshFun } = param;
     var _userData_kyc, _userData_kyc1, _userData_kyc2;
     _s();
     const isUploadMode = mode.view === "upload";
@@ -1398,6 +1398,7 @@ function UploadEMIModal(param) {
         } catch (err) {
             console.error("Upload failed:", err);
         } finally{
+            refreshFun();
             setUploading(false);
             setTimeout(()=>{
                 onClose();
@@ -1461,6 +1462,7 @@ function UploadEMIModal(param) {
         } catch (err) {
             console.error(err);
         } finally{
+            refreshFun();
             setOff(false);
             setFile(null);
         }
@@ -1483,6 +1485,7 @@ function UploadEMIModal(param) {
         } catch (err) {
             console.error(err);
         } finally{
+            refreshFun();
             setLoad(false);
         }
     };
@@ -1512,7 +1515,7 @@ function UploadEMIModal(param) {
                 "aria-hidden": "true"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                lineNumber: 161,
+                lineNumber: 164,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1525,7 +1528,7 @@ function UploadEMIModal(param) {
                             children: "Upload Data Payment"
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                            lineNumber: 168,
+                            lineNumber: 171,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1538,7 +1541,7 @@ function UploadEMIModal(param) {
                                     height: 160
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                    lineNumber: 172,
+                                    lineNumber: 175,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -1549,14 +1552,14 @@ function UploadEMIModal(param) {
                                             className: "text-2xl"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                            lineNumber: 177,
+                                            lineNumber: 180,
                                             columnNumber: 17
                                         }, this),
                                         " Upload File"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                    lineNumber: 173,
+                                    lineNumber: 176,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1567,7 +1570,7 @@ function UploadEMIModal(param) {
                                     onChange: handleFileChange
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                    lineNumber: 179,
+                                    lineNumber: 182,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1575,7 +1578,7 @@ function UploadEMIModal(param) {
                                     children: "*Upload only CSV files"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                    lineNumber: 186,
+                                    lineNumber: 189,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1587,7 +1590,7 @@ function UploadEMIModal(param) {
                                             children: "Cancel"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                            lineNumber: 190,
+                                            lineNumber: 193,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1597,25 +1600,25 @@ function UploadEMIModal(param) {
                                             children: uploading ? "Uploading..." : "Upload"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                            lineNumber: 196,
+                                            lineNumber: 199,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                    lineNumber: 189,
+                                    lineNumber: 192,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                            lineNumber: 171,
+                            lineNumber: 174,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                    lineNumber: 167,
+                    lineNumber: 170,
                     columnNumber: 11
                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$headlessui$2f$react$2f$dist$2f$components$2f$dialog$2f$dialog$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"].Panel, {
                     className: "mx-auto max-w-7xl rounded-2xl bg-[#f1f6fe] p-6 grid grid-cols-3 gap-4",
@@ -1625,12 +1628,12 @@ function UploadEMIModal(param) {
                             className: "animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                            lineNumber: 212,
+                            lineNumber: 215,
                             columnNumber: 17
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                        lineNumber: 211,
+                        lineNumber: 214,
                         columnNumber: 15
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                         children: [
@@ -1644,12 +1647,12 @@ function UploadEMIModal(param) {
                                             children: "".concat((0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utlis$2f$string$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toTitleCase"])(userData === null || userData === void 0 ? void 0 : userData.name), " ").concat((0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utlis$2f$string$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toTitleCase"])(userData === null || userData === void 0 ? void 0 : (_userData_kyc = userData.kyc) === null || _userData_kyc === void 0 ? void 0 : _userData_kyc.lastname))
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                            lineNumber: 219,
+                                            lineNumber: 222,
                                             columnNumber: 21
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                        lineNumber: 218,
+                                        lineNumber: 221,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1661,28 +1664,11 @@ function UploadEMIModal(param) {
                                                         children: "User ID:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                        lineNumber: 227,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    " ",
-                                                    userData === null || userData === void 0 ? void 0 : (_userData_kyc1 = userData.kyc) === null || _userData_kyc1 === void 0 ? void 0 : _userData_kyc1.id
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 226,
-                                                columnNumber: 21
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                        children: "Gender:"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/components/UploadEMIModal.js",
                                                         lineNumber: 230,
                                                         columnNumber: 23
                                                     }, this),
                                                     " ",
-                                                    userData === null || userData === void 0 ? void 0 : userData.gender
+                                                    userData === null || userData === void 0 ? void 0 : (_userData_kyc1 = userData.kyc) === null || _userData_kyc1 === void 0 ? void 0 : _userData_kyc1.id
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
@@ -1692,14 +1678,14 @@ function UploadEMIModal(param) {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                        children: "Mob No.:"
+                                                        children: "Gender:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
                                                         lineNumber: 233,
                                                         columnNumber: 23
                                                     }, this),
                                                     " ",
-                                                    userData === null || userData === void 0 ? void 0 : userData.phone
+                                                    userData === null || userData === void 0 ? void 0 : userData.gender
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
@@ -1709,10 +1695,27 @@ function UploadEMIModal(param) {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                        children: "E-mail ID:"
+                                                        children: "Mob No.:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
                                                         lineNumber: 236,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    " ",
+                                                    userData === null || userData === void 0 ? void 0 : userData.phone
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/components/UploadEMIModal.js",
+                                                lineNumber: 235,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                        children: "E-mail ID:"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/components/UploadEMIModal.js",
+                                                        lineNumber: 239,
                                                         columnNumber: 23
                                                     }, this),
                                                     " ",
@@ -1720,7 +1723,7 @@ function UploadEMIModal(param) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 235,
+                                                lineNumber: 238,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1733,24 +1736,24 @@ function UploadEMIModal(param) {
                                                     children: "View Details"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                    lineNumber: 244,
+                                                    lineNumber: 247,
                                                     columnNumber: 23
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 238,
+                                                lineNumber: 241,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                        lineNumber: 225,
+                                        lineNumber: 228,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                lineNumber: 217,
+                                lineNumber: 220,
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1769,7 +1772,7 @@ function UploadEMIModal(param) {
                                                     className: "rounded-full"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                    lineNumber: 253,
+                                                    lineNumber: 256,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1779,7 +1782,7 @@ function UploadEMIModal(param) {
                                                             children: "Assigned Advocate"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                            lineNumber: 266,
+                                                            lineNumber: 269,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1787,24 +1790,24 @@ function UploadEMIModal(param) {
                                                             children: advocate === null || advocate === void 0 ? void 0 : advocate.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                            lineNumber: 269,
+                                                            lineNumber: 272,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                    lineNumber: 265,
+                                                    lineNumber: 268,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                            lineNumber: 252,
+                                            lineNumber: 255,
                                             columnNumber: 21
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                        lineNumber: 251,
+                                        lineNumber: 254,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1817,7 +1820,7 @@ function UploadEMIModal(param) {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fi$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FiUpload"], {}, void 0, false, {
                                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                                lineNumber: 277,
+                                                                lineNumber: 280,
                                                                 columnNumber: 25
                                                             }, this),
                                                             " Select Invoice",
@@ -1828,13 +1831,13 @@ function UploadEMIModal(param) {
                                                                 className: "hidden"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                                lineNumber: 278,
+                                                                lineNumber: 281,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                        lineNumber: 276,
+                                                        lineNumber: 279,
                                                         columnNumber: 23
                                                     }, this),
                                                     file && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1847,19 +1850,19 @@ function UploadEMIModal(param) {
                                                                 children: file.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                                lineNumber: 288,
+                                                                lineNumber: 291,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                        lineNumber: 286,
+                                                        lineNumber: 289,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 275,
+                                                lineNumber: 278,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1869,13 +1872,13 @@ function UploadEMIModal(param) {
                                                 children: off ? "Uploading..." : "Upload"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 292,
+                                                lineNumber: 295,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                        lineNumber: 274,
+                                        lineNumber: 277,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1893,7 +1896,7 @@ function UploadEMIModal(param) {
                                                 children: load ? "Closing..." : "Close EMI"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 303,
+                                                lineNumber: 306,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1902,7 +1905,7 @@ function UploadEMIModal(param) {
                                                 children: load ? "Marking..." : "Mark as Paid"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 314,
+                                                lineNumber: 317,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1917,7 +1920,7 @@ function UploadEMIModal(param) {
                                                 children: "Add Loan"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 320,
+                                                lineNumber: 323,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1926,31 +1929,31 @@ function UploadEMIModal(param) {
                                                 children: "Cancel"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 331,
+                                                lineNumber: 334,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                        lineNumber: 302,
+                                        lineNumber: 305,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                lineNumber: 250,
+                                lineNumber: 253,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, void 0, true)
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                    lineNumber: 209,
+                    lineNumber: 212,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                lineNumber: 165,
+                lineNumber: 168,
                 columnNumber: 7
             }, this),
             showLoanForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$uploadManualEmiModal$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1962,7 +1965,7 @@ function UploadEMIModal(param) {
                 id: showLoanForm.id
             }, void 0, false, {
                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                lineNumber: 346,
+                lineNumber: 349,
                 columnNumber: 9
             }, this),
             closeUser && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$CloseEMI$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1974,13 +1977,13 @@ function UploadEMIModal(param) {
                 id: closeUser.id
             }, void 0, false, {
                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                lineNumber: 354,
+                lineNumber: 357,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/UploadEMIModal.js",
-        lineNumber: 160,
+        lineNumber: 163,
         columnNumber: 5
     }, this);
 }
@@ -3239,12 +3242,21 @@ function DashboardPage() {
     const [updateModalOpen, setUpdateModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [updateUser, setUpdateUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [type, setType] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [refresh, setRefresh] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "DashboardPage.useEffect": ()=>{
             GetAllKycUser();
             getAllDriUers();
         }
     }["DashboardPage.useEffect"], []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "DashboardPage.useEffect": ()=>{
+            GetAllKycUser();
+            getAllDriUers();
+        }
+    }["DashboardPage.useEffect"], [
+        refresh
+    ]);
     const GetAllKycUser = async ()=>{
         const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].kyc.get));
         const result = await res.json();
@@ -3349,11 +3361,15 @@ function DashboardPage() {
             __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error("Something went wrong!");
         }
     };
+    // refresh function
+    const handleRefresh = ()=>{
+        setRefresh((prev)=>!prev);
+    };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$Header$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 178,
+                lineNumber: 187,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3368,7 +3384,7 @@ function DashboardPage() {
                                 children: "User EMI Summary"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/userController/page.js",
-                                lineNumber: 183,
+                                lineNumber: 192,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3377,13 +3393,13 @@ function DashboardPage() {
                                 children: "KYC Approval"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/userController/page.js",
-                                lineNumber: 193,
+                                lineNumber: 202,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/userController/page.js",
-                        lineNumber: 182,
+                        lineNumber: 191,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3400,7 +3416,7 @@ function DashboardPage() {
                                         onChange: (e)=>setSearch(e.target.value)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 209,
+                                        lineNumber: 218,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3415,7 +3431,7 @@ function DashboardPage() {
                                                 children: "Insert EMI's"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 217,
+                                                lineNumber: 226,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3424,7 +3440,7 @@ function DashboardPage() {
                                                 children: "Delete Users"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 226,
+                                                lineNumber: 235,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3436,7 +3452,7 @@ function DashboardPage() {
                                                 children: "Add Users"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 232,
+                                                lineNumber: 241,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -3449,7 +3465,7 @@ function DashboardPage() {
                                                         children: "Status"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 247,
+                                                        lineNumber: 256,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -3457,7 +3473,7 @@ function DashboardPage() {
                                                         children: "Pending"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 248,
+                                                        lineNumber: 257,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -3465,13 +3481,13 @@ function DashboardPage() {
                                                         children: "Approved"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 249,
+                                                        lineNumber: 258,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 242,
+                                                lineNumber: 251,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -3484,7 +3500,7 @@ function DashboardPage() {
                                                         children: "Gender"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 257,
+                                                        lineNumber: 266,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -3492,7 +3508,7 @@ function DashboardPage() {
                                                         children: "Male"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 258,
+                                                        lineNumber: 267,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -3500,25 +3516,25 @@ function DashboardPage() {
                                                         children: "Female"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 259,
+                                                        lineNumber: 268,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 252,
+                                                lineNumber: 261,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 216,
+                                        lineNumber: 225,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/userController/page.js",
-                                lineNumber: 208,
+                                lineNumber: 217,
                                 columnNumber: 11
                             }, this),
                             isEMI ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
@@ -3537,12 +3553,12 @@ function DashboardPage() {
                                                         checked: selectedUsers.length === filteredEmiUsers.filter((u)=>(u === null || u === void 0 ? void 0 : u.id) || (u === null || u === void 0 ? void 0 : u.phone)).length && filteredEmiUsers.length > 0
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 270,
+                                                        lineNumber: 279,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 269,
+                                                    lineNumber: 278,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3550,7 +3566,7 @@ function DashboardPage() {
                                                     children: "User ID"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 280,
+                                                    lineNumber: 289,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3558,7 +3574,7 @@ function DashboardPage() {
                                                     children: "DRI User"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 281,
+                                                    lineNumber: 290,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3566,7 +3582,7 @@ function DashboardPage() {
                                                     children: "Gender"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 282,
+                                                    lineNumber: 291,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3574,7 +3590,7 @@ function DashboardPage() {
                                                     children: "User Mob No."
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 283,
+                                                    lineNumber: 292,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3582,7 +3598,7 @@ function DashboardPage() {
                                                     children: "EMI Progress"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 284,
+                                                    lineNumber: 293,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3590,7 +3606,7 @@ function DashboardPage() {
                                                     children: "Status"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 285,
+                                                    lineNumber: 294,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3598,18 +3614,18 @@ function DashboardPage() {
                                                     children: "Actions"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 286,
+                                                    lineNumber: 295,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/userController/page.js",
-                                            lineNumber: 268,
+                                            lineNumber: 277,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 267,
+                                        lineNumber: 276,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -3620,12 +3636,12 @@ function DashboardPage() {
                                                 children: "No Users Found"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 292,
+                                                lineNumber: 301,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/userController/page.js",
-                                            lineNumber: 291,
+                                            lineNumber: 300,
                                             columnNumber: 19
                                         }, this) : filteredEmiUsers.map((user, idx)=>{
                                             var _user_status, _user_status1, _user_status2, _user_status3;
@@ -3639,12 +3655,12 @@ function DashboardPage() {
                                                             onChange: ()=>handleSelectOne(user)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 300,
+                                                            lineNumber: 309,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 299,
+                                                        lineNumber: 308,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3652,7 +3668,7 @@ function DashboardPage() {
                                                         children: user === null || user === void 0 ? void 0 : user.id
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 308,
+                                                        lineNumber: 317,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3660,14 +3676,14 @@ function DashboardPage() {
                                                         children: user === null || user === void 0 ? void 0 : user.name
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 309,
+                                                        lineNumber: 318,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                         children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utlis$2f$string$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toTitleCase"])(user === null || user === void 0 ? void 0 : user.gender)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 312,
+                                                        lineNumber: 321,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3675,7 +3691,7 @@ function DashboardPage() {
                                                         children: user === null || user === void 0 ? void 0 : user.phone
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 314,
+                                                        lineNumber: 323,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3687,7 +3703,7 @@ function DashboardPage() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 315,
+                                                        lineNumber: 324,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3699,19 +3715,19 @@ function DashboardPage() {
                                                                     className: "h-2 w-2 rounded-full ".concat(((_user_status2 = user.status) === null || _user_status2 === void 0 ? void 0 : _user_status2.toLowerCase()) === "paid" ? "bg-green-500" : ((_user_status3 = user.status) === null || _user_status3 === void 0 ? void 0 : _user_status3.toLowerCase()) === "pending" ? "bg-red-500" : "bg-blue-500")
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 328,
+                                                                    lineNumber: 337,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 user.status
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 319,
+                                                            lineNumber: 328,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 318,
+                                                        lineNumber: 327,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3726,7 +3742,7 @@ function DashboardPage() {
                                                             children: "Update"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 344,
+                                                            lineNumber: 353,
                                                             columnNumber: 27
                                                         }, this) : // ✅ Default Actions
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -3740,7 +3756,7 @@ function DashboardPage() {
                                                                     children: "Upload File"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 356,
+                                                                    lineNumber: 365,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3755,7 +3771,7 @@ function DashboardPage() {
                                                                     children: "Manual EMI"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 367,
+                                                                    lineNumber: 376,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3767,32 +3783,32 @@ function DashboardPage() {
                                                                     children: "View"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 378,
+                                                                    lineNumber: 387,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, void 0, true)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 340,
+                                                        lineNumber: 349,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, idx, true, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 298,
+                                                lineNumber: 307,
                                                 columnNumber: 21
                                             }, this);
                                         })
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 289,
+                                        lineNumber: 298,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/userController/page.js",
-                                lineNumber: 266,
+                                lineNumber: 275,
                                 columnNumber: 13
                             }, this) : /* KYC Table */ /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
                                 className: "w-full text-sm text-left border",
@@ -3807,7 +3823,7 @@ function DashboardPage() {
                                                     children: "DRI User"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 399,
+                                                    lineNumber: 408,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3815,7 +3831,7 @@ function DashboardPage() {
                                                     children: "Gender"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 400,
+                                                    lineNumber: 409,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3823,7 +3839,7 @@ function DashboardPage() {
                                                     children: "Joining Date"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 401,
+                                                    lineNumber: 410,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3831,7 +3847,7 @@ function DashboardPage() {
                                                     children: "User Mob No."
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 402,
+                                                    lineNumber: 411,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3839,7 +3855,7 @@ function DashboardPage() {
                                                     children: "Status"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 403,
+                                                    lineNumber: 412,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3847,18 +3863,18 @@ function DashboardPage() {
                                                     children: "Actions"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 404,
+                                                    lineNumber: 413,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/userController/page.js",
-                                            lineNumber: 398,
+                                            lineNumber: 407,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 397,
+                                        lineNumber: 406,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -3869,18 +3885,19 @@ function DashboardPage() {
                                                 children: "No Users Found"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 410,
+                                                lineNumber: 419,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/userController/page.js",
-                                            lineNumber: 409,
+                                            lineNumber: 418,
                                             columnNumber: 19
                                         }, this) : filteredKycUsers.map((user, idx)=>{
                                             var _user_user_id, _user_status, _user_status1;
                                             return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
                                                 className: "border-t text-center",
                                                 children: [
+                                                    console.log("user", user),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                         className: "p-3 flex items-center justify-center gap-3",
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3888,27 +3905,27 @@ function DashboardPage() {
                                                             children: user === null || user === void 0 ? void 0 : user.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 418,
+                                                            lineNumber: 428,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 417,
+                                                        lineNumber: 427,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                         children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utlis$2f$string$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toTitleCase"])(user === null || user === void 0 ? void 0 : user.gender)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 420,
+                                                        lineNumber: 430,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                         className: "p-3",
-                                                        children: user === null || user === void 0 ? void 0 : user.date
+                                                        children: (user === null || user === void 0 ? void 0 : user.date) || formatDate(user === null || user === void 0 ? void 0 : user.joinDate)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 421,
+                                                        lineNumber: 431,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3916,7 +3933,7 @@ function DashboardPage() {
                                                         children: user === null || user === void 0 ? void 0 : (_user_user_id = user.user_id) === null || _user_user_id === void 0 ? void 0 : _user_user_id.phone
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 422,
+                                                        lineNumber: 434,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3928,19 +3945,19 @@ function DashboardPage() {
                                                                     className: "h-2 w-2 rounded-full ".concat(((_user_status1 = user.status) === null || _user_status1 === void 0 ? void 0 : _user_status1.toLowerCase()) === "approve" ? "bg-green-500" : "bg-red-500")
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 431,
+                                                                    lineNumber: 443,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 user.status
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 424,
+                                                            lineNumber: 436,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 423,
+                                                        lineNumber: 435,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3954,51 +3971,52 @@ function DashboardPage() {
                                                             children: "Review & Assign"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 442,
+                                                            lineNumber: 454,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 441,
+                                                        lineNumber: 453,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, idx, true, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 416,
+                                                lineNumber: 425,
                                                 columnNumber: 21
                                             }, this);
                                         })
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 407,
+                                        lineNumber: 416,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/userController/page.js",
-                                lineNumber: 396,
+                                lineNumber: 405,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/userController/page.js",
-                        lineNumber: 206,
+                        lineNumber: 215,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 180,
+                lineNumber: 189,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$UploadEMIModal$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 isOpen: isModalOpen,
                 onClose: ()=>setIsModalOpen(false),
-                mode: modalMode
+                mode: modalMode,
+                refreshFun: handleRefresh
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 462,
+                lineNumber: 474,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ReviewAssignModal$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4007,7 +4025,7 @@ function DashboardPage() {
                 userData: selectedUser
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 467,
+                lineNumber: 480,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$PaytoDri$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4020,7 +4038,7 @@ function DashboardPage() {
                 }
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 472,
+                lineNumber: 485,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$uploadUsersFromCSV$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4033,7 +4051,7 @@ function DashboardPage() {
                 types: type
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 481,
+                lineNumber: 494,
                 columnNumber: 7
             }, this),
             updateModalOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$UpdateProfile$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4042,17 +4060,17 @@ function DashboardPage() {
                 userData: updateUser
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 491,
+                lineNumber: 504,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/userController/page.js",
-        lineNumber: 177,
+        lineNumber: 186,
         columnNumber: 5
     }, this);
 }
-_s(DashboardPage, "LwA+15C0hfY3vR22tHTIXtMoNNY=");
+_s(DashboardPage, "RdIy4g5zHK8rNm6/hZg8eECxRhg=");
 _c = DashboardPage;
 var _c;
 __turbopack_context__.k.register(_c, "DashboardPage");
