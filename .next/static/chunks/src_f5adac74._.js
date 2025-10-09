@@ -81,7 +81,8 @@ const ApiRute = {
         mannual: "/emi/manual",
         markaspaid: "/emi/mark-as-paid",
         bulkinsert: "/emi/bulk-insert",
-        outstanding: "/emi/outstand"
+        outstanding: "/emi/outstand",
+        getPaidService: "/emi/get-paid-service"
     },
     userLoan: {
         addloan: "/loan/create"
@@ -117,8 +118,483 @@ const ApiRute = {
         singerSubscription: "/subcription/get-substouser",
         markaspaid: "/subcription/markAsPaid",
         paidSubs: "/subcription/getPaidSubscriptions"
+    },
+    user: {
+        single: "/user/get-user-saving"
     }
-};
+}; // "use client";
+ // import { ApiRute } from "@/url/ApiRoute";
+ // import { API_BASE_URL } from "@/url/BaseURL";
+ // import { getStroage } from "@/url/storage";
+ // import { useParams } from "next/navigation";
+ // import React, { use, useEffect, useState } from "react";
+ // import toast from "react-hot-toast";
+ // import Header from "../Header";
+ // // ✅ Safe date formatter
+ // const formatDate = (dateStr) => {
+ //   const d = new Date(dateStr);
+ //   const day = d.getDate().toString().padStart(2, "0");
+ //   const month = (d.getMonth() + 1).toString().padStart(2, "0");
+ //   const year = d.getFullYear();
+ //   return `${day}/${month}/${year}`;
+ // };
+ // export default function UserDashboard() {
+ //   const { details } = useParams();
+ //   const [usesrId, setUserId] = useState("");
+ //   const [phone, setPhone] = useState(0);
+ //   // ✅ Independent tab states
+ //   const [subscriptionTab, setSubscriptionTab] = useState("current");
+ //   const [serviceTab, setServiceTab] = useState("current");
+ //   // ✅ Separate states for subscriptions
+ //   const [currentSubscriptions, setCurrentSubscriptions] = useState([]);
+ //   const [paidSubscriptions, setPaidSubscriptions] = useState([]);
+ //   // ✅ Separate states for services
+ //   const [currentServices, setCurrentServices] = useState([]);
+ //   const [paidServices, setPaidServices] = useState([]);
+ //   const fetchUserId = async () => {
+ //     try {
+ //       const response = await fetch(`${API_BASE_URL}${ApiRute.user.single}`, {
+ //         method: "POST",
+ //         headers: {
+ //           "content-type": "application/json",
+ //           authorization: `Bearer ${getStroage().token}`,
+ //         },
+ //         body: JSON.stringify({ user_id: details }),
+ //       });
+ //       const result = await response.json();
+ //       if (result?.success) {
+ //         setPhone(result?.userData?.phone);
+ //         setUserId(result?.userData);
+ //         fetchCurrentServices(result?.userData?.phone);
+ //         fetchPaidServices(result?.userData?.phone);
+ //       }
+ //     } catch (error) {
+ //       console.error(error);
+ //     }
+ //   };
+ //   const getStatusClass = (status) => {
+ //     if (status === "paid") return "bg-green-100 text-green-600";
+ //     if (status === "pending") return "bg-yellow-100 text-yellow-600";
+ //     return "bg-gray-200 text-gray-500";
+ //   };
+ //   // ✅ Fetch unpaid/current subscriptions
+ //   const fetchCurrentSubscriptions = async () => {
+ //     try {
+ //       const response = await fetch(
+ //         `${API_BASE_URL}${ApiRute.subscription.singerSubscription}/${details}`,
+ //         { method: "GET", headers: { "content-type": "application/json" } }
+ //       );
+ //       const result = await response.json();
+ //       if (result.data && result.data.length > 0) {
+ //         const unpaidSubs = result.data
+ //           .filter((sub) => !sub.isPaid)
+ //           .map((sub) => ({
+ //             ...sub,
+ //             paidForMonth: new Date(sub.dueDate).toLocaleString("default", {
+ //               month: "long",
+ //               year: "numeric",
+ //             }),
+ //             status: "pending",
+ //           }));
+ //         setCurrentSubscriptions(unpaidSubs);
+ //       } else {
+ //         setCurrentSubscriptions([]);
+ //       }
+ //     } catch (err) {
+ //       console.error(err);
+ //       console.error("Error fetching current subscriptions.");
+ //     }
+ //   };
+ //   // ✅ Fetch paid subscriptions
+ //   const fetchPaidSubscriptions = async () => {
+ //     try {
+ //       const response = await fetch(
+ //         `${API_BASE_URL}${ApiRute.subscription.paidSubs}?userId=${details}`,
+ //         {
+ //           method: "GET",
+ //           headers: {
+ //             "content-type": "application/json",
+ //             authorization: `Bearer ${getStroage().token}`,
+ //           },
+ //         }
+ //       );
+ //       const result = await response.json();
+ //       if (result.data && result.data.length > 0) {
+ //         setPaidSubscriptions(
+ //           result.data.map((sub) => ({
+ //             ...sub,
+ //             status: sub.status || "paid",
+ //           }))
+ //         );
+ //       } else {
+ //         setPaidSubscriptions([]);
+ //       }
+ //     } catch (err) {
+ //       console.error(err);
+ //       console.error("Error fetching paid subscriptions.");
+ //     }
+ //   };
+ //   // ✅ Fetch unpaid/current services
+ //   const fetchCurrentServices = async (phone) => {
+ //     try {
+ //       const response = await fetch(
+ //         `${API_BASE_URL}${ApiRute?.driUser?.singe}`,
+ //         {
+ //           method: "POST",
+ //           headers: { "content-type": "application/json" },
+ //           body: JSON.stringify({ phone }),
+ //         }
+ //       );
+ //       const result = await response.json();
+ //       if (result?.success) {
+ //         const [day, month, year] = result?.data?.dueDate.split("-").map(Number);
+ //         const dateObj = new Date(year, month - 1, day);
+ //         const payload = [
+ //           {
+ //             emiPay: result?.data?.emiPay,
+ //             userId: result?.data?.id,
+ //             dueDate: dateObj, // ✅ assign Date object
+ //             paidForMonth: dateObj.toLocaleString("default", {
+ //               month: "long",
+ //               year: "numeric",
+ //             }),
+ //             totalEMI: result?.data?.totalEmi,
+ //             emiAmount: result?.data?.monthlyEmi,
+ //             status: result?.data?.status || "pending", // fallback
+ //             serviceType: !result?.data?.serviceFees
+ //               ? "service Advance"
+ //               : "service",
+ //           },
+ //         ];
+ //         setCurrentServices(payload);
+ //       } else {
+ //         setCurrentServices([]);
+ //       }
+ //     } catch (err) {
+ //       console.error("Error fetching current services:", err);
+ //     }
+ //   };
+ //   // ✅ Fetch paid services
+ //   const fetchPaidServices = async () => {
+ //     try {
+ //       const response = await fetch(
+ //         `${API_BASE_URL}${ApiRute?.emi.getPaidService}?user_id=${details}`,
+ //         {
+ //           method: "GET",
+ //           headers: {
+ //             "content-type": "application/json",
+ //             authorization: `Bearer ${getStroage().token}`,
+ //           },
+ //         }
+ //       );
+ //       const result = await response.json();
+ //       console.log("paid", result);
+ //       if (result.data && result.data.length > 0) {
+ //         setPaidServices(result.data.map((svc) => ({ ...svc, status: "paid" })));
+ //       } else {
+ //         setPaidServices([]);
+ //       }
+ //     } catch (err) {
+ //       console.error(err);
+ //       console.error("Error fetching paid services.");
+ //     }
+ //   };
+ //   // ✅ Mark subscription as paid
+ //   const subscriptionMarkAsPaid = async (subscription) => {
+ //     try {
+ //       const res = await fetch(
+ //         `${API_BASE_URL}${ApiRute.subscription.markaspaid}`,
+ //         {
+ //           method: "POST",
+ //           headers: {
+ //             "Content-Type": "application/json",
+ //             authorization: `Bearer ${getStroage().token}`,
+ //           },
+ //           body: JSON.stringify({
+ //             subscriptionId: subscription?._id,
+ //             paymentMode: "UPI",
+ //           }),
+ //         }
+ //       );
+ //       const data = await res.json();
+ //       if (data.success) {
+ //         toast.success("Subscription marked as paid!");
+ //         fetchCurrentSubscriptions();
+ //         fetchPaidSubscriptions();
+ //       } else {
+ //         toast.error(data.message || "Failed to mark as paid.");
+ //       }
+ //     } catch (err) {
+ //       console.error(err);
+ //       toast.error("Error marking subscription as paid.");
+ //     }
+ //   };
+ //   // ✅ Mark service as paid
+ //   const checkServicePayment = (svcIndex) => {
+ //     const paidService = { ...currentServices[svcIndex], status: "paid" };
+ //     setPaidServices((prev) => [...prev, paidService]);
+ //     setCurrentServices((prev) => prev.filter((_, idx) => idx !== svcIndex));
+ //     toast.success(`Service for ${paidService.paidForMonth} marked as PAID.`);
+ //   };
+ //   // ✅ Decide which subscriptions/services to show based on tab
+ //   const subscriptionsToShow =
+ //     subscriptionTab === "paid" ? paidSubscriptions : currentSubscriptions;
+ //   const servicesToShow = serviceTab === "paid" ? paidServices : currentServices;
+ //   const markAsPaid = async () => {
+ //     try {
+ //       alert("hello");
+ //       const res = await fetch(`${API_BASE_URL}${ApiRute.emi.markaspaid}`, {
+ //         method: "PUT",
+ //         headers: {
+ //           "content-type": "application/json",
+ //           authorization: `Bearer ${getStroage().token}`,
+ //         },
+ //         body: JSON.stringify({
+ //           phone: phone,
+ //           user_id: details,
+ //         }),
+ //       });
+ //       const result = await res.json();
+ //       fetchCurrentSubscriptions();
+ //       fetchPaidSubscriptions();
+ //       fetchUserId();
+ //       result?.success
+ //         ? toast.success(result?.message)
+ //         : toast.error(result?.message);
+ //     } catch (err) {
+ //       console.error(err);
+ //     }
+ //   };
+ //   // ✅ Initial fetch
+ //   useEffect(() => {
+ //     fetchCurrentSubscriptions();
+ //     fetchPaidSubscriptions();
+ //     fetchUserId();
+ //   }, [details]);
+ //   return (
+ //     <>
+ //       <Header />
+ //       <div className="min-h-screen flex justify-center items-start bg-gray-100 p-6">
+ //         <div className="max-w-6xl w-full flex flex-col space-y-8 justify-center rounded-xl bg-white p-5">
+ //           <div className="flex flex-col md:flex-row gap-6">
+ //             {/* Left: Subscriptions */}
+ //             <div className="flex-1 flex flex-col">
+ //               <h3 className="text-xl font-semibold text-gray-800 mb-3">
+ //                 Monthly Subscriptions
+ //               </h3>
+ //               <ul className="flex border-b mb-3">
+ //                 <li
+ //                   className={`cursor-pointer px-4 py-2 ${
+ //                     subscriptionTab === "current"
+ //                       ? "border-b-2 border-blue-600 font-semibold text-blue-600"
+ //                       : "text-gray-500 hover:text-blue-600"
+ //                   }`}
+ //                   onClick={() => setSubscriptionTab("current")}
+ //                 >
+ //                   Current
+ //                 </li>
+ //                 <li
+ //                   className={`cursor-pointer px-4 py-2 relative ${
+ //                     subscriptionTab === "paid"
+ //                       ? "border-b-2 border-blue-600 font-semibold text-blue-600"
+ //                       : "text-gray-500 hover:text-blue-600"
+ //                   }`}
+ //                   onClick={() => setSubscriptionTab("paid")}
+ //                 >
+ //                   Paid{" "}
+ //                   {/* <span className="absolute top-0.5 right-0.3 bg-red-400 w-[15px] h-[15px] text-center align-middle rounded-xl text-[13px] text-white">
+ //                     {paidSubscriptions.length}
+ //                   </span> */}
+ //                 </li>
+ //               </ul>
+ //               {subscriptionTab === "current" ? (
+ //                 <div className="max-h-[250px] overflow-y-auto space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50">
+ //                   {subscriptionsToShow.length === 0 ? (
+ //                     <p className="text-gray-500 text-sm">
+ //                       No subscriptions found.
+ //                     </p>
+ //                   ) : (
+ //                     currentSubscriptions.map((sub, index) => (
+ //                       <div
+ //                         key={index}
+ //                         className="p-4 border rounded-xl bg-white hover:bg-gray-100 transition flex flex-col relative"
+ //                       >
+ //                         <span
+ //                           className={`absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(
+ //                             sub?.status
+ //                           )}`}
+ //                         >
+ //                           {sub?.status.charAt(0).toUpperCase() +
+ //                             sub?.status?.slice(1).toLowerCase()}
+ //                         </span>
+ //                         <div>
+ //                           <p className="font-semibold text-gray-800">
+ //                             {sub.paidForMonth}
+ //                           </p>
+ //                           <p className="text-sm text-red-500 ">
+ //                             Due Date:{" "}
+ //                             {formatDate(sub?.paidForDueDate || sub?.dueDate)}
+ //                           </p>
+ //                         </div>
+ //                         <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2 text-sm text-gray-700">
+ //                           <p>Amount: ₹{sub?.subscription || sub?.amount}</p>
+ //                           <p>GST: {sub?.gst}%</p>
+ //                           <p>Total: ₹{sub?.totalAmount || sub?.amount}</p>
+ //                         </div>
+ //                         {sub?.status === "pending" && (
+ //                           <div className="mt-4 flex justify-start">
+ //                             <button
+ //                               onClick={() => subscriptionMarkAsPaid(sub)}
+ //                               className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
+ //                             >
+ //                               Mark as Paid
+ //                             </button>
+ //                           </div>
+ //                         )}
+ //                       </div>
+ //                     ))
+ //                   )}
+ //                 </div>
+ //               ) : (
+ //                 <div className="max-h-[250px] overflow-y-auto space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50">
+ //                   {subscriptionsToShow.length === 0 ? (
+ //                     <p className="text-gray-500 text-sm">
+ //                       No paid subscriptions found.
+ //                     </p>
+ //                   ) : (
+ //                     paidSubscriptions.map((sub, index) => (
+ //                       <div
+ //                         key={index}
+ //                         className="p-4 border rounded-xl bg-white hover:bg-gray-100 transition flex flex-col relative"
+ //                       >
+ //                         <span
+ //                           className={`absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(
+ //                             sub?.status
+ //                           )}`}
+ //                         >
+ //                           {sub?.status.charAt(0).toUpperCase() +
+ //                             sub?.status?.slice(1).toLowerCase()}
+ //                         </span>
+ //                         <div>
+ //                           <p className="font-semibold text-gray-800">
+ //                             {sub.paidForMonth}
+ //                           </p>
+ //                           <p className="text-sm text-green-500">
+ //                             Date:{" "}
+ //                             {formatDate(sub?.paidForDueDate || sub?.dueDate)}
+ //                           </p>
+ //                         </div>
+ //                         <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2 text-sm text-gray-700">
+ //                           <p>Amount: ₹{sub?.subscriptionId?.subscription}</p>
+ //                           <p>GST: {sub?.gst}%</p>
+ //                           <p>Total: ₹{sub?.subscriptionId?.amount}</p>
+ //                         </div>
+ //                         {sub?.status === "pending" && (
+ //                           <div className="mt-4 flex justify-start">
+ //                             <button
+ //                               onClick={() => subscriptionMarkAsPaid(sub)}
+ //                               className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
+ //                             >
+ //                               Mark as Paid
+ //                             </button>
+ //                           </div>
+ //                         )}
+ //                       </div>
+ //                     ))
+ //                   )}
+ //                 </div>
+ //               )}
+ //             </div>
+ //             {/* Right: Services */}
+ //             {/* Right: Services */}
+ //             <div className="flex-1 flex flex-col">
+ //               <h3 className="text-xl font-semibold mb-3 text-gray-800 capitalize">
+ //                 {currentServices[0]?.serviceType}
+ //               </h3>
+ //               <ul className="flex border-b mb-3">
+ //                 <li
+ //                   className={`cursor-pointer px-4 py-2 ${
+ //                     serviceTab === "current"
+ //                       ? "border-b-2 border-blue-600 font-semibold text-blue-600"
+ //                       : "text-gray-500 hover:text-blue-600"
+ //                   }`}
+ //                   onClick={() => setServiceTab("current")}
+ //                 >
+ //                   Current
+ //                 </li>
+ //                 <li
+ //                   className={`cursor-pointer px-4 py-2 ${
+ //                     serviceTab === "paid"
+ //                       ? "border-b-2 border-blue-600 font-semibold text-blue-600"
+ //                       : "text-gray-500 hover:text-blue-600"
+ //                   }`}
+ //                   onClick={() => setServiceTab("paid")}
+ //                 >
+ //                   Paid
+ //                 </li>
+ //               </ul>
+ //               <div className="max-h-[250px] overflow-y-auto space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50">
+ //                 {servicesToShow.length === 0 ? (
+ //                   <p className="text-gray-500 text-sm">No Paid Services</p>
+ //                 ) : (
+ //                   servicesToShow.map((service, index) => (
+ //                     <div
+ //                       key={index}
+ //                       className="p-4 border rounded-xl bg-white hover:bg-gray-100 transition relative"
+ //                     >
+ //                       <span
+ //                         className={`absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(
+ //                           service?.status
+ //                         )}`}
+ //                       >
+ //                         {(service?.status || "pending")
+ //                           .toString()
+ //                           .charAt(0)
+ //                           .toUpperCase() +
+ //                           (service?.status || "pending")
+ //                             .toString()
+ //                             .slice(1)
+ //                             .toLowerCase()}
+ //                       </span>
+ //                       <div>
+ //                         <p className="font-semibold text-gray-800">
+ //                           {service?.paidForMonth}
+ //                         </p>
+ //                         <p className="text-sm text-red-500 ">
+ //                           {" "}
+ //                           Due Date: {formatDate(service?.dueDate)}
+ //                         </p>
+ //                       </div>
+ //                       <div className="mt-2  flex text-sm text-gray-700  justify-between items-start">
+ //                         <p>Total EMI: {service?.totalEMI || "N/A"}</p>
+ //                         <p>EMI: {service?.emiPay || "N/A"}</p>
+ //                         <p>EMI Amount: ₹ {service?.emiAmount || "N/A"}</p>
+ //                       </div>
+ //                       {/* <button
+ //                         onClick={() => checkServicePayment(index)}
+ //                         className="absolute bottom-4 right-4 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm"
+ //                       >
+ //                         Mark as Paid
+ //                       </button> */}
+ //                       <div className="mt-4 flex justify-start">
+ //                         <button
+ //                           onClick={markAsPaid}
+ //                           className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
+ //                         >
+ //                           Mark as Paid
+ //                         </button>
+ //                       </div>
+ //                     </div>
+ //                   ))
+ //                 )}
+ //               </div>
+ //             </div>
+ //           </div>
+ //         </div>
+ //       </div>
+ //     </>
+ //   );
+ // }
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
 }
@@ -1367,6 +1843,7 @@ function UploadEMIModal(param) {
         id: ""
     });
     const [closeUser, setCloseUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [loadingPaid, setLoadingPaid] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const handleFileChange = (e)=>{
         const file = e.target.files[0];
@@ -1469,7 +1946,8 @@ function UploadEMIModal(param) {
     };
     const markAsPaid = async ()=>{
         try {
-            setLoad(true);
+            var _userData_kyc;
+            setLoadingPaid(true);
             const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].emi.markaspaid), {
                 method: "PUT",
                 headers: {
@@ -1477,7 +1955,8 @@ function UploadEMIModal(param) {
                     authorization: "Bearer ".concat((0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getStroage"])().token)
                 },
                 body: JSON.stringify({
-                    phone: mode.phone
+                    phone: mode.phone,
+                    user_id: userData === null || userData === void 0 ? void 0 : (_userData_kyc = userData.kyc) === null || _userData_kyc === void 0 ? void 0 : _userData_kyc.user_id
                 })
             });
             const result = await res.json();
@@ -1486,7 +1965,7 @@ function UploadEMIModal(param) {
             console.error(err);
         } finally{
             refreshFun();
-            setLoad(false);
+            setLoadingPaid(false);
         }
     };
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
@@ -1515,7 +1994,7 @@ function UploadEMIModal(param) {
                 "aria-hidden": "true"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                lineNumber: 164,
+                lineNumber: 169,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1528,7 +2007,7 @@ function UploadEMIModal(param) {
                             children: "Upload Data Payment"
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                            lineNumber: 171,
+                            lineNumber: 176,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1541,7 +2020,7 @@ function UploadEMIModal(param) {
                                     height: 160
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                    lineNumber: 175,
+                                    lineNumber: 180,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -1552,14 +2031,14 @@ function UploadEMIModal(param) {
                                             className: "text-2xl"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                            lineNumber: 180,
+                                            lineNumber: 185,
                                             columnNumber: 17
                                         }, this),
                                         " Upload File"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                    lineNumber: 176,
+                                    lineNumber: 181,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1570,7 +2049,7 @@ function UploadEMIModal(param) {
                                     onChange: handleFileChange
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                    lineNumber: 182,
+                                    lineNumber: 187,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1578,7 +2057,7 @@ function UploadEMIModal(param) {
                                     children: "*Upload only CSV files"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                    lineNumber: 189,
+                                    lineNumber: 194,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1590,7 +2069,7 @@ function UploadEMIModal(param) {
                                             children: "Cancel"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                            lineNumber: 193,
+                                            lineNumber: 198,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1600,25 +2079,25 @@ function UploadEMIModal(param) {
                                             children: uploading ? "Uploading..." : "Upload"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                            lineNumber: 199,
+                                            lineNumber: 204,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                    lineNumber: 192,
+                                    lineNumber: 197,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                            lineNumber: 174,
+                            lineNumber: 179,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                    lineNumber: 170,
+                    lineNumber: 175,
                     columnNumber: 11
                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$headlessui$2f$react$2f$dist$2f$components$2f$dialog$2f$dialog$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"].Panel, {
                     className: "mx-auto max-w-7xl rounded-2xl bg-[#f1f6fe] p-6 grid grid-cols-3 gap-4",
@@ -1628,12 +2107,12 @@ function UploadEMIModal(param) {
                             className: "animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                            lineNumber: 215,
+                            lineNumber: 220,
                             columnNumber: 17
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                        lineNumber: 214,
+                        lineNumber: 219,
                         columnNumber: 15
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                         children: [
@@ -1647,12 +2126,12 @@ function UploadEMIModal(param) {
                                             children: "".concat((0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utlis$2f$string$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toTitleCase"])(userData === null || userData === void 0 ? void 0 : userData.name), " ").concat((0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utlis$2f$string$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toTitleCase"])(userData === null || userData === void 0 ? void 0 : (_userData_kyc = userData.kyc) === null || _userData_kyc === void 0 ? void 0 : _userData_kyc.lastname))
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                            lineNumber: 222,
+                                            lineNumber: 227,
                                             columnNumber: 21
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                        lineNumber: 221,
+                                        lineNumber: 226,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1664,7 +2143,7 @@ function UploadEMIModal(param) {
                                                         children: "User ID:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                        lineNumber: 230,
+                                                        lineNumber: 235,
                                                         columnNumber: 23
                                                     }, this),
                                                     " ",
@@ -1672,7 +2151,7 @@ function UploadEMIModal(param) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 229,
+                                                lineNumber: 234,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1681,7 +2160,7 @@ function UploadEMIModal(param) {
                                                         children: "Gender:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                        lineNumber: 233,
+                                                        lineNumber: 238,
                                                         columnNumber: 23
                                                     }, this),
                                                     " ",
@@ -1689,7 +2168,7 @@ function UploadEMIModal(param) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 232,
+                                                lineNumber: 237,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1698,7 +2177,7 @@ function UploadEMIModal(param) {
                                                         children: "Mob No.:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                        lineNumber: 236,
+                                                        lineNumber: 241,
                                                         columnNumber: 23
                                                     }, this),
                                                     " ",
@@ -1706,7 +2185,7 @@ function UploadEMIModal(param) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 235,
+                                                lineNumber: 240,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1715,7 +2194,7 @@ function UploadEMIModal(param) {
                                                         children: "E-mail ID:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                        lineNumber: 239,
+                                                        lineNumber: 244,
                                                         columnNumber: 23
                                                     }, this),
                                                     " ",
@@ -1723,7 +2202,7 @@ function UploadEMIModal(param) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 238,
+                                                lineNumber: 243,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1736,24 +2215,24 @@ function UploadEMIModal(param) {
                                                     children: "View Details"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                    lineNumber: 247,
+                                                    lineNumber: 252,
                                                     columnNumber: 23
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 241,
+                                                lineNumber: 246,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                        lineNumber: 228,
+                                        lineNumber: 233,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                lineNumber: 220,
+                                lineNumber: 225,
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1772,7 +2251,7 @@ function UploadEMIModal(param) {
                                                     className: "rounded-full"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                    lineNumber: 256,
+                                                    lineNumber: 261,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1782,7 +2261,7 @@ function UploadEMIModal(param) {
                                                             children: "Assigned Advocate"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                            lineNumber: 269,
+                                                            lineNumber: 274,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1790,24 +2269,24 @@ function UploadEMIModal(param) {
                                                             children: advocate === null || advocate === void 0 ? void 0 : advocate.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                            lineNumber: 272,
+                                                            lineNumber: 277,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                    lineNumber: 268,
+                                                    lineNumber: 273,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                            lineNumber: 255,
+                                            lineNumber: 260,
                                             columnNumber: 21
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                        lineNumber: 254,
+                                        lineNumber: 259,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1820,7 +2299,7 @@ function UploadEMIModal(param) {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fi$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FiUpload"], {}, void 0, false, {
                                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                                lineNumber: 280,
+                                                                lineNumber: 285,
                                                                 columnNumber: 25
                                                             }, this),
                                                             " Select Invoice",
@@ -1831,13 +2310,13 @@ function UploadEMIModal(param) {
                                                                 className: "hidden"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                                lineNumber: 281,
+                                                                lineNumber: 286,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                        lineNumber: 279,
+                                                        lineNumber: 284,
                                                         columnNumber: 23
                                                     }, this),
                                                     file && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1850,19 +2329,19 @@ function UploadEMIModal(param) {
                                                                 children: file.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                                lineNumber: 291,
+                                                                lineNumber: 296,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                        lineNumber: 289,
+                                                        lineNumber: 294,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 278,
+                                                lineNumber: 283,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1872,13 +2351,13 @@ function UploadEMIModal(param) {
                                                 children: off ? "Uploading..." : "Upload"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 295,
+                                                lineNumber: 300,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                        lineNumber: 277,
+                                        lineNumber: 282,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1896,16 +2375,16 @@ function UploadEMIModal(param) {
                                                 children: load ? "Closing..." : "Close EMI"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 306,
+                                                lineNumber: 311,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                 className: "bg-[#1172da] text-white px-6 py-2 rounded-lg font-bold cursor-pointer",
                                                 onClick: markAsPaid,
-                                                children: load ? "Marking..." : "Mark as Paid"
+                                                children: loadingPaid ? "Marking..." : "Mark as Paid"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 317,
+                                                lineNumber: 322,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1920,7 +2399,7 @@ function UploadEMIModal(param) {
                                                 children: "Add Loan"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 323,
+                                                lineNumber: 328,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1929,31 +2408,31 @@ function UploadEMIModal(param) {
                                                 children: "Cancel"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                                lineNumber: 334,
+                                                lineNumber: 339,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                        lineNumber: 305,
+                                        lineNumber: 310,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                                lineNumber: 253,
+                                lineNumber: 258,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, void 0, true)
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/UploadEMIModal.js",
-                    lineNumber: 212,
+                    lineNumber: 217,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                lineNumber: 168,
+                lineNumber: 173,
                 columnNumber: 7
             }, this),
             showLoanForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$uploadManualEmiModal$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1965,7 +2444,7 @@ function UploadEMIModal(param) {
                 id: showLoanForm.id
             }, void 0, false, {
                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                lineNumber: 349,
+                lineNumber: 354,
                 columnNumber: 9
             }, this),
             closeUser && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$CloseEMI$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1977,17 +2456,17 @@ function UploadEMIModal(param) {
                 id: closeUser.id
             }, void 0, false, {
                 fileName: "[project]/src/app/components/UploadEMIModal.js",
-                lineNumber: 357,
+                lineNumber: 362,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/UploadEMIModal.js",
-        lineNumber: 163,
+        lineNumber: 168,
         columnNumber: 5
     }, this);
 }
-_s(UploadEMIModal, "eY6JA66MNxjRUL9kjtcdgk+4uD4=", false, function() {
+_s(UploadEMIModal, "oc4A/bw55rP07UVSqq1dlaocSEs=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
     ];

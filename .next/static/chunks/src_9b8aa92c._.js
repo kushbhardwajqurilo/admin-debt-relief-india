@@ -117,6 +117,9 @@ const ApiRute = {
         singerSubscription: "/subcription/get-substouser",
         markaspaid: "/subcription/markAsPaid",
         paidSubs: "/subcription/getPaidSubscriptions"
+    },
+    user: {
+        single: "/user/get-user-saving"
     }
 };
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {

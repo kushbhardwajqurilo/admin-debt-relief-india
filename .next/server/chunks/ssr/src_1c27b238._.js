@@ -79,7 +79,8 @@ const ApiRute = {
         mannual: "/emi/manual",
         markaspaid: "/emi/mark-as-paid",
         bulkinsert: "/emi/bulk-insert",
-        outstanding: "/emi/outstand"
+        outstanding: "/emi/outstand",
+        getPaidService: "/emi/get-paid-service"
     },
     userLoan: {
         addloan: "/loan/create"
@@ -115,8 +116,483 @@ const ApiRute = {
         singerSubscription: "/subcription/get-substouser",
         markaspaid: "/subcription/markAsPaid",
         paidSubs: "/subcription/getPaidSubscriptions"
+    },
+    user: {
+        single: "/user/get-user-saving"
     }
-};
+}; // "use client";
+ // import { ApiRute } from "@/url/ApiRoute";
+ // import { API_BASE_URL } from "@/url/BaseURL";
+ // import { getStroage } from "@/url/storage";
+ // import { useParams } from "next/navigation";
+ // import React, { use, useEffect, useState } from "react";
+ // import toast from "react-hot-toast";
+ // import Header from "../Header";
+ // // ✅ Safe date formatter
+ // const formatDate = (dateStr) => {
+ //   const d = new Date(dateStr);
+ //   const day = d.getDate().toString().padStart(2, "0");
+ //   const month = (d.getMonth() + 1).toString().padStart(2, "0");
+ //   const year = d.getFullYear();
+ //   return `${day}/${month}/${year}`;
+ // };
+ // export default function UserDashboard() {
+ //   const { details } = useParams();
+ //   const [usesrId, setUserId] = useState("");
+ //   const [phone, setPhone] = useState(0);
+ //   // ✅ Independent tab states
+ //   const [subscriptionTab, setSubscriptionTab] = useState("current");
+ //   const [serviceTab, setServiceTab] = useState("current");
+ //   // ✅ Separate states for subscriptions
+ //   const [currentSubscriptions, setCurrentSubscriptions] = useState([]);
+ //   const [paidSubscriptions, setPaidSubscriptions] = useState([]);
+ //   // ✅ Separate states for services
+ //   const [currentServices, setCurrentServices] = useState([]);
+ //   const [paidServices, setPaidServices] = useState([]);
+ //   const fetchUserId = async () => {
+ //     try {
+ //       const response = await fetch(`${API_BASE_URL}${ApiRute.user.single}`, {
+ //         method: "POST",
+ //         headers: {
+ //           "content-type": "application/json",
+ //           authorization: `Bearer ${getStroage().token}`,
+ //         },
+ //         body: JSON.stringify({ user_id: details }),
+ //       });
+ //       const result = await response.json();
+ //       if (result?.success) {
+ //         setPhone(result?.userData?.phone);
+ //         setUserId(result?.userData);
+ //         fetchCurrentServices(result?.userData?.phone);
+ //         fetchPaidServices(result?.userData?.phone);
+ //       }
+ //     } catch (error) {
+ //       console.error(error);
+ //     }
+ //   };
+ //   const getStatusClass = (status) => {
+ //     if (status === "paid") return "bg-green-100 text-green-600";
+ //     if (status === "pending") return "bg-yellow-100 text-yellow-600";
+ //     return "bg-gray-200 text-gray-500";
+ //   };
+ //   // ✅ Fetch unpaid/current subscriptions
+ //   const fetchCurrentSubscriptions = async () => {
+ //     try {
+ //       const response = await fetch(
+ //         `${API_BASE_URL}${ApiRute.subscription.singerSubscription}/${details}`,
+ //         { method: "GET", headers: { "content-type": "application/json" } }
+ //       );
+ //       const result = await response.json();
+ //       if (result.data && result.data.length > 0) {
+ //         const unpaidSubs = result.data
+ //           .filter((sub) => !sub.isPaid)
+ //           .map((sub) => ({
+ //             ...sub,
+ //             paidForMonth: new Date(sub.dueDate).toLocaleString("default", {
+ //               month: "long",
+ //               year: "numeric",
+ //             }),
+ //             status: "pending",
+ //           }));
+ //         setCurrentSubscriptions(unpaidSubs);
+ //       } else {
+ //         setCurrentSubscriptions([]);
+ //       }
+ //     } catch (err) {
+ //       console.error(err);
+ //       console.error("Error fetching current subscriptions.");
+ //     }
+ //   };
+ //   // ✅ Fetch paid subscriptions
+ //   const fetchPaidSubscriptions = async () => {
+ //     try {
+ //       const response = await fetch(
+ //         `${API_BASE_URL}${ApiRute.subscription.paidSubs}?userId=${details}`,
+ //         {
+ //           method: "GET",
+ //           headers: {
+ //             "content-type": "application/json",
+ //             authorization: `Bearer ${getStroage().token}`,
+ //           },
+ //         }
+ //       );
+ //       const result = await response.json();
+ //       if (result.data && result.data.length > 0) {
+ //         setPaidSubscriptions(
+ //           result.data.map((sub) => ({
+ //             ...sub,
+ //             status: sub.status || "paid",
+ //           }))
+ //         );
+ //       } else {
+ //         setPaidSubscriptions([]);
+ //       }
+ //     } catch (err) {
+ //       console.error(err);
+ //       console.error("Error fetching paid subscriptions.");
+ //     }
+ //   };
+ //   // ✅ Fetch unpaid/current services
+ //   const fetchCurrentServices = async (phone) => {
+ //     try {
+ //       const response = await fetch(
+ //         `${API_BASE_URL}${ApiRute?.driUser?.singe}`,
+ //         {
+ //           method: "POST",
+ //           headers: { "content-type": "application/json" },
+ //           body: JSON.stringify({ phone }),
+ //         }
+ //       );
+ //       const result = await response.json();
+ //       if (result?.success) {
+ //         const [day, month, year] = result?.data?.dueDate.split("-").map(Number);
+ //         const dateObj = new Date(year, month - 1, day);
+ //         const payload = [
+ //           {
+ //             emiPay: result?.data?.emiPay,
+ //             userId: result?.data?.id,
+ //             dueDate: dateObj, // ✅ assign Date object
+ //             paidForMonth: dateObj.toLocaleString("default", {
+ //               month: "long",
+ //               year: "numeric",
+ //             }),
+ //             totalEMI: result?.data?.totalEmi,
+ //             emiAmount: result?.data?.monthlyEmi,
+ //             status: result?.data?.status || "pending", // fallback
+ //             serviceType: !result?.data?.serviceFees
+ //               ? "service Advance"
+ //               : "service",
+ //           },
+ //         ];
+ //         setCurrentServices(payload);
+ //       } else {
+ //         setCurrentServices([]);
+ //       }
+ //     } catch (err) {
+ //       console.error("Error fetching current services:", err);
+ //     }
+ //   };
+ //   // ✅ Fetch paid services
+ //   const fetchPaidServices = async () => {
+ //     try {
+ //       const response = await fetch(
+ //         `${API_BASE_URL}${ApiRute?.emi.getPaidService}?user_id=${details}`,
+ //         {
+ //           method: "GET",
+ //           headers: {
+ //             "content-type": "application/json",
+ //             authorization: `Bearer ${getStroage().token}`,
+ //           },
+ //         }
+ //       );
+ //       const result = await response.json();
+ //       console.log("paid", result);
+ //       if (result.data && result.data.length > 0) {
+ //         setPaidServices(result.data.map((svc) => ({ ...svc, status: "paid" })));
+ //       } else {
+ //         setPaidServices([]);
+ //       }
+ //     } catch (err) {
+ //       console.error(err);
+ //       console.error("Error fetching paid services.");
+ //     }
+ //   };
+ //   // ✅ Mark subscription as paid
+ //   const subscriptionMarkAsPaid = async (subscription) => {
+ //     try {
+ //       const res = await fetch(
+ //         `${API_BASE_URL}${ApiRute.subscription.markaspaid}`,
+ //         {
+ //           method: "POST",
+ //           headers: {
+ //             "Content-Type": "application/json",
+ //             authorization: `Bearer ${getStroage().token}`,
+ //           },
+ //           body: JSON.stringify({
+ //             subscriptionId: subscription?._id,
+ //             paymentMode: "UPI",
+ //           }),
+ //         }
+ //       );
+ //       const data = await res.json();
+ //       if (data.success) {
+ //         toast.success("Subscription marked as paid!");
+ //         fetchCurrentSubscriptions();
+ //         fetchPaidSubscriptions();
+ //       } else {
+ //         toast.error(data.message || "Failed to mark as paid.");
+ //       }
+ //     } catch (err) {
+ //       console.error(err);
+ //       toast.error("Error marking subscription as paid.");
+ //     }
+ //   };
+ //   // ✅ Mark service as paid
+ //   const checkServicePayment = (svcIndex) => {
+ //     const paidService = { ...currentServices[svcIndex], status: "paid" };
+ //     setPaidServices((prev) => [...prev, paidService]);
+ //     setCurrentServices((prev) => prev.filter((_, idx) => idx !== svcIndex));
+ //     toast.success(`Service for ${paidService.paidForMonth} marked as PAID.`);
+ //   };
+ //   // ✅ Decide which subscriptions/services to show based on tab
+ //   const subscriptionsToShow =
+ //     subscriptionTab === "paid" ? paidSubscriptions : currentSubscriptions;
+ //   const servicesToShow = serviceTab === "paid" ? paidServices : currentServices;
+ //   const markAsPaid = async () => {
+ //     try {
+ //       alert("hello");
+ //       const res = await fetch(`${API_BASE_URL}${ApiRute.emi.markaspaid}`, {
+ //         method: "PUT",
+ //         headers: {
+ //           "content-type": "application/json",
+ //           authorization: `Bearer ${getStroage().token}`,
+ //         },
+ //         body: JSON.stringify({
+ //           phone: phone,
+ //           user_id: details,
+ //         }),
+ //       });
+ //       const result = await res.json();
+ //       fetchCurrentSubscriptions();
+ //       fetchPaidSubscriptions();
+ //       fetchUserId();
+ //       result?.success
+ //         ? toast.success(result?.message)
+ //         : toast.error(result?.message);
+ //     } catch (err) {
+ //       console.error(err);
+ //     }
+ //   };
+ //   // ✅ Initial fetch
+ //   useEffect(() => {
+ //     fetchCurrentSubscriptions();
+ //     fetchPaidSubscriptions();
+ //     fetchUserId();
+ //   }, [details]);
+ //   return (
+ //     <>
+ //       <Header />
+ //       <div className="min-h-screen flex justify-center items-start bg-gray-100 p-6">
+ //         <div className="max-w-6xl w-full flex flex-col space-y-8 justify-center rounded-xl bg-white p-5">
+ //           <div className="flex flex-col md:flex-row gap-6">
+ //             {/* Left: Subscriptions */}
+ //             <div className="flex-1 flex flex-col">
+ //               <h3 className="text-xl font-semibold text-gray-800 mb-3">
+ //                 Monthly Subscriptions
+ //               </h3>
+ //               <ul className="flex border-b mb-3">
+ //                 <li
+ //                   className={`cursor-pointer px-4 py-2 ${
+ //                     subscriptionTab === "current"
+ //                       ? "border-b-2 border-blue-600 font-semibold text-blue-600"
+ //                       : "text-gray-500 hover:text-blue-600"
+ //                   }`}
+ //                   onClick={() => setSubscriptionTab("current")}
+ //                 >
+ //                   Current
+ //                 </li>
+ //                 <li
+ //                   className={`cursor-pointer px-4 py-2 relative ${
+ //                     subscriptionTab === "paid"
+ //                       ? "border-b-2 border-blue-600 font-semibold text-blue-600"
+ //                       : "text-gray-500 hover:text-blue-600"
+ //                   }`}
+ //                   onClick={() => setSubscriptionTab("paid")}
+ //                 >
+ //                   Paid{" "}
+ //                   {/* <span className="absolute top-0.5 right-0.3 bg-red-400 w-[15px] h-[15px] text-center align-middle rounded-xl text-[13px] text-white">
+ //                     {paidSubscriptions.length}
+ //                   </span> */}
+ //                 </li>
+ //               </ul>
+ //               {subscriptionTab === "current" ? (
+ //                 <div className="max-h-[250px] overflow-y-auto space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50">
+ //                   {subscriptionsToShow.length === 0 ? (
+ //                     <p className="text-gray-500 text-sm">
+ //                       No subscriptions found.
+ //                     </p>
+ //                   ) : (
+ //                     currentSubscriptions.map((sub, index) => (
+ //                       <div
+ //                         key={index}
+ //                         className="p-4 border rounded-xl bg-white hover:bg-gray-100 transition flex flex-col relative"
+ //                       >
+ //                         <span
+ //                           className={`absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(
+ //                             sub?.status
+ //                           )}`}
+ //                         >
+ //                           {sub?.status.charAt(0).toUpperCase() +
+ //                             sub?.status?.slice(1).toLowerCase()}
+ //                         </span>
+ //                         <div>
+ //                           <p className="font-semibold text-gray-800">
+ //                             {sub.paidForMonth}
+ //                           </p>
+ //                           <p className="text-sm text-red-500 ">
+ //                             Due Date:{" "}
+ //                             {formatDate(sub?.paidForDueDate || sub?.dueDate)}
+ //                           </p>
+ //                         </div>
+ //                         <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2 text-sm text-gray-700">
+ //                           <p>Amount: ₹{sub?.subscription || sub?.amount}</p>
+ //                           <p>GST: {sub?.gst}%</p>
+ //                           <p>Total: ₹{sub?.totalAmount || sub?.amount}</p>
+ //                         </div>
+ //                         {sub?.status === "pending" && (
+ //                           <div className="mt-4 flex justify-start">
+ //                             <button
+ //                               onClick={() => subscriptionMarkAsPaid(sub)}
+ //                               className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
+ //                             >
+ //                               Mark as Paid
+ //                             </button>
+ //                           </div>
+ //                         )}
+ //                       </div>
+ //                     ))
+ //                   )}
+ //                 </div>
+ //               ) : (
+ //                 <div className="max-h-[250px] overflow-y-auto space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50">
+ //                   {subscriptionsToShow.length === 0 ? (
+ //                     <p className="text-gray-500 text-sm">
+ //                       No paid subscriptions found.
+ //                     </p>
+ //                   ) : (
+ //                     paidSubscriptions.map((sub, index) => (
+ //                       <div
+ //                         key={index}
+ //                         className="p-4 border rounded-xl bg-white hover:bg-gray-100 transition flex flex-col relative"
+ //                       >
+ //                         <span
+ //                           className={`absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(
+ //                             sub?.status
+ //                           )}`}
+ //                         >
+ //                           {sub?.status.charAt(0).toUpperCase() +
+ //                             sub?.status?.slice(1).toLowerCase()}
+ //                         </span>
+ //                         <div>
+ //                           <p className="font-semibold text-gray-800">
+ //                             {sub.paidForMonth}
+ //                           </p>
+ //                           <p className="text-sm text-green-500">
+ //                             Date:{" "}
+ //                             {formatDate(sub?.paidForDueDate || sub?.dueDate)}
+ //                           </p>
+ //                         </div>
+ //                         <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2 text-sm text-gray-700">
+ //                           <p>Amount: ₹{sub?.subscriptionId?.subscription}</p>
+ //                           <p>GST: {sub?.gst}%</p>
+ //                           <p>Total: ₹{sub?.subscriptionId?.amount}</p>
+ //                         </div>
+ //                         {sub?.status === "pending" && (
+ //                           <div className="mt-4 flex justify-start">
+ //                             <button
+ //                               onClick={() => subscriptionMarkAsPaid(sub)}
+ //                               className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
+ //                             >
+ //                               Mark as Paid
+ //                             </button>
+ //                           </div>
+ //                         )}
+ //                       </div>
+ //                     ))
+ //                   )}
+ //                 </div>
+ //               )}
+ //             </div>
+ //             {/* Right: Services */}
+ //             {/* Right: Services */}
+ //             <div className="flex-1 flex flex-col">
+ //               <h3 className="text-xl font-semibold mb-3 text-gray-800 capitalize">
+ //                 {currentServices[0]?.serviceType}
+ //               </h3>
+ //               <ul className="flex border-b mb-3">
+ //                 <li
+ //                   className={`cursor-pointer px-4 py-2 ${
+ //                     serviceTab === "current"
+ //                       ? "border-b-2 border-blue-600 font-semibold text-blue-600"
+ //                       : "text-gray-500 hover:text-blue-600"
+ //                   }`}
+ //                   onClick={() => setServiceTab("current")}
+ //                 >
+ //                   Current
+ //                 </li>
+ //                 <li
+ //                   className={`cursor-pointer px-4 py-2 ${
+ //                     serviceTab === "paid"
+ //                       ? "border-b-2 border-blue-600 font-semibold text-blue-600"
+ //                       : "text-gray-500 hover:text-blue-600"
+ //                   }`}
+ //                   onClick={() => setServiceTab("paid")}
+ //                 >
+ //                   Paid
+ //                 </li>
+ //               </ul>
+ //               <div className="max-h-[250px] overflow-y-auto space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50">
+ //                 {servicesToShow.length === 0 ? (
+ //                   <p className="text-gray-500 text-sm">No Paid Services</p>
+ //                 ) : (
+ //                   servicesToShow.map((service, index) => (
+ //                     <div
+ //                       key={index}
+ //                       className="p-4 border rounded-xl bg-white hover:bg-gray-100 transition relative"
+ //                     >
+ //                       <span
+ //                         className={`absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(
+ //                           service?.status
+ //                         )}`}
+ //                       >
+ //                         {(service?.status || "pending")
+ //                           .toString()
+ //                           .charAt(0)
+ //                           .toUpperCase() +
+ //                           (service?.status || "pending")
+ //                             .toString()
+ //                             .slice(1)
+ //                             .toLowerCase()}
+ //                       </span>
+ //                       <div>
+ //                         <p className="font-semibold text-gray-800">
+ //                           {service?.paidForMonth}
+ //                         </p>
+ //                         <p className="text-sm text-red-500 ">
+ //                           {" "}
+ //                           Due Date: {formatDate(service?.dueDate)}
+ //                         </p>
+ //                       </div>
+ //                       <div className="mt-2  flex text-sm text-gray-700  justify-between items-start">
+ //                         <p>Total EMI: {service?.totalEMI || "N/A"}</p>
+ //                         <p>EMI: {service?.emiPay || "N/A"}</p>
+ //                         <p>EMI Amount: ₹ {service?.emiAmount || "N/A"}</p>
+ //                       </div>
+ //                       {/* <button
+ //                         onClick={() => checkServicePayment(index)}
+ //                         className="absolute bottom-4 right-4 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm"
+ //                       >
+ //                         Mark as Paid
+ //                       </button> */}
+ //                       <div className="mt-4 flex justify-start">
+ //                         <button
+ //                           onClick={markAsPaid}
+ //                           className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
+ //                         >
+ //                           Mark as Paid
+ //                         </button>
+ //                       </div>
+ //                     </div>
+ //                   ))
+ //                 )}
+ //               </div>
+ //             </div>
+ //           </div>
+ //         </div>
+ //       </div>
+ //     </>
+ //   );
+ // }
 }),
 "[project]/src/url/BaseURL.js [app-ssr] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
@@ -385,6 +861,509 @@ function Header() {
 "[project]/src/app/components/[details]/page.js [app-ssr] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
 
+// "use client";
+// import { ApiRute } from "@/url/ApiRoute";
+// import { API_BASE_URL } from "@/url/BaseURL";
+// import { getStroage } from "@/url/storage";
+// import { useParams } from "next/navigation";
+// import React, { use, useEffect, useState } from "react";
+// import toast from "react-hot-toast";
+// import Header from "../Header";
+// // ✅ Safe date formatter
+// const formatDate = (dateStr) => {
+//   const d = new Date(dateStr);
+//   const day = d.getDate().toString().padStart(2, "0");
+//   const month = (d.getMonth() + 1).toString().padStart(2, "0");
+//   const year = d.getFullYear();
+//   console.log({ day, month, year });
+//   return `${day}/${month}/${year}`;
+// };
+// const formatPaidServiceDate = (isoStr) => {
+//   if (!isoStr) return "N/A";
+//   const d = new Date(isoStr);
+//   // Get UTC components
+//   const day = String(d.getUTCDate()).padStart(2, "0");
+//   const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+//   const year = d.getUTCFullYear();
+//   return `${day}/${month}/${year}`;
+// };
+// export default function UserDashboard() {
+//   const { details } = useParams();
+//   const [usesrId, setUserId] = useState("");
+//   const [phone, setPhone] = useState(0);
+//   // ✅ Independent tab states
+//   const [subscriptionTab, setSubscriptionTab] = useState("current");
+//   const [serviceTab, setServiceTab] = useState("current");
+//   // ✅ Separate states for subscriptions
+//   const [currentSubscriptions, setCurrentSubscriptions] = useState([]);
+//   const [paidSubscriptions, setPaidSubscriptions] = useState([]);
+//   // ✅ Separate states for services
+//   const [currentServices, setCurrentServices] = useState([]);
+//   const [paidServices, setPaidServices] = useState([]);
+//   const fetchUserId = async () => {
+//     try {
+//       const response = await fetch(`${API_BASE_URL}${ApiRute.user.single}`, {
+//         method: "POST",
+//         headers: {
+//           "content-type": "application/json",
+//           authorization: `Bearer ${getStroage().token}`,
+//         },
+//         body: JSON.stringify({ user_id: details }),
+//       });
+//       const result = await response.json();
+//       if (result?.success) {
+//         setPhone(result?.userData?.phone);
+//         setUserId(result?.userData);
+//         fetchCurrentServices(result?.userData?.phone);
+//         fetchPaidServices(result?.userData?.phone);
+//       }
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
+//   const getStatusClass = (status) => {
+//     if (status === "paid") return "bg-green-100 text-green-600";
+//     if (status === "pending") return "bg-yellow-100 text-yellow-600";
+//     return "bg-gray-200 text-gray-500";
+//   };
+//   // ✅ Fetch unpaid/current subscriptions
+//   const fetchCurrentSubscriptions = async () => {
+//     try {
+//       const response = await fetch(
+//         `${API_BASE_URL}${ApiRute.subscription.singerSubscription}/${details}`,
+//         { method: "GET", headers: { "content-type": "application/json" } }
+//       );
+//       const result = await response.json();
+//       if (result.data && result.data.length > 0) {
+//         const unpaidSubs = result.data
+//           .filter((sub) => !sub.isPaid)
+//           .map((sub) => ({
+//             ...sub,
+//             paidForMonth: new Date(sub.dueDate).toLocaleString("default", {
+//               month: "long",
+//               year: "numeric",
+//             }),
+//             status: "pending",
+//           }));
+//         setCurrentSubscriptions(unpaidSubs);
+//       } else {
+//         setCurrentSubscriptions([]);
+//       }
+//     } catch (err) {
+//       console.error(err);
+//       console.error("Error fetching current subscriptions.");
+//     }
+//   };
+//   // ✅ Fetch paid subscriptions
+//   const fetchPaidSubscriptions = async () => {
+//     try {
+//       const response = await fetch(
+//         `${API_BASE_URL}${ApiRute.subscription.paidSubs}?userId=${details}`,
+//         {
+//           method: "GET",
+//           headers: {
+//             "content-type": "application/json",
+//             authorization: `Bearer ${getStroage().token}`,
+//           },
+//         }
+//       );
+//       const result = await response.json();
+//       if (result.data && result.data.length > 0) {
+//         setPaidSubscriptions(
+//           result.data.map((sub) => ({
+//             ...sub,
+//             status: sub.status || "paid",
+//           }))
+//         );
+//       } else {
+//         setPaidSubscriptions([]);
+//       }
+//     } catch (err) {
+//       console.error(err);
+//       console.error("Error fetching paid subscriptions.");
+//     }
+//   };
+//   // ✅ Fetch unpaid/current services
+//   const fetchCurrentServices = async (phone) => {
+//     try {
+//       const response = await fetch(
+//         `${API_BASE_URL}${ApiRute?.driUser?.singe}`,
+//         {
+//           method: "POST",
+//           headers: { "content-type": "application/json" },
+//           body: JSON.stringify({ phone }),
+//         }
+//       );
+//       const result = await response.json();
+//       if (result?.success) {
+//         const [day, month, year] = result?.data?.dueDate.split("-").map(Number);
+//         const dateObj = new Date(year, month - 1, day);
+//         const payload = [
+//           {
+//             emiPay: result?.data?.emiPay,
+//             userId: result?.data?.id,
+//             dueDate: dateObj, // ✅ assign Date object
+//             paidForMonth: dateObj.toLocaleString("default", {
+//               month: "long",
+//               year: "numeric",
+//             }),
+//             totalEMI: result?.data?.totalEmi,
+//             emiAmount: result?.data?.monthlyEmi,
+//             status: result?.data?.status || "pending", // fallback
+//             serviceType: !result?.data?.serviceFees
+//               ? "service Advance"
+//               : "service",
+//           },
+//         ];
+//         setCurrentServices(payload);
+//       } else {
+//         setCurrentServices([]);
+//       }
+//     } catch (err) {
+//       console.error("Error fetching current services:", err);
+//     }
+//   };
+//   // ✅ Fetch paid services
+//   const fetchPaidServices = async () => {
+//     try {
+//       const response = await fetch(
+//         `${API_BASE_URL}${ApiRute?.emi.getPaidService}/${details}`,
+//         {
+//           method: "GET",
+//           headers: {
+//             "content-type": "application/json",
+//             authorization: `Bearer ${getStroage().token}`,
+//           },
+//         }
+//       );
+//       const result = await response.json();
+//       console.log("paid", result);
+//       if (result.data && result.data.length > 0) {
+//         setPaidServices(result.data.map((svc) => ({ ...svc, status: "paid" })));
+//       } else {
+//         setPaidServices([]);
+//       }
+//     } catch (err) {
+//       console.error(err);
+//       console.error("Error fetching paid services.");
+//     }
+//   };
+//   // ✅ Mark subscription as paid
+//   const subscriptionMarkAsPaid = async (subscription) => {
+//     try {
+//       const res = await fetch(
+//         `${API_BASE_URL}${ApiRute.subscription.markaspaid}`,
+//         {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             authorization: `Bearer ${getStroage().token}`,
+//           },
+//           body: JSON.stringify({
+//             subscriptionId: subscription?._id,
+//             paymentMode: "UPI",
+//           }),
+//         }
+//       );
+//       const data = await res.json();
+//       if (data.success) {
+//         toast.success("Subscription marked as paid!");
+//         fetchCurrentSubscriptions();
+//         fetchPaidSubscriptions();
+//       } else {
+//         toast.error(data.message || "Failed to mark as paid.");
+//       }
+//     } catch (err) {
+//       console.error(err);
+//       toast.error("Error marking subscription as paid.");
+//     }
+//   };
+//   // ✅ Mark service as paid
+//   const checkServicePayment = (svcIndex) => {
+//     const paidService = { ...currentServices[svcIndex], status: "paid" };
+//     setPaidServices((prev) => [...prev, paidService]);
+//     setCurrentServices((prev) => prev.filter((_, idx) => idx !== svcIndex));
+//     toast.success(`Service for ${paidService.paidForMonth} marked as PAID.`);
+//   };
+//   // ✅ Decide which subscriptions/services to show based on tab
+//   const subscriptionsToShow =
+//     subscriptionTab === "paid" ? paidSubscriptions : currentSubscriptions;
+//   const servicesToShow = serviceTab === "paid" ? paidServices : currentServices;
+//   const markAsPaid = async () => {
+//     try {
+//       alert("hello");
+//       const res = await fetch(`${API_BASE_URL}${ApiRute.emi.markaspaid}`, {
+//         method: "PUT",
+//         headers: {
+//           "content-type": "application/json",
+//           authorization: `Bearer ${getStroage().token}`,
+//         },
+//         body: JSON.stringify({
+//           phone: phone,
+//           user_id: details,
+//         }),
+//       });
+//       const result = await res.json();
+//       fetchCurrentSubscriptions();
+//       fetchPaidSubscriptions();
+//       fetchUserId();
+//       result?.success
+//         ? toast.success(result?.message)
+//         : toast.error(result?.message);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+//   // ✅ Initial fetch
+//   useEffect(() => {
+//     fetchCurrentSubscriptions();
+//     fetchPaidSubscriptions();
+//     fetchUserId();
+//   }, [details]);
+//   return (
+//     <>
+//       <Header />
+//       <div className="min-h-screen flex justify-center items-start bg-gray-100 p-6">
+//         <div className="max-w-6xl w-full flex flex-col space-y-8 justify-center rounded-xl bg-white p-5">
+//           <div className="flex flex-col md:flex-row gap-6">
+//             {/* Left: Subscriptions */}
+//             <div className="flex-1 flex flex-col">
+//               <h3 className="text-xl font-semibold text-gray-800 mb-3">
+//                 Monthly Subscriptions
+//               </h3>
+//               <ul className="flex border-b mb-3">
+//                 <li
+//                   className={`cursor-pointer px-4 py-2 ${
+//                     subscriptionTab === "current"
+//                       ? "border-b-2 border-blue-600 font-semibold text-blue-600"
+//                       : "text-gray-500 hover:text-blue-600"
+//                   }`}
+//                   onClick={() => setSubscriptionTab("current")}
+//                 >
+//                   Current
+//                 </li>
+//                 <li
+//                   className={`cursor-pointer px-4 py-2 relative ${
+//                     subscriptionTab === "paid"
+//                       ? "border-b-2 border-blue-600 font-semibold text-blue-600"
+//                       : "text-gray-500 hover:text-blue-600"
+//                   }`}
+//                   onClick={() => setSubscriptionTab("paid")}
+//                 >
+//                   Paid{" "}
+//                   {/* <span className="absolute top-0.5 right-0.3 bg-red-400 w-[15px] h-[15px] text-center align-middle rounded-xl text-[13px] text-white">
+//                     {paidSubscriptions.length}
+//                   </span> */}
+//                 </li>
+//               </ul>
+//               {subscriptionTab === "current" ? (
+//                 <div className="max-h-[250px] overflow-y-auto space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50">
+//                   {subscriptionsToShow.length === 0 ? (
+//                     <p className="text-gray-500 text-sm">
+//                       No subscriptions found.
+//                     </p>
+//                   ) : (
+//                     currentSubscriptions.map((sub, index) => (
+//                       <div
+//                         key={index}
+//                         className="p-4 border rounded-xl bg-white hover:bg-gray-100 transition flex flex-col relative"
+//                       >
+//                         <span
+//                           className={`absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(
+//                             sub?.status
+//                           )}`}
+//                         >
+//                           {sub?.status.charAt(0).toUpperCase() +
+//                             sub?.status?.slice(1).toLowerCase()}
+//                         </span>
+//                         <div>
+//                           <p className="font-semibold text-gray-800">
+//                             {sub.paidForMonth}
+//                           </p>
+//                           <p className="text-sm text-red-500 ">
+//                             Due Date:{" "}
+//                             {formatDate(sub?.paidForDueDate || sub?.dueDate)}
+//                           </p>
+//                         </div>
+//                         <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2 text-sm text-gray-700">
+//                           <p>Amount: ₹{sub?.subscription || sub?.amount}</p>
+//                           <p>GST: {sub?.gst}%</p>
+//                           <p>Total: ₹{sub?.totalAmount || sub?.amount}</p>
+//                         </div>
+//                         {sub?.status === "pending" && (
+//                           <div className="mt-4 flex justify-start">
+//                             <button
+//                               onClick={() => subscriptionMarkAsPaid(sub)}
+//                               className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
+//                             >
+//                               Mark as Paid
+//                             </button>
+//                           </div>
+//                         )}
+//                       </div>
+//                     ))
+//                   )}
+//                 </div>
+//               ) : (
+//                 <div className="max-h-[250px] overflow-y-auto space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50">
+//                   {subscriptionsToShow.length === 0 ? (
+//                     <p className="text-gray-500 text-sm">
+//                       No paid subscriptions found.
+//                     </p>
+//                   ) : (
+//                     paidSubscriptions.map((sub, index) => (
+//                       <div
+//                         key={index}
+//                         className="p-4 border rounded-xl bg-white hover:bg-gray-100 transition flex flex-col relative"
+//                       >
+//                         <span
+//                           className={`absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(
+//                             sub?.status
+//                           )}`}
+//                         >
+//                           {sub?.status.charAt(0).toUpperCase() +
+//                             sub?.status?.slice(1).toLowerCase()}
+//                         </span>
+//                         <div>
+//                           <p className="font-semibold text-gray-800">
+//                             {sub.paidForMonth}
+//                           </p>
+//                           <p className="text-sm text-green-500">
+//                             Date:{" "}
+//                             {formatDate(sub?.paidForDueDate || sub?.dueDate)}
+//                           </p>
+//                         </div>
+//                         <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2 text-sm text-gray-700">
+//                           <p>Amount: ₹{sub?.subscriptionId?.subscription}</p>
+//                           <p>GST: {sub?.gst}%</p>
+//                           <p>Total: ₹{sub?.subscriptionId?.amount}</p>
+//                         </div>
+//                         {sub?.status === "pending" && (
+//                           <div className="mt-4 flex justify-start">
+//                             <button
+//                               onClick={() => subscriptionMarkAsPaid(sub)}
+//                               className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
+//                             >
+//                               Mark as Paid
+//                             </button>
+//                           </div>
+//                         )}
+//                       </div>
+//                     ))
+//                   )}
+//                 </div>
+//               )}
+//             </div>
+//             {/* Right: Services */}
+//             {/* Right: Services */}
+//             <div className="flex-1 flex flex-col">
+//               <h3 className="text-xl font-semibold mb-3 text-gray-800 capitalize">
+//                 Services
+//               </h3>
+//               <ul className="flex border-b mb-3">
+//                 <li
+//                   className={`cursor-pointer px-4 py-2 ${
+//                     serviceTab === "current"
+//                       ? "border-b-2 border-blue-600 font-semibold text-blue-600"
+//                       : "text-gray-500 hover:text-blue-600"
+//                   }`}
+//                   onClick={() => setServiceTab("current")}
+//                 >
+//                   Current
+//                 </li>
+//                 <li
+//                   className={`cursor-pointer px-4 py-2 ${
+//                     serviceTab === "paid"
+//                       ? "border-b-2 border-blue-600 font-semibold text-blue-600"
+//                       : "text-gray-500 hover:text-blue-600"
+//                   }`}
+//                   onClick={() => setServiceTab("paid")}
+//                 >
+//                   Paid
+//                 </li>
+//               </ul>
+//               <div className="max-h-[250px] overflow-y-auto space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50">
+//                 {servicesToShow.length === 0 ? (
+//                   <p className="text-gray-500 text-sm">
+//                     {serviceTab === "paid"
+//                       ? "No Paid Services"
+//                       : "No Current Services"}
+//                   </p>
+//                 ) : (
+//                   servicesToShow.map((service, index) => (
+//                     <div
+//                       key={index}
+//                       className="p-4 border rounded-xl bg-white hover:bg-gray-100 transition relative"
+//                     >
+//                       <span
+//                         className={`absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(
+//                           service?.status
+//                         )}`}
+//                       >
+//                         {service?.status.charAt(0).toUpperCase() +
+//                           service?.status.slice(1).toLowerCase()}
+//                       </span>
+//                       <div>
+//                         <p className="font-semibold text-gray-800">
+//                           {service?.paidForMonth ||
+//                             new Date(
+//                               service?.dueDate || service?.date
+//                             ).toLocaleString("default", {
+//                               month: "long",
+//                               year: "numeric",
+//                             })}
+//                         </p>
+//                         <p
+//                           className={`text-sm ${
+//                             serviceTab === "paid"
+//                               ? "text-green-500"
+//                               : "text-red-500"
+//                           }`}
+//                         >
+//                           {serviceTab === "paid" ? "Date: " : "Due Date: "}
+//                           {service?.date
+//                             ? formatPaidServiceDate(service.date)
+//                             : service?.dueDate
+//                             ? formatDate(service.dueDate)
+//                             : "N/A"}
+//                         </p>
+//                       </div>
+//                       {serviceTab === "paid" ? (
+//                         <div className="mt-2 flex text-sm text-gray-700 justify-between items-start">
+//                           {/* <p>EMI: {service?.totalEMI || "N/A"}</p> */}
+//                           <p>EMI: {service?.emiNo || "N/A"}</p>
+//                           <p>EMI Amount: ₹ {service?.emiAmount || "N/A"}</p>
+//                         </div>
+//                       ) : (
+//                         <div className="mt-2 flex text-sm text-gray-700 justify-between items-start">
+//                           <p>Total EMI: {service?.totalEMI || "N/A"}</p>
+//                           <p>EMI: {service?.emiPay || "N/A"}</p>
+//                           <p>EMI Amount: ₹ {service?.emiAmount || "N/A"}</p>
+//                         </div>
+//                       )}
+//                       {/* Only show Mark as Paid for current services */}
+//                       {serviceTab === "current" &&
+//                         service.status !== "paid" && (
+//                           <div className="mt-4 flex justify-start">
+//                             <button
+//                               onClick={markAsPaid}
+//                               className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
+//                             >
+//                               Mark as Paid
+//                             </button>
+//                           </div>
+//                         )}
+//                     </div>
+//                   ))
+//                 )}
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// }
 __turbopack_context__.s({
     "default": ()=>UserDashboard
 });
@@ -413,8 +1392,24 @@ const formatDate = (dateStr)=>{
     const year = d.getFullYear();
     return `${day}/${month}/${year}`;
 };
+const formatPaidServiceDate = (isoStr)=>{
+    if (!isoStr) return "N/A";
+    const d = new Date(isoStr);
+    // Get UTC components
+    const day = String(d.getUTCDate()).padStart(2, "0");
+    const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+    const year = d.getUTCFullYear();
+    return `${day}/${month}/${year}`;
+};
+function PaidFormate(date) {
+    const [day, month, year] = date.split("-").map(Number);
+    const dateObj = new Date(year, month - 1, day);
+    return dateObj;
+}
 function UserDashboard() {
     const { details } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useParams"])();
+    const [usesrId, setUserId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    const [phone, setPhone] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(0);
     // ✅ Independent tab states
     const [subscriptionTab, setSubscriptionTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("current");
     const [serviceTab, setServiceTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("current");
@@ -424,6 +1419,29 @@ function UserDashboard() {
     // ✅ Separate states for services
     const [currentServices, setCurrentServices] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [paidServices, setPaidServices] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const fetchUserId = async ()=>{
+        try {
+            const response = await fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["API_BASE_URL"]}${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApiRute"].user.single}`, {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json",
+                    authorization: `Bearer ${(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getStroage"])().token}`
+                },
+                body: JSON.stringify({
+                    user_id: details
+                })
+            });
+            const result = await response.json();
+            if (result?.success) {
+                setPhone(result?.userData?.phone);
+                setUserId(result?.userData);
+                fetchCurrentServices(result?.userData?.phone);
+                fetchPaidServices(result?.userData?.phone);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
     const getStatusClass = (status)=>{
         if (status === "paid") return "bg-green-100 text-green-600";
         if (status === "pending") return "bg-yellow-100 text-yellow-600";
@@ -440,9 +1458,9 @@ function UserDashboard() {
             });
             const result = await response.json();
             if (result.data && result.data.length > 0) {
-                const unpaidSubs = result.data.filter((sub1)=>!sub1.isPaid).map((sub1)=>({
-                        ...sub1,
-                        paidForMonth: new Date(sub1.dueDate).toLocaleString("default", {
+                const unpaidSubs = result.data.filter((sub)=>!sub.isPaid).map((sub)=>({
+                        ...sub,
+                        paidForMonth: new Date(sub.dueDate).toLocaleString("default", {
                             month: "long",
                             year: "numeric"
                         }),
@@ -453,7 +1471,6 @@ function UserDashboard() {
                 setCurrentSubscriptions([]);
             }
         } catch (err) {
-            console.error(err);
             console.error("Error fetching current subscriptions.");
         }
     };
@@ -469,45 +1486,60 @@ function UserDashboard() {
             });
             const result = await response.json();
             if (result.data && result.data.length > 0) {
-                setPaidSubscriptions(result.data.map((sub1)=>({
-                        ...sub1,
-                        status: sub1.status || "paid"
+                setPaidSubscriptions(result.data.map((sub)=>({
+                        ...sub,
+                        status: sub.status || "paid"
                     })));
             } else {
                 setPaidSubscriptions([]);
             }
         } catch (err) {
-            console.error(err);
             console.error("Error fetching paid subscriptions.");
         }
     };
     // ✅ Fetch unpaid/current services
-    const fetchCurrentServices = async ()=>{
+    const fetchCurrentServices = async (phone)=>{
         try {
-            const response = await fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["API_BASE_URL"]}${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApiRute"]?.services?.current}?userId=${details}`, {
-                method: "GET",
+            const response = await fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["API_BASE_URL"]}${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApiRute"]?.driUser?.singe}`, {
+                method: "POST",
                 headers: {
                     "content-type": "application/json"
-                }
+                },
+                body: JSON.stringify({
+                    phone
+                })
             });
             const result = await response.json();
-            if (result.data && result.data.length > 0) {
-                setCurrentServices(result.data.map((svc)=>({
-                        ...svc,
-                        status: svc.isPaid ? "paid" : "pending"
-                    })).filter((s)=>s.status === "pending"));
+            if (result?.success) {
+                const [day, month, year] = result?.data?.dueDate.split("-").map(Number);
+                const dateObj = new Date(year, month - 1, day);
+                const payload = [
+                    {
+                        emiPay: result?.data?.emiPay,
+                        userId: result?.data?.id,
+                        dueDate: dateObj,
+                        paidForMonth: dateObj.toLocaleString("default", {
+                            month: "long",
+                            year: "numeric"
+                        }),
+                        totalEMI: result?.data?.totalEmi,
+                        emiAmount: result?.data?.monthlyEmi,
+                        status: result?.data?.status || "pending",
+                        serviceType: !result?.data?.serviceFees ? "service Advance" : "service"
+                    }
+                ];
+                setCurrentServices(payload);
             } else {
                 setCurrentServices([]);
             }
         } catch (err) {
-            console.error(err);
-            console.error("Error fetching current services.");
+            console.error("Error fetching current services:", err);
         }
     };
     // ✅ Fetch paid services
     const fetchPaidServices = async ()=>{
         try {
-            const response = await fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["API_BASE_URL"]}${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApiRute"]?.services?.paid}?userId=${details}`, {
+            const response = await fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["API_BASE_URL"]}${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApiRute"]?.emi.getPaidService}/${details}`, {
                 method: "GET",
                 headers: {
                     "content-type": "application/json",
@@ -516,15 +1548,21 @@ function UserDashboard() {
             });
             const result = await response.json();
             if (result.data && result.data.length > 0) {
-                setPaidServices(result.data.map((svc)=>({
+                setPaidServices(result.data.map((svc)=>{
+                    const dateObj = new Date(svc.date); // assuming svc.date exists
+                    return {
                         ...svc,
-                        status: "paid"
-                    })));
+                        status: "paid",
+                        paidForMonth: dateObj.toLocaleString("default", {
+                            month: "long",
+                            year: "numeric"
+                        })
+                    };
+                }));
             } else {
                 setPaidServices([]);
             }
         } catch (err) {
-            console.error(err);
             console.error("Error fetching paid services.");
         }
     };
@@ -551,7 +1589,6 @@ function UserDashboard() {
                 __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error(data.message || "Failed to mark as paid.");
             }
         } catch (err) {
-            console.error(err);
             __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error("Error marking subscription as paid.");
         }
     };
@@ -571,12 +1608,34 @@ function UserDashboard() {
     // ✅ Decide which subscriptions/services to show based on tab
     const subscriptionsToShow = subscriptionTab === "paid" ? paidSubscriptions : currentSubscriptions;
     const servicesToShow = serviceTab === "paid" ? paidServices : currentServices;
+    const markAsPaid = async ()=>{
+        try {
+            alert("hello");
+            const res = await fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["API_BASE_URL"]}${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApiRute"].emi.markaspaid}`, {
+                method: "PUT",
+                headers: {
+                    "content-type": "application/json",
+                    authorization: `Bearer ${(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getStroage"])().token}`
+                },
+                body: JSON.stringify({
+                    phone: phone,
+                    user_id: details
+                })
+            });
+            const result = await res.json();
+            fetchCurrentSubscriptions();
+            fetchPaidSubscriptions();
+            fetchUserId();
+            result?.success ? __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].success(result?.message) : __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].error(result?.message);
+        } catch (err) {
+            console.error(err);
+        }
+    };
     // ✅ Initial fetch
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         fetchCurrentSubscriptions();
         fetchPaidSubscriptions();
-        fetchCurrentServices();
-        fetchPaidServices();
+        fetchUserId();
     }, [
         details
     ]);
@@ -584,7 +1643,7 @@ function UserDashboard() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$Header$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/components/[details]/page.js",
-                lineNumber: 201,
+                lineNumber: 829,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -602,7 +1661,7 @@ function UserDashboard() {
                                         children: "Monthly Subscriptions"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 207,
+                                        lineNumber: 835,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -614,7 +1673,7 @@ function UserDashboard() {
                                                 children: "Current"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 211,
+                                                lineNumber: 839,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -626,13 +1685,13 @@ function UserDashboard() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 221,
+                                                lineNumber: 849,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 210,
+                                        lineNumber: 838,
                                         columnNumber: 15
                                     }, this),
                                     subscriptionTab === "current" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -642,27 +1701,27 @@ function UserDashboard() {
                                             children: "No subscriptions found."
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/[details]/page.js",
-                                            lineNumber: 239,
+                                            lineNumber: 867,
                                             columnNumber: 21
-                                        }, this) : currentSubscriptions.map((sub1, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        }, this) : currentSubscriptions.map((sub, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "p-4 border rounded-xl bg-white hover:bg-gray-100 transition flex flex-col relative",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: `absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(sub1?.status)}`,
-                                                        children: sub1?.status.charAt(0).toUpperCase() + sub1?.status?.slice(1).toLowerCase()
+                                                        className: `absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(sub?.status)}`,
+                                                        children: sub?.status.charAt(0).toUpperCase() + sub?.status?.slice(1).toLowerCase()
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 248,
+                                                        lineNumber: 876,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 className: "font-semibold text-gray-800",
-                                                                children: sub1.paidForMonth
+                                                                children: sub.paidForMonth
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 258,
+                                                                lineNumber: 886,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -670,17 +1729,17 @@ function UserDashboard() {
                                                                 children: [
                                                                     "Due Date:",
                                                                     " ",
-                                                                    formatDate(sub1?.paidForDueDate || sub1?.dueDate)
+                                                                    formatDate(sub?.paidForDueDate || sub?.dueDate)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 261,
+                                                                lineNumber: 889,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 257,
+                                                        lineNumber: 885,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -689,65 +1748,65 @@ function UserDashboard() {
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 children: [
                                                                     "Amount: ₹",
-                                                                    sub1?.subscription || sub1?.amount
+                                                                    sub?.subscription || sub?.amount
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 268,
+                                                                lineNumber: 896,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 children: [
                                                                     "GST: ",
-                                                                    sub1?.gst,
+                                                                    sub?.gst,
                                                                     "%"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 269,
+                                                                lineNumber: 897,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 children: [
                                                                     "Total: ₹",
-                                                                    sub1?.totalAmount || sub1?.amount
+                                                                    sub?.totalAmount || sub?.amount
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 270,
+                                                                lineNumber: 898,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 267,
+                                                        lineNumber: 895,
                                                         columnNumber: 25
                                                     }, this),
-                                                    sub1?.status === "pending" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    sub?.status === "pending" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "mt-4 flex justify-start",
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                            onClick: ()=>subscriptionMarkAsPaid(sub1),
+                                                            onClick: ()=>subscriptionMarkAsPaid(sub),
                                                             className: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm",
                                                             children: "Mark as Paid"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/[details]/page.js",
-                                                            lineNumber: 275,
+                                                            lineNumber: 903,
                                                             columnNumber: 29
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 274,
+                                                        lineNumber: 902,
                                                         columnNumber: 27
                                                     }, this)
                                                 ]
                                             }, index, true, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 244,
+                                                lineNumber: 872,
                                                 columnNumber: 23
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 237,
+                                        lineNumber: 865,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "max-h-[250px] overflow-y-auto space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50",
@@ -756,27 +1815,27 @@ function UserDashboard() {
                                             children: "No paid subscriptions found."
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/[details]/page.js",
-                                            lineNumber: 290,
+                                            lineNumber: 918,
                                             columnNumber: 21
-                                        }, this) : paidSubscriptions.map((sub1, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        }, this) : paidSubscriptions.map((sub, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "p-4 border rounded-xl bg-white hover:bg-gray-100 transition flex flex-col relative",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: `absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(sub1?.status)}`,
-                                                        children: sub1?.status.charAt(0).toUpperCase() + sub1?.status?.slice(1).toLowerCase()
+                                                        className: `absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(sub?.status)}`,
+                                                        children: sub?.status.charAt(0).toUpperCase() + sub?.status?.slice(1).toLowerCase()
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 299,
+                                                        lineNumber: 927,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 className: "font-semibold text-gray-800",
-                                                                children: sub1.paidForMonth
+                                                                children: sub.paidForMonth
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 309,
+                                                                lineNumber: 937,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -784,17 +1843,17 @@ function UserDashboard() {
                                                                 children: [
                                                                     "Date:",
                                                                     " ",
-                                                                    formatDate(sub1?.paidForDueDate || sub1?.dueDate)
+                                                                    formatDate(sub?.paidForDueDate || sub?.dueDate)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 312,
+                                                                lineNumber: 940,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 308,
+                                                        lineNumber: 936,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -803,82 +1862,82 @@ function UserDashboard() {
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 children: [
                                                                     "Amount: ₹",
-                                                                    sub1?.subscriptionId?.subscription
+                                                                    sub?.subscriptionId?.subscription
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 319,
+                                                                lineNumber: 947,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 children: [
                                                                     "GST: ",
-                                                                    sub1?.gst,
+                                                                    sub?.gst,
                                                                     "%"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 320,
+                                                                lineNumber: 948,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 children: [
                                                                     "Total: ₹",
-                                                                    sub1?.subscriptionId?.amount
+                                                                    sub?.subscriptionId?.amount
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 321,
+                                                                lineNumber: 949,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 318,
+                                                        lineNumber: 946,
                                                         columnNumber: 25
                                                     }, this),
-                                                    sub1?.status === "pending" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    sub?.status === "pending" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "mt-4 flex justify-start",
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                            onClick: ()=>subscriptionMarkAsPaid(sub1),
+                                                            onClick: ()=>subscriptionMarkAsPaid(sub),
                                                             className: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm",
                                                             children: "Mark as Paid"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/[details]/page.js",
-                                                            lineNumber: 326,
+                                                            lineNumber: 954,
                                                             columnNumber: 29
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 325,
+                                                        lineNumber: 953,
                                                         columnNumber: 27
                                                     }, this)
                                                 ]
                                             }, index, true, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 295,
+                                                lineNumber: 923,
                                                 columnNumber: 23
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 288,
+                                        lineNumber: 916,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                lineNumber: 206,
+                                lineNumber: 834,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex-1 flex flex-col",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                        className: "text-xl font-semibold mb-3 text-gray-800",
-                                        children: "Services"
+                                        className: "text-xl font-semibold mb-3 text-gray-800 capitalize",
+                                        children: currentServices[0]?.serviceType
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 343,
+                                        lineNumber: 971,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -890,7 +1949,7 @@ function UserDashboard() {
                                                 children: "Current"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 347,
+                                                lineNumber: 975,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -899,34 +1958,34 @@ function UserDashboard() {
                                                 children: "Paid"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 357,
+                                                lineNumber: 985,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 346,
+                                        lineNumber: 974,
                                         columnNumber: 15
                                     }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    serviceTab === "current" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "max-h-[250px] overflow-y-auto space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50",
-                                        children: servicesToShow.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        children: currentServices.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                             className: "text-gray-500 text-sm",
-                                            children: "No services found."
+                                            children: "No Current Services"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/[details]/page.js",
-                                            lineNumber: 371,
-                                            columnNumber: 19
-                                        }, this) : servicesToShow.map((service, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            lineNumber: 1001,
+                                            columnNumber: 21
+                                        }, this) : currentServices.map((service, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "p-4 border rounded-xl bg-white hover:bg-gray-100 transition relative",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         className: `absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(service.status)}`,
-                                                        children: service.status.charAt(0).toUpperCase() + sub?.status?.slice(1).toLowerCase()
+                                                        children: service.status.charAt(0).toUpperCase() + service.status.slice(1).toLowerCase()
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 378,
-                                                        columnNumber: 23
+                                                        lineNumber: 1008,
+                                                        columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         children: [
@@ -935,95 +1994,200 @@ function UserDashboard() {
                                                                 children: service.paidForMonth
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 387,
-                                                                columnNumber: 25
+                                                                lineNumber: 1018,
+                                                                columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                className: "text-sm text-gray-500",
+                                                                className: "text-sm text-red-500",
                                                                 children: [
-                                                                    "EMI Number: ",
-                                                                    service.emiNumber
+                                                                    "Due Date:",
+                                                                    " ",
+                                                                    service.dueDate ? formatDate(service.dueDate) : "N/A"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 390,
-                                                                columnNumber: 25
+                                                                lineNumber: 1021,
+                                                                columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 386,
-                                                        columnNumber: 23
+                                                        lineNumber: 1017,
+                                                        columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "mt-2 grid grid-cols-2 md:grid-cols-3 gap-2 text-sm text-gray-700",
+                                                        className: "mt-2 flex text-sm text-gray-700 justify-between items-start",
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 children: [
-                                                                    "EMI Amount: ₹",
-                                                                    service.emiAmount
+                                                                    "Total EMI: ",
+                                                                    service.totalEMI || "N/A"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 395,
-                                                                columnNumber: 25
+                                                                lineNumber: 1030,
+                                                                columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 children: [
-                                                                    "Due Date: ",
-                                                                    formatDate(service.dueDate)
+                                                                    "EMI: ",
+                                                                    service.emiPay || "N/A"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 396,
-                                                                columnNumber: 25
+                                                                lineNumber: 1031,
+                                                                columnNumber: 27
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                children: [
+                                                                    "EMI Amount: ₹ ",
+                                                                    service.emiAmount || "N/A"
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/app/components/[details]/page.js",
+                                                                lineNumber: 1032,
+                                                                columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 394,
-                                                        columnNumber: 23
+                                                        lineNumber: 1029,
+                                                        columnNumber: 25
                                                     }, this),
-                                                    service.status === "pending" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                        onClick: ()=>checkServicePayment(index),
-                                                        className: "absolute bottom-4 right-4 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm",
-                                                        children: "Mark as Paid"
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "mt-4 flex justify-start",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            onClick: markAsPaid,
+                                                            className: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm",
+                                                            children: "Mark as Paid"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/app/components/[details]/page.js",
+                                                            lineNumber: 1036,
+                                                            columnNumber: 27
+                                                        }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 399,
+                                                        lineNumber: 1035,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, index, true, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 374,
-                                                columnNumber: 21
+                                                lineNumber: 1004,
+                                                columnNumber: 23
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 369,
-                                        columnNumber: 15
+                                        lineNumber: 999,
+                                        columnNumber: 17
+                                    }, this) : // Paid Services
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "max-h-[250px] overflow-y-auto space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50",
+                                        children: paidServices.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-gray-500 text-sm",
+                                            children: "No Paid Services"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/components/[details]/page.js",
+                                            lineNumber: 1051,
+                                            columnNumber: 21
+                                        }, this) : paidServices.map((service, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "p-4 border rounded-xl bg-white hover:bg-gray-100 transition relative",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: `absolute top-4 right-4 text-sm font-medium px-3 py-1 rounded-full ${getStatusClass(service.status)}`,
+                                                        children: service.status.charAt(0).toUpperCase() + service.status.slice(1).toLowerCase()
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/components/[details]/page.js",
+                                                        lineNumber: 1058,
+                                                        columnNumber: 25
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "font-semibold text-gray-800",
+                                                                children: service.paidForMonth || "N/A"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/components/[details]/page.js",
+                                                                lineNumber: 1068,
+                                                                columnNumber: 27
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "text-sm text-green-500",
+                                                                children: [
+                                                                    "Date: ",
+                                                                    service?.date
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/app/components/[details]/page.js",
+                                                                lineNumber: 1072,
+                                                                columnNumber: 27
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/app/components/[details]/page.js",
+                                                        lineNumber: 1067,
+                                                        columnNumber: 25
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "mt-2 flex text-sm text-gray-700 justify-between items-start",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                children: [
+                                                                    "EMI: ",
+                                                                    service.emiNo || "N/A"
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/app/components/[details]/page.js",
+                                                                lineNumber: 1078,
+                                                                columnNumber: 27
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                children: [
+                                                                    "EMI Amount: ₹ ",
+                                                                    service.emiAmount || "N/A"
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/app/components/[details]/page.js",
+                                                                lineNumber: 1079,
+                                                                columnNumber: 27
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/app/components/[details]/page.js",
+                                                        lineNumber: 1077,
+                                                        columnNumber: 25
+                                                    }, this)
+                                                ]
+                                            }, index, true, {
+                                                fileName: "[project]/src/app/components/[details]/page.js",
+                                                lineNumber: 1054,
+                                                columnNumber: 23
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/components/[details]/page.js",
+                                        lineNumber: 1049,
+                                        columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                lineNumber: 342,
+                                lineNumber: 970,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/[details]/page.js",
-                        lineNumber: 204,
+                        lineNumber: 832,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/[details]/page.js",
-                    lineNumber: 203,
+                    lineNumber: 831,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/components/[details]/page.js",
-                lineNumber: 202,
+                lineNumber: 830,
                 columnNumber: 7
             }, this)
         ]

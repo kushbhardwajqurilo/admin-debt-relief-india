@@ -115,6 +115,9 @@ const ApiRute = {
         singerSubscription: "/subcription/get-substouser",
         markaspaid: "/subcription/markAsPaid",
         paidSubs: "/subcription/getPaidSubscriptions"
+    },
+    user: {
+        single: "/user/get-user-saving"
     }
 };
 }),
