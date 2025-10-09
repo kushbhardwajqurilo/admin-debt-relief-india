@@ -25,6 +25,8 @@ export default function UploadEMIModal({ isOpen, onClose, mode, refreshFun }) {
   const [sendEmi, setSendEMi] = useState({ phone: "", file: null });
   const [showLoanForm, setShowLoanForm] = useState({ status: false, id: "" });
   const [closeUser, setCloseUser] = useState(false);
+  const [loadingPaid, setLoadingPaid] = useState(false);
+
   const router = useRouter();
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -129,14 +131,17 @@ export default function UploadEMIModal({ isOpen, onClose, mode, refreshFun }) {
 
   const markAsPaid = async () => {
     try {
-      setLoad(true);
+      setLoadingPaid(true);
       const res = await fetch(`${API_BASE_URL}${ApiRute.emi.markaspaid}`, {
         method: "PUT",
         headers: {
           "content-type": "application/json",
           authorization: `Bearer ${getStroage().token}`,
         },
-        body: JSON.stringify({ phone: mode.phone }),
+        body: JSON.stringify({
+          phone: mode.phone,
+          user_id: userData?.kyc?.user_id,
+        }),
       });
       const result = await res.json();
       result?.success
@@ -146,7 +151,7 @@ export default function UploadEMIModal({ isOpen, onClose, mode, refreshFun }) {
       console.error(err);
     } finally {
       refreshFun();
-      setLoad(false);
+      setLoadingPaid(false);
     }
   };
 
@@ -318,7 +323,7 @@ export default function UploadEMIModal({ isOpen, onClose, mode, refreshFun }) {
                       className="bg-[#1172da] text-white px-6 py-2 rounded-lg font-bold cursor-pointer"
                       onClick={markAsPaid}
                     >
-                      {load ? "Marking..." : "Mark as Paid"}
+                      {loadingPaid ? "Marking..." : "Mark as Paid"}
                     </button>
                     <button
                       className="bg-[#1172da] text-white px-6 py-2 rounded-lg font-bold cursor-pointer"
