@@ -88,7 +88,8 @@ const ApiRute = {
         singe: "/driuser/single",
         addUser: "/driuser",
         delete: "/driuser/delete-user",
-        update: "/driuser/update-user"
+        update: "/driuser/update-user",
+        permanentDelete: "/driuser/permanent-delete"
     },
     adminProfileImage: "/admin/adminProfileBanner",
     emi: {
@@ -97,7 +98,9 @@ const ApiRute = {
         markaspaid: "/emi/mark-as-paid",
         bulkinsert: "/emi/bulk-insert",
         outstanding: "/emi/outstand",
-        getPaidService: "/emi/get-paid-service"
+        getPaidService: "/emi/get-paid-service",
+        updateDueDate: "/emi/update-date",
+        addLoan: "/emi/add-single-loan"
     },
     userLoan: {
         addloan: "/loan/create"
@@ -132,7 +135,8 @@ const ApiRute = {
         getuser: "/subcription/subscription-users",
         singerSubscription: "/subcription/get-substouser",
         markaspaid: "/subcription/markAsPaid",
-        paidSubs: "/subcription/getPaidSubscriptions"
+        paidSubs: "/subcription/getPaidSubscriptions",
+        updateDueDate: "/subcription/update-date"
     },
     user: {
         single: "/user/get-user-saving"

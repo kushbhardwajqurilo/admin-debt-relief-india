@@ -73,7 +73,8 @@ const ApiRute = {
         singe: "/driuser/single",
         addUser: "/driuser",
         delete: "/driuser/delete-user",
-        update: "/driuser/update-user"
+        update: "/driuser/update-user",
+        permanentDelete: "/driuser/permanent-delete"
     },
     adminProfileImage: "/admin/adminProfileBanner",
     emi: {
@@ -82,7 +83,9 @@ const ApiRute = {
         markaspaid: "/emi/mark-as-paid",
         bulkinsert: "/emi/bulk-insert",
         outstanding: "/emi/outstand",
-        getPaidService: "/emi/get-paid-service"
+        getPaidService: "/emi/get-paid-service",
+        updateDueDate: "/emi/update-date",
+        addLoan: "/emi/add-single-loan"
     },
     userLoan: {
         addloan: "/loan/create"
@@ -117,7 +120,8 @@ const ApiRute = {
         getuser: "/subcription/subscription-users",
         singerSubscription: "/subcription/get-substouser",
         markaspaid: "/subcription/markAsPaid",
-        paidSubs: "/subcription/getPaidSubscriptions"
+        paidSubs: "/subcription/getPaidSubscriptions",
+        updateDueDate: "/subcription/update-date"
     },
     user: {
         single: "/user/get-user-saving"
@@ -920,6 +924,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js_
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/url/ApiRoute.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react-hot-toast/dist/index.mjs [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/url/storage.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
@@ -929,32 +934,23 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+;
 function LoanEMIForm(param) {
     let { show, handleClose, phone, id } = param;
-    var _banks_data;
     _s();
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [banks, setBanks] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])();
-    const [formData, setFormData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
-        principleAmount: "",
-        estimatedSettlement: "",
-        bank: "",
-        savings: "",
-        phone: phone,
-        user_id: ""
-    });
+    const [banks, setBanks] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [selectedBank, setSelectedBank] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
-    const handleBankSelect = (val)=>{
-        setSelectedBank(val.bankName);
-        setFormData((prev)=>({
-                ...prev,
-                bank: val._id
-            }));
-        setFormData((prev)=>({
-                ...prev,
-                user_id: id
-            }));
-    };
+    // ✅ keep all input fields in formData
+    const [formData, setFormData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        loanType: "",
+        amount: "",
+        settlmentPercentage: "",
+        total: "",
+        bank: "",
+        phone: phone
+    });
+    // ✅ handle input change for all inputs
     const handleChange = (e)=>{
         const { name, value } = e.target;
         setFormData((prev)=>({
@@ -962,39 +958,25 @@ function LoanEMIForm(param) {
                 [name]: value
             }));
     };
-    const handleAdd = async ()=>{
-        try {
-            console.log("formdata", formData);
-            setLoading(true);
-            const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].loan.addLoan), {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData)
-            });
-            const result = await res.json();
-            if (result === null || result === void 0 ? void 0 : result.success) __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success(result === null || result === void 0 ? void 0 : result.message);
-            else __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(result === null || result === void 0 ? void 0 : result.message);
-        } catch (error) {
-            console.error(error);
-        } finally{
-            setLoading(false);
-            handleClose();
-        }
+    // ✅ handle bank selection
+    const handleBankSelect = (val)=>{
+        setSelectedBank(val._id);
+        setFormData((prev)=>({
+                ...prev,
+                bank: val.bankName
+            }));
     };
+    // ✅ fetch banks
     const getBanks = async ()=>{
         try {
             const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].bank.getbanks), {
                 method: "GET",
                 headers: {
-                    "content-type": "application/json"
+                    "Content-Type": "application/json"
                 }
             });
             const result = await res.json();
-            if (result === null || result === void 0 ? void 0 : result.success) {
-                setBanks(result);
-            }
+            if (result === null || result === void 0 ? void 0 : result.success) setBanks(result.data);
         } catch (error) {
             console.error(error);
         }
@@ -1004,6 +986,44 @@ function LoanEMIForm(param) {
             getBanks();
         }
     }["LoanEMIForm.useEffect"], []);
+    // ✅ handle form submit (API call)
+    const handleAdd = async ()=>{
+        if (!formData.bank || !formData.loanType) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error("Please fill all required fields");
+            return;
+        }
+        try {
+            setLoading(true);
+            const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].emi.addLoan), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: "Bearer ".concat((0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getStroage"])().token)
+                },
+                body: JSON.stringify(formData)
+            });
+            const result = await res.json();
+            if (result === null || result === void 0 ? void 0 : result.success) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success(result.message || "Loan added successfully!");
+                setFormData({
+                    loanType: "",
+                    amount: "",
+                    settlmentPercentage: "",
+                    total: "",
+                    bank: "",
+                    phone: phone
+                });
+                handleClose();
+            } else {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(result.message || "Something went wrong");
+            }
+        } catch (error) {
+            console.error(error);
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error("Server error");
+        } finally{
+            setLoading(false);
+        }
+    };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$headlessui$2f$react$2f$dist$2f$components$2f$dialog$2f$dialog$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
         open: show,
         onClose: handleClose,
@@ -1014,7 +1034,7 @@ function LoanEMIForm(param) {
                 "aria-hidden": "true"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                lineNumber: 73,
+                lineNumber: 98,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1027,13 +1047,14 @@ function LoanEMIForm(param) {
                             children: "Loan EMI Form"
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                            lineNumber: 76,
+                            lineNumber: 101,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "grid grid-cols-2 gap-4",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "space-y-3",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             children: [
@@ -1041,7 +1062,7 @@ function LoanEMIForm(param) {
                                                     children: "Loan Type"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                    lineNumber: 83,
+                                                    lineNumber: 109,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1055,7 +1076,7 @@ function LoanEMIForm(param) {
                                                             children: "Select Type"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                            lineNumber: 90,
+                                                            lineNumber: 116,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1063,7 +1084,7 @@ function LoanEMIForm(param) {
                                                             children: "Personal Loan"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                            lineNumber: 91,
+                                                            lineNumber: 117,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1071,174 +1092,171 @@ function LoanEMIForm(param) {
                                                             children: "Credit Loan"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                            lineNumber: 92,
+                                                            lineNumber: 118,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                    lineNumber: 84,
+                                                    lineNumber: 110,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                            lineNumber: 82,
+                                            lineNumber: 108,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    children: "Principal Amount"
+                                                    children: "Amount"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                    lineNumber: 97,
+                                                    lineNumber: 123,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    autoComplete: "off",
                                                     type: "text",
-                                                    name: "principleAmount",
-                                                    value: formData.principleAmount,
+                                                    name: "amount",
+                                                    value: formData.amount,
                                                     onChange: handleChange,
                                                     className: "w-full border p-2 rounded"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                    lineNumber: 98,
+                                                    lineNumber: 124,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                            lineNumber: 96,
+                                            lineNumber: 122,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    children: "Estimated Settlement"
+                                                    children: "CC/PL Settlement Percentage"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                    lineNumber: 108,
+                                                    lineNumber: 135,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                                    type: "text",
-                                                    name: "estimatedSettlement",
-                                                    value: formData.estimatedSettlement,
+                                                    autoComplete: "off",
+                                                    type: "number",
+                                                    name: "settlmentPercentage",
+                                                    value: formData.settlmentPercentage,
                                                     onChange: handleChange,
                                                     className: "w-full border p-2 rounded"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                    lineNumber: 109,
+                                                    lineNumber: 136,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                            lineNumber: 107,
+                                            lineNumber: 134,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    children: "Savings"
+                                                    children: "CC/PL Total"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                    lineNumber: 119,
+                                                    lineNumber: 147,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    autoComplete: "off",
                                                     type: "text",
-                                                    name: "savings",
-                                                    value: formData.savings,
+                                                    name: "total",
+                                                    value: formData.total,
                                                     onChange: handleChange,
                                                     className: "w-full border p-2 rounded"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                    lineNumber: 120,
+                                                    lineNumber: 148,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                            lineNumber: 118,
+                                            lineNumber: 146,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                    lineNumber: 81,
+                                    lineNumber: 107,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                                             className: "font-semibold mb-2",
-                                            children: "Select Banks"
+                                            children: "Select Bank"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                            lineNumber: 130,
+                                            lineNumber: 161,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "h-[230px] overflow-x-hidden overflow-y-auto border p-2 rounded",
-                                            children: (banks === null || banks === void 0 ? void 0 : (_banks_data = banks.data) === null || _banks_data === void 0 ? void 0 : _banks_data.length) > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
-                                                className: "space-y-1",
-                                                children: banks.data.map((val, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                        onClick: ()=>handleBankSelect(val),
-                                                        className: "flex items-center gap-2 p-1 rounded cursor-pointer transition-colors bg-gray-200 border-1 border-gray-300 ".concat(selectedBank === val.bankName ? "bg-blue-100 border border-blue-400" : "hover:bg-gray-100"),
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                                                src: val.icon || "/bank-placeholder.png",
-                                                                alt: val.bankName,
-                                                                className: "object-contain rounded",
-                                                                height: 20,
-                                                                width: 20
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                                lineNumber: 144,
-                                                                columnNumber: 25
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                children: val.bankName
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                                lineNumber: 151,
-                                                                columnNumber: 25
-                                                            }, this)
-                                                        ]
-                                                    }, i, true, {
-                                                        fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                        lineNumber: 135,
-                                                        columnNumber: 23
-                                                    }, this))
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                lineNumber: 133,
-                                                columnNumber: 19
-                                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                className: "text-gray-500",
+                                            className: "h-[400px] overflow-y-auto border p-2 rounded space-y-1",
+                                            children: banks.length > 0 ? banks.map((val)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    onClick: ()=>handleBankSelect(val),
+                                                    className: "flex items-center gap-2 p-2 rounded-lg cursor-pointer border transition-all duration-200 ".concat(selectedBank === val._id ? "bg-blue-600 text-white border-blue-600 shadow-md scale-[1.02]" : "bg-gray-100 hover:bg-gray-200 border-gray-300"),
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                                            src: (val === null || val === void 0 ? void 0 : val.icon) || "/bank-placeholder.png",
+                                                            alt: val === null || val === void 0 ? void 0 : val.bankName,
+                                                            className: "object-contain rounded bg-white p-1",
+                                                            height: 24,
+                                                            width: 24
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/app/components/uploadManualEmiModal.js",
+                                                            lineNumber: 174,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "font-medium",
+                                                            children: val === null || val === void 0 ? void 0 : val.bankName
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/app/components/uploadManualEmiModal.js",
+                                                            lineNumber: 181,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    ]
+                                                }, val._id, true, {
+                                                    fileName: "[project]/src/app/components/uploadManualEmiModal.js",
+                                                    lineNumber: 165,
+                                                    columnNumber: 21
+                                                }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-gray-500 text-sm",
                                                 children: "No banks found"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                                lineNumber: 156,
+                                                lineNumber: 185,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                            lineNumber: 131,
+                                            lineNumber: 162,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                    lineNumber: 129,
+                                    lineNumber: 160,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                            lineNumber: 80,
+                            lineNumber: 105,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1250,7 +1268,7 @@ function LoanEMIForm(param) {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                    lineNumber: 163,
+                                    lineNumber: 193,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1260,34 +1278,34 @@ function LoanEMIForm(param) {
                                     children: loading ? "Uploading..." : "Upload"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                                    lineNumber: 169,
+                                    lineNumber: 199,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                            lineNumber: 162,
+                            lineNumber: 192,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                    lineNumber: 75,
+                    lineNumber: 100,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-                lineNumber: 74,
+                lineNumber: 99,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/uploadManualEmiModal.js",
-        lineNumber: 72,
+        lineNumber: 97,
         columnNumber: 5
     }, this);
 }
-_s(LoanEMIForm, "OUtfvJcTHp1C/Ek7UkQFlcVQO10=");
+_s(LoanEMIForm, "1Jjnq+QYa0NQUQ5GZC4LPwmN84s=");
 _c = LoanEMIForm;
 var _c;
 __turbopack_context__.k.register(_c, "LoanEMIForm");
@@ -3661,6 +3679,490 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 
 var { k: __turbopack_refresh__, m: module } = __turbopack_context__;
 {
+// "use client";
+// import { useState, useEffect } from "react";
+// import Header from "../components/Header";
+// import UploadEMIModal from "../components/UploadEMIModal";
+// import { API_BASE_URL } from "@/url/BaseURL";
+// import { ApiRute } from "@/url/ApiRoute";
+// import ReviewAssignModal from "../components/ReviewAssignModal";
+// import PayToDri from "../components/PaytoDri";
+// import UploadCSVModal from "../components/uploadUsersFromCSV";
+// import { toTitleCase } from "@/utlis/string";
+// import toast from "react-hot-toast";
+// import { getStroage } from "@/url/storage";
+// import UpdateProfile from "../components/UpdateProfile";
+// function formatDate(date) {
+//   const dateArr = date?.split("-");
+//   const dateTime = dateArr[dateArr?.length - 1];
+//   const day = dateTime?.split("T")[0];
+//   const year = dateArr[0];
+//   const month = dateArr[1];
+//   return `${day}/${month}/${year}`;
+// }
+// export default function DashboardPage() {
+//   const [activeTab, setActiveTab] = useState("emi");
+//   const [statusFilter, setStatusFilter] = useState("");
+//   const [genderFilter, setGenderFilter] = useState("");
+//   const [keycUsers, setKycUser] = useState([]);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [modalMode, setModalMode] = useState("upload");
+//   const [show, setShow] = useState(false);
+//   const [reviewModalOpen, setReviewModalOpen] = useState(false);
+//   const [selectedUser, setSelectedUser] = useState(null);
+//   const [emiUsers, setEmiUsers] = useState([]);
+//   const [search, setSearch] = useState("");
+//   const [selectedPhone, setPhone] = useState(0);
+//   const [csvModalOpen, setCsvModalOpen] = useState(false);
+//   const [selectedUsers, setSelectedUsers] = useState([]);
+//   const [userIds, setUserIds] = useState([]);
+//   const [phones, setPhones] = useState([]);
+//   const [updateModalOpen, setUpdateModalOpen] = useState(false);
+//   const [updateUser, setUpdateUser] = useState(null);
+//   const [type, setType] = useState("");
+//   const [refresh, setRefresh] = useState(false);
+//   useEffect(() => {
+//     GetAllKycUser();
+//     getAllDriUers();
+//   }, []);
+//   useEffect(() => {
+//     GetAllKycUser();
+//     getAllDriUers();
+//   }, [refresh]);
+//   const GetAllKycUser = async () => {
+//     const res = await fetch(`${API_BASE_URL}${ApiRute.kyc.get}`);
+//     const result = await res.json();
+//     setKycUser(result?.data || []);
+//   };
+//   const getAllDriUers = async () => {
+//     const res = await fetch(`${API_BASE_URL}${ApiRute.driUser.getAll}`);
+//     const result = await res.json();
+//     if (result?.success) setEmiUsers(result?.data || []);
+//   };
+//   const openModal = (mode) => {
+//     setModalMode(mode);
+//     setIsModalOpen(true);
+//   };
+//   const handleShow = (data) => {
+//     setPhone(data?.phone);
+//     setShow(true);
+//   };
+//   const handleClose = () => setShow(false);
+//   const isEMI = activeTab === "emi";
+//   const filteredEmiUsers = emiUsers.filter(
+//     (user) =>
+//       user?.id?.toString().includes(search) ||
+//       user?.name?.toLowerCase().includes(search.toLowerCase()) ||
+//       user?.phone?.toString().includes(search)
+//   );
+//   const filteredKycUsers = keycUsers.filter(
+//     (user) =>
+//       (!statusFilter ||
+//         user.status?.toLowerCase() === statusFilter.toLowerCase()) &&
+//       (!genderFilter ||
+//         user.gender?.toLowerCase() === genderFilter.toLowerCase()) &&
+//       (user?.id?.toString().includes(search) ||
+//         user?.name?.toLowerCase().includes(search.toLowerCase()) ||
+//         user?.user_id?.phone?.toString().includes(search))
+//   );
+//   const handleSelectAll = (e) => {
+//     if (e.target.checked) {
+//       const allUserIds = [];
+//       const allPhones = [];
+//       filteredEmiUsers.forEach((user) => {
+//         if (user?.id) {
+//           allUserIds.push(user.id);
+//         } else if (user?.phone) {
+//           allPhones.push(user.phone);
+//         }
+//       });
+//       setSelectedUsers([...allUserIds, ...allPhones]);
+//       setUserIds(allUserIds);
+//       setPhones(allPhones);
+//     } else {
+//       setSelectedUsers([]);
+//       setUserIds([]);
+//       setPhones([]);
+//     }
+//   };
+//   // ✅ Updated handleSelectOne (single checkbox)
+//   const handleSelectOne = (user) => {
+//     const idOrPhone = user?.id ? user.id : user?.phone;
+//     setSelectedUsers((prev) =>
+//       prev.includes(idOrPhone)
+//         ? prev.filter((u) => u !== idOrPhone)
+//         : [...prev, idOrPhone]
+//     );
+//     // Update separate arrays
+//     if (user?.id) {
+//       setUserIds((prev) =>
+//         prev.includes(user.id)
+//           ? prev.filter((u) => u !== user.id)
+//           : [...prev, user.id]
+//       );
+//     } else if (user?.phone) {
+//       setPhones((prev) =>
+//         prev.includes(user.phone)
+//           ? prev.filter((p) => p !== user.phone)
+//           : [...prev, user.phone]
+//       );
+//     }
+//   };
+//   // ✅ Delete
+//   const handleDelete = async () => {
+//     if (!selectedUsers.length) {
+//       toast.error("No users selected");
+//       return;
+//     }
+//     try {
+//       const res = await fetch(`${API_BASE_URL}${ApiRute.driUser.delete}`, {
+//         method: "DELETE",
+//         headers: {
+//           "content-type": "application/json",
+//           authorization: `Bearer ${getStroage().token}`,
+//         },
+//         body: JSON.stringify({ userIds, phones }),
+//       });
+//       const result = await res.json();
+//       if (result?.success) {
+//         toast.success(result?.message);
+//         setSelectedUsers([]);
+//         setUserIds([]);
+//         setPhones([]);
+//         getAllDriUers();
+//       } else {
+//         toast.error(result?.message);
+//       }
+//     } catch (error) {
+//       console.error(error);
+//       toast.error("Something went wrong!");
+//     }
+//   };
+//   // refresh function
+//   const handleRefresh = () => {
+//     setRefresh((prev) => !prev);
+//   };
+//   return (
+//     <div>
+//       <Header />
+//       <div className="min-h-screen p-4 w-full mx-auto">
+//         {/* Tabs */}
+//         <div className="w-full mx-auto mt-4 flex mb-10 border-2 border-blue-800">
+//           <div
+//             onClick={() => setActiveTab("emi")}
+//             className={`w-1/2 text-center py-3 font-semibold text-lg cursor-pointer border-r border-blue-800 ${
+//               isEMI
+//                 ? "bg-[#00479C] text-white"
+//                 : "bg-[#F3F8FF] text-[#00479C] border-blue-800"
+//             }`}
+//           >
+//             User EMI Summary
+//           </div>
+//           <div
+//             onClick={() => setActiveTab("kyc")}
+//             className={`w-1/2 text-center py-3 font-semibold text-lg cursor-pointer ${
+//               !isEMI
+//                 ? "bg-[#00479C] text-white"
+//                 : "bg-[#F3F8FF] text-[#00479C] border-blue-800"
+//             }`}
+//           >
+//             KYC Approval
+//           </div>
+//         </div>
+//         {/* Card */}
+//         <div className="p-4 w-[80%] mx-auto bg-white h-[600px] rounded-xl shadow-lg overflow-auto">
+//           {/* Filters */}
+//           <div className="flex justify-between mb-4">
+//             <input
+//               type="text"
+//               placeholder="Search By User ID / Name / Phone"
+//               className="border px-4 py-2 rounded-md w-[300px]"
+//               value={search}
+//               onChange={(e) => setSearch(e.target.value)}
+//             />
+//             <div className="flex gap-2">
+//               <button
+//                 onClick={() => {
+//                   setCsvModalOpen(true);
+//                   setType("emi");
+//                 }}
+//                 className="w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition"
+//               >
+//                 Insert EMI&apos;s
+//               </button>
+//               <button
+//                 onClick={handleDelete}
+//                 className="w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition"
+//               >
+//                 Delete Users
+//               </button>
+//               <button
+//                 onClick={() => {
+//                   setCsvModalOpen(true);
+//                   setType("user");
+//                 }}
+//                 className="w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition"
+//               >
+//                 Add Users
+//               </button>
+//               <select
+//                 className="border px-4 py-2 rounded-md"
+//                 value={statusFilter}
+//                 onChange={(e) => setStatusFilter(e.target.value)}
+//               >
+//                 <option value="">Status</option>
+//                 <option value="pending">Pending</option>
+//                 <option value="approve">Approved</option>
+//               </select>
+//               <select
+//                 className="border px-4 py-2 rounded-md"
+//                 value={genderFilter}
+//                 onChange={(e) => setGenderFilter(e.target.value)}
+//               >
+//                 <option value="">Gender</option>
+//                 <option value="male">Male</option>
+//                 <option value="female">Female</option>
+//               </select>
+//             </div>
+//           </div>
+//           {/* EMI Table */}
+//           {isEMI ? (
+//             <table className="w-full text-sm border text-center">
+//               <thead className="bg-gray-100">
+//                 <tr className="text-center">
+//                   <th className="p-3">
+//                     <input
+//                       type="checkbox"
+//                       onChange={handleSelectAll}
+//                       checked={
+//                         selectedUsers.length ===
+//                           filteredEmiUsers.filter((u) => u?.id || u?.phone)
+//                             .length && filteredEmiUsers.length > 0
+//                       }
+//                     />
+//                   </th>
+//                   <th className="p-3">User ID</th>
+//                   <th className="p-3">DRI User</th>
+//                   <th className="p-3">Gender</th>
+//                   <th className="p-3">User Mob No.</th>
+//                   <th className="p-3">EMI Progress</th>
+//                   <th className="p-3">Status</th>
+//                   <th className="p-3 text-center">Actions</th>
+//                 </tr>
+//               </thead>
+//               <tbody>
+//                 {filteredEmiUsers.length === 0 ? (
+//                   <tr>
+//                     <td colSpan={9} className="p-4 text-center">
+//                       No Users Found
+//                     </td>
+//                   </tr>
+//                 ) : (
+//                   filteredEmiUsers.map((user, idx) => (
+//                     <tr key={idx} className="border-t text-center">
+//                       <td>
+//                         <input
+//                           type="checkbox"
+//                           checked={selectedUsers.includes(
+//                             user?.id || user?.phone
+//                           )}
+//                           onChange={() => handleSelectOne(user)}
+//                         />
+//                       </td>
+//                       <td className="p-3">{user?.id}</td>
+//                       <td className="p-3 flex items-center gap-3">
+//                         {user?.name}
+//                       </td>
+//                       <td>{toTitleCase(user?.gender)}</td>
+//                       <td className="p-3">{user?.phone}</td>
+//                       <td className="p-3">
+//                         {user?.emiPay}/{user?.totalEmi}
+//                       </td>
+//                       <td className="p-3">
+//                         <span
+//                           className={`inline-flex items-center gap-2 ${
+//                             user.status?.toLowerCase() === "paid"
+//                               ? "text-green-600"
+//                               : user.status?.toLowerCase() === "pending"
+//                               ? "text-red-600"
+//                               : "text-blue-600"
+//                           }`}
+//                         >
+//                           <span
+//                             className={`h-2 w-2 rounded-full ${
+//                               user.status?.toLowerCase() === "paid"
+//                                 ? "bg-green-500"
+//                                 : user.status?.toLowerCase() === "pending"
+//                                 ? "bg-red-500"
+//                                 : "bg-blue-500"
+//                             }`}
+//                           ></span>
+//                           {user.status}
+//                         </span>
+//                       </td>
+//                       <td className="p-3 flex gap-3 justify-center">
+//                         {selectedUsers.length === 1 &&
+//                         selectedUsers.includes(user?.id || user?.phone) ? (
+//                           // ✅ Update button
+//                           <button
+//                             className="bg-[#044B99] text-white px-3 py-1 rounded"
+//                             onClick={() => {
+//                               setUpdateUser(user); // update modal user
+//                               setUpdateModalOpen(true); // open modal
+//                             }}
+//                           >
+//                             Update
+//                           </button>
+//                         ) : (
+//                           // ✅ Default Actions
+//                           <>
+//                             <button
+//                               onClick={() =>
+//                                 openModal({
+//                                   view: "upload",
+//                                   phone: user?.phone,
+//                                 })
+//                               }
+//                               className="bg-[#044B99] text-white px-3 py-1 rounded"
+//                             >
+//                               Upload File
+//                             </button>
+//                             <button
+//                               onClick={() =>
+//                                 handleShow({
+//                                   phone: user?.phone,
+//                                   id: user?.kyc?.user_id,
+//                                 })
+//                               }
+//                               className="bg-[#044B99] text-white px-3 py-1 rounded"
+//                             >
+//                               Manual EMI
+//                             </button>
+//                             <button
+//                               onClick={() =>
+//                                 openModal({ view: "view", phone: user?.phone })
+//                               }
+//                               className="font-semibold px-3 py-1 rounded"
+//                             >
+//                               View
+//                             </button>
+//                           </>
+//                         )}
+//                       </td>
+//                     </tr>
+//                   ))
+//                 )}
+//               </tbody>
+//             </table>
+//           ) : (
+//             /* KYC Table */
+//             <table className="w-full text-sm text-left border">
+//               <thead className="bg-gray-100">
+//                 <tr className="text-center">
+//                   <th className="p-3">DRI User</th>
+//                   <th className="p-3">Gender</th>
+//                   <th className="p-3">Joining Date</th>
+//                   <th className="p-3">User Mob No.</th>
+//                   <th className="p-3">Status</th>
+//                   <th className="p-3">Actions</th>
+//                 </tr>
+//               </thead>
+//               <tbody>
+//                 {filteredKycUsers.length === 0 ? (
+//                   <tr>
+//                     <td colSpan={6} className="p-4 text-center">
+//                       No Users Found
+//                     </td>
+//                   </tr>
+//                 ) : (
+//                   filteredKycUsers.map((user, idx) => (
+//                     <tr key={idx} className="border-t text-center">
+//                       {console.log("user", user)}
+//                       <td className="p-3 flex items-center justify-center gap-3">
+//                         <div className="font-medium">{user?.name}</div>
+//                       </td>
+//                       <td>{toTitleCase(user?.gender)}</td>
+//                       <td className="p-3">
+//                         {user?.date || formatDate(user?.joinDate)}
+//                       </td>
+//                       <td className="p-3">{user?.user_id?.phone}</td>
+//                       <td className="p-3">
+//                         <span
+//                           className={`inline-flex items-center gap-2 ${
+//                             user.status?.toLowerCase() === "approve"
+//                               ? "text-green-600"
+//                               : "text-red-600"
+//                           }`}
+//                         >
+//                           <span
+//                             className={`h-2 w-2 rounded-full ${
+//                               user.status?.toLowerCase() === "approve"
+//                                 ? "bg-green-500"
+//                                 : "bg-red-500"
+//                             }`}
+//                           ></span>
+//                           {user.status}
+//                         </span>
+//                       </td>
+//                       <td className="p-3">
+//                         <button
+//                           onClick={() => {
+//                             setSelectedUser(user);
+//                             setReviewModalOpen(true);
+//                           }}
+//                           className="bg-[#044B99] text-white px-4 py-1 rounded-lg"
+//                         >
+//                           Review & Assign
+//                         </button>
+//                       </td>
+//                     </tr>
+//                   ))
+//                 )}
+//               </tbody>
+//             </table>
+//           )}
+//         </div>
+//       </div>
+//       {/* Modals */}
+//       <UploadEMIModal
+//         isOpen={isModalOpen}
+//         onClose={() => setIsModalOpen(false)}
+//         mode={modalMode}
+//         refreshFun={handleRefresh}
+//       />
+//       <ReviewAssignModal
+//         isOpen={reviewModalOpen}
+//         onClose={() => setReviewModalOpen(false)}
+//         userData={selectedUser}
+//       />
+//       <PayToDri
+//         show={show}
+//         phone={selectedPhone}
+//         handleClose={() => {
+//           handleClose();
+//           getAllDriUers();
+//           GetAllKycUser();
+//         }}
+//       />
+//       <UploadCSVModal
+//         isOpen={csvModalOpen}
+//         onClose={() => {
+//           setCsvModalOpen(false);
+//           getAllDriUers();
+//           GetAllKycUser();
+//         }}
+//         types={type}
+//       />
+//       {updateModalOpen && (
+//         <UpdateProfile
+//           isOpen={updateModalOpen}
+//           onClose={() => setUpdateModalOpen(false)}
+//           userData={updateUser}
+//         />
+//       )}
+//     </div>
+//   );
+// }
 __turbopack_context__.s({
     "default": ()=>DashboardPage
 });
@@ -3706,36 +4208,34 @@ function DashboardPage() {
     const [statusFilter, setStatusFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [genderFilter, setGenderFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [keycUsers, setKycUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
-    const [isModalOpen, setIsModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [modalMode, setModalMode] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("upload");
-    const [show, setShow] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [reviewModalOpen, setReviewModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [selectedUser, setSelectedUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [emiUsers, setEmiUsers] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [search, setSearch] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
-    const [selectedPhone, setPhone] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
-    const [csvModalOpen, setCsvModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [selectedUsers, setSelectedUsers] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [userIds, setUserIds] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [phones, setPhones] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [isModalOpen, setIsModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [modalMode, setModalMode] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("upload");
+    const [show, setShow] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [selectedPhone, setPhone] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
+    const [reviewModalOpen, setReviewModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [selectedUser, setSelectedUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [csvModalOpen, setCsvModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [updateModalOpen, setUpdateModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [updateUser, setUpdateUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [type, setType] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [refresh, setRefresh] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const isEMI = activeTab === "emi";
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "DashboardPage.useEffect": ()=>{
-            GetAllKycUser();
-            getAllDriUers();
-        }
-    }["DashboardPage.useEffect"], []);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "DashboardPage.useEffect": ()=>{
-            GetAllKycUser();
-            getAllDriUers();
+            fetchAllUsers();
         }
     }["DashboardPage.useEffect"], [
         refresh
     ]);
+    const fetchAllUsers = async ()=>{
+        await GetAllKycUser();
+        await getAllDriUers();
+    };
     const GetAllKycUser = async ()=>{
         const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].kyc.get));
         const result = await res.json();
@@ -3755,55 +4255,59 @@ function DashboardPage() {
         setShow(true);
     };
     const handleClose = ()=>setShow(false);
-    const isEMI = activeTab === "emi";
     const filteredEmiUsers = emiUsers.filter((user)=>{
         var _user_id, _user_name, _user_phone;
         return (user === null || user === void 0 ? void 0 : (_user_id = user.id) === null || _user_id === void 0 ? void 0 : _user_id.toString().includes(search)) || (user === null || user === void 0 ? void 0 : (_user_name = user.name) === null || _user_name === void 0 ? void 0 : _user_name.toLowerCase().includes(search.toLowerCase())) || (user === null || user === void 0 ? void 0 : (_user_phone = user.phone) === null || _user_phone === void 0 ? void 0 : _user_phone.toString().includes(search));
     });
     const filteredKycUsers = keycUsers.filter((user)=>{
-        var _user_status, _user_gender, _user_id, _user_name, _user_user_id_phone, _user_user_id;
-        return (!statusFilter || ((_user_status = user.status) === null || _user_status === void 0 ? void 0 : _user_status.toLowerCase()) === statusFilter.toLowerCase()) && (!genderFilter || ((_user_gender = user.gender) === null || _user_gender === void 0 ? void 0 : _user_gender.toLowerCase()) === genderFilter.toLowerCase()) && ((user === null || user === void 0 ? void 0 : (_user_id = user.id) === null || _user_id === void 0 ? void 0 : _user_id.toString().includes(search)) || (user === null || user === void 0 ? void 0 : (_user_name = user.name) === null || _user_name === void 0 ? void 0 : _user_name.toLowerCase().includes(search.toLowerCase())) || (user === null || user === void 0 ? void 0 : (_user_user_id = user.user_id) === null || _user_user_id === void 0 ? void 0 : (_user_user_id_phone = _user_user_id.phone) === null || _user_user_id_phone === void 0 ? void 0 : _user_user_id_phone.toString().includes(search)));
+        var _user_status, _user_gender, _user_id, _user_name, _user_kyc_user_id, _user_kyc;
+        return (!statusFilter || ((_user_status = user.status) === null || _user_status === void 0 ? void 0 : _user_status.toLowerCase()) === statusFilter.toLowerCase()) && (!genderFilter || ((_user_gender = user.gender) === null || _user_gender === void 0 ? void 0 : _user_gender.toLowerCase()) === genderFilter.toLowerCase()) && ((user === null || user === void 0 ? void 0 : (_user_id = user.id) === null || _user_id === void 0 ? void 0 : _user_id.toString().includes(search)) || (user === null || user === void 0 ? void 0 : (_user_name = user.name) === null || _user_name === void 0 ? void 0 : _user_name.toLowerCase().includes(search.toLowerCase())) || (user === null || user === void 0 ? void 0 : (_user_kyc = user.kyc) === null || _user_kyc === void 0 ? void 0 : (_user_kyc_user_id = _user_kyc.user_id) === null || _user_kyc_user_id === void 0 ? void 0 : _user_kyc_user_id.toString().includes(search)));
     });
-    const handleSelectAll = (e)=>{
-        if (e.target.checked) {
-            const allUserIds = [];
-            const allPhones = [];
-            filteredEmiUsers.forEach((user)=>{
-                if (user === null || user === void 0 ? void 0 : user.id) {
-                    allUserIds.push(user.id);
-                } else if (user === null || user === void 0 ? void 0 : user.phone) {
-                    allPhones.push(user.phone);
-                }
-            });
+    // ✅ Select All
+    const handleSelectAll = ()=>{
+        const usersToSelect = isEMI ? filteredEmiUsers : filteredKycUsers;
+        const allUserIds = [];
+        const allPhones = [];
+        usersToSelect.forEach((user)=>{
+            var _user_kyc;
+            if (user === null || user === void 0 ? void 0 : user.phone) allPhones.push(user.phone);
+            if (user === null || user === void 0 ? void 0 : (_user_kyc = user.kyc) === null || _user_kyc === void 0 ? void 0 : _user_kyc.user_id) allUserIds.push(user.kyc.user_id);
+        });
+        const allSelectedCount = allUserIds.length + allPhones.length;
+        // Toggle: if all are already selected, unselect all
+        if (selectedUsers.length === allSelectedCount) {
+            setSelectedUsers([]);
+            setUserIds([]);
+            setPhones([]);
+        } else {
             setSelectedUsers([
                 ...allUserIds,
                 ...allPhones
             ]);
             setUserIds(allUserIds);
             setPhones(allPhones);
-        } else {
-            setSelectedUsers([]);
-            setUserIds([]);
-            setPhones([]);
         }
     };
-    // ✅ Updated handleSelectOne (single checkbox)
+    // ✅ Select One
     const handleSelectOne = (user)=>{
-        const idOrPhone = (user === null || user === void 0 ? void 0 : user.id) ? user.id : user === null || user === void 0 ? void 0 : user.phone;
+        var _user_kyc;
+        const idForDelete = user === null || user === void 0 ? void 0 : (_user_kyc = user.kyc) === null || _user_kyc === void 0 ? void 0 : _user_kyc.user_id;
+        const phone = user === null || user === void 0 ? void 0 : user.phone;
+        const idOrPhone = idForDelete || phone;
         setSelectedUsers((prev)=>prev.includes(idOrPhone) ? prev.filter((u)=>u !== idOrPhone) : [
                 ...prev,
                 idOrPhone
             ]);
-        // Update separate arrays
-        if (user === null || user === void 0 ? void 0 : user.id) {
-            setUserIds((prev)=>prev.includes(user.id) ? prev.filter((u)=>u !== user.id) : [
+        if (idForDelete) {
+            setUserIds((prev)=>prev.includes(idForDelete) ? prev.filter((u)=>u !== idForDelete) : [
                     ...prev,
-                    user.id
+                    idForDelete
                 ]);
-        } else if (user === null || user === void 0 ? void 0 : user.phone) {
-            setPhones((prev)=>prev.includes(user.phone) ? prev.filter((p)=>p !== user.phone) : [
+        }
+        if (phone) {
+            setPhones((prev)=>prev.includes(phone) ? prev.filter((p)=>p !== phone) : [
                     ...prev,
-                    user.phone
+                    phone
                 ]);
         }
     };
@@ -3813,8 +4317,12 @@ function DashboardPage() {
             __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error("No users selected");
             return;
         }
+        console.log("se", {
+            userIds,
+            phones
+        });
         try {
-            const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].driUser.delete), {
+            const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].driUser.permanentDelete), {
                 method: "DELETE",
                 headers: {
                     "content-type": "application/json",
@@ -3831,7 +4339,7 @@ function DashboardPage() {
                 setSelectedUsers([]);
                 setUserIds([]);
                 setPhones([]);
-                getAllDriUers();
+                fetchAllUsers();
             } else {
                 __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(result === null || result === void 0 ? void 0 : result.message);
             }
@@ -3840,15 +4348,12 @@ function DashboardPage() {
             __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error("Something went wrong!");
         }
     };
-    // refresh function
-    const handleRefresh = ()=>{
-        setRefresh((prev)=>!prev);
-    };
+    const handleRefresh = ()=>setRefresh((prev)=>!prev);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$Header$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 187,
+                lineNumber: 708,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3863,7 +4368,7 @@ function DashboardPage() {
                                 children: "User EMI Summary"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/userController/page.js",
-                                lineNumber: 192,
+                                lineNumber: 713,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3872,620 +4377,611 @@ function DashboardPage() {
                                 children: "KYC Approval"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/userController/page.js",
-                                lineNumber: 202,
+                                lineNumber: 723,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/userController/page.js",
-                        lineNumber: 191,
+                        lineNumber: 712,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "p-4 w-[80%] mx-auto bg-white h-[600px] rounded-xl shadow-lg overflow-auto",
+                        className: "flex justify-between mb-4",
                         children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                type: "text",
+                                placeholder: "Search By User ID / Name / Phone",
+                                className: "border px-4 py-2 rounded-md w-[300px]",
+                                value: search,
+                                onChange: (e)=>setSearch(e.target.value)
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/userController/page.js",
+                                lineNumber: 737,
+                                columnNumber: 11
+                            }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "flex justify-between mb-4",
+                                className: "flex gap-2",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                        type: "text",
-                                        placeholder: "Search By User ID / Name / Phone",
-                                        className: "border px-4 py-2 rounded-md w-[300px]",
-                                        value: search,
-                                        onChange: (e)=>setSearch(e.target.value)
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: ()=>{
+                                            setCsvModalOpen(true);
+                                            setType("emi");
+                                        },
+                                        className: "w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition",
+                                        children: "Insert EMI's"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 218,
+                                        lineNumber: 745,
                                         columnNumber: 13
                                     }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex gap-2",
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: handleDelete,
+                                        className: "w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition",
+                                        children: "Delete Users"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/userController/page.js",
+                                        lineNumber: 754,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: ()=>{
+                                            setCsvModalOpen(true);
+                                            setType("user");
+                                        },
+                                        className: "w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition",
+                                        children: "Add Users"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/userController/page.js",
+                                        lineNumber: 760,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                        className: "border px-4 py-2 rounded-md",
+                                        value: statusFilter,
+                                        onChange: (e)=>setStatusFilter(e.target.value),
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: ()=>{
-                                                    setCsvModalOpen(true);
-                                                    setType("emi");
-                                                },
-                                                className: "w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition",
-                                                children: "Insert EMI's"
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                value: "",
+                                                children: "Status"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 226,
+                                                lineNumber: 775,
                                                 columnNumber: 15
                                             }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: handleDelete,
-                                                className: "w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition",
-                                                children: "Delete Users"
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                value: "pending",
+                                                children: "Pending"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 235,
+                                                lineNumber: 776,
                                                 columnNumber: 15
                                             }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: ()=>{
-                                                    setCsvModalOpen(true);
-                                                    setType("user");
-                                                },
-                                                className: "w-30 bg-[#044b99] rounded text-white cursor-pointer hover:bg-white border-1 hover:border-[#044b99] hover:text-[#044b99] transition",
-                                                children: "Add Users"
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                value: "approve",
+                                                children: "Approved"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 241,
-                                                columnNumber: 15
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
-                                                className: "border px-4 py-2 rounded-md",
-                                                value: statusFilter,
-                                                onChange: (e)=>setStatusFilter(e.target.value),
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                        value: "",
-                                                        children: "Status"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 256,
-                                                        columnNumber: 17
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                        value: "pending",
-                                                        children: "Pending"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 257,
-                                                        columnNumber: 17
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                        value: "approve",
-                                                        children: "Approved"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 258,
-                                                        columnNumber: 17
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 251,
-                                                columnNumber: 15
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
-                                                className: "border px-4 py-2 rounded-md",
-                                                value: genderFilter,
-                                                onChange: (e)=>setGenderFilter(e.target.value),
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                        value: "",
-                                                        children: "Gender"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 266,
-                                                        columnNumber: 17
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                        value: "male",
-                                                        children: "Male"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 267,
-                                                        columnNumber: 17
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                        value: "female",
-                                                        children: "Female"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 268,
-                                                        columnNumber: 17
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 261,
+                                                lineNumber: 777,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 225,
+                                        lineNumber: 770,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                        className: "border px-4 py-2 rounded-md",
+                                        value: genderFilter,
+                                        onChange: (e)=>setGenderFilter(e.target.value),
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                value: "",
+                                                children: "Gender"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 785,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                value: "male",
+                                                children: "Male"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 786,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                value: "female",
+                                                children: "Female"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 787,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/userController/page.js",
+                                        lineNumber: 780,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/userController/page.js",
-                                lineNumber: 217,
+                                lineNumber: 744,
                                 columnNumber: 11
-                            }, this),
-                            isEMI ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
-                                className: "w-full text-sm border text-center",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
-                                        className: "bg-gray-100",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                            className: "text-center",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
-                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                                        type: "checkbox",
-                                                        onChange: handleSelectAll,
-                                                        checked: selectedUsers.length === filteredEmiUsers.filter((u)=>(u === null || u === void 0 ? void 0 : u.id) || (u === null || u === void 0 ? void 0 : u.phone)).length && filteredEmiUsers.length > 0
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 279,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 278,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
-                                                    children: "User ID"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 289,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
-                                                    children: "DRI User"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 290,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
-                                                    children: "Gender"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 291,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
-                                                    children: "User Mob No."
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 292,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
-                                                    children: "EMI Progress"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 293,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
-                                                    children: "Status"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 294,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3 text-center",
-                                                    children: "Actions"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 295,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/userController/page.js",
-                                            lineNumber: 277,
-                                            columnNumber: 17
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 276,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
-                                        children: filteredEmiUsers.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                colSpan: 9,
-                                                className: "p-4 text-center",
-                                                children: "No Users Found"
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/userController/page.js",
+                        lineNumber: 736,
+                        columnNumber: 9
+                    }, this),
+                    isEMI ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
+                        className: "w-full text-sm border text-center",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
+                                className: "bg-gray-100",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                    className: "text-center",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3",
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                onChange: handleSelectAll,
+                                                checked: selectedUsers.length === filteredEmiUsers.filter((u)=>{
+                                                    var _u_kyc;
+                                                    return (u === null || u === void 0 ? void 0 : u.phone) || (u === null || u === void 0 ? void 0 : (_u_kyc = u.kyc) === null || _u_kyc === void 0 ? void 0 : _u_kyc.user_id);
+                                                }).length && filteredEmiUsers.length > 0
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 301,
-                                                columnNumber: 21
+                                                lineNumber: 798,
+                                                columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/userController/page.js",
-                                            lineNumber: 300,
-                                            columnNumber: 19
-                                        }, this) : filteredEmiUsers.map((user, idx)=>{
-                                            var _user_status, _user_status1, _user_status2, _user_status3;
-                                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                className: "border-t text-center",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                                            type: "checkbox",
-                                                            checked: selectedUsers.includes((user === null || user === void 0 ? void 0 : user.id) || (user === null || user === void 0 ? void 0 : user.phone)),
-                                                            onChange: ()=>handleSelectOne(user)
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 309,
-                                                            columnNumber: 25
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 308,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "p-3",
-                                                        children: user === null || user === void 0 ? void 0 : user.id
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 317,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "p-3 flex items-center gap-3",
-                                                        children: user === null || user === void 0 ? void 0 : user.name
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 318,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utlis$2f$string$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toTitleCase"])(user === null || user === void 0 ? void 0 : user.gender)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 321,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "p-3",
-                                                        children: user === null || user === void 0 ? void 0 : user.phone
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 323,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "p-3",
-                                                        children: [
-                                                            user === null || user === void 0 ? void 0 : user.emiPay,
-                                                            "/",
-                                                            user === null || user === void 0 ? void 0 : user.totalEmi
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 324,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "p-3",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            className: "inline-flex items-center gap-2 ".concat(((_user_status = user.status) === null || _user_status === void 0 ? void 0 : _user_status.toLowerCase()) === "paid" ? "text-green-600" : ((_user_status1 = user.status) === null || _user_status1 === void 0 ? void 0 : _user_status1.toLowerCase()) === "pending" ? "text-red-600" : "text-blue-600"),
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    className: "h-2 w-2 rounded-full ".concat(((_user_status2 = user.status) === null || _user_status2 === void 0 ? void 0 : _user_status2.toLowerCase()) === "paid" ? "bg-green-500" : ((_user_status3 = user.status) === null || _user_status3 === void 0 ? void 0 : _user_status3.toLowerCase()) === "pending" ? "bg-red-500" : "bg-blue-500")
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 337,
-                                                                    columnNumber: 27
-                                                                }, this),
-                                                                user.status
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 328,
-                                                            columnNumber: 25
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 327,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "p-3 flex gap-3 justify-center",
-                                                        children: selectedUsers.length === 1 && selectedUsers.includes((user === null || user === void 0 ? void 0 : user.id) || (user === null || user === void 0 ? void 0 : user.phone)) ? // ✅ Update button
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                            className: "bg-[#044B99] text-white px-3 py-1 rounded",
-                                                            onClick: ()=>{
-                                                                setUpdateUser(user); // update modal user
-                                                                setUpdateModalOpen(true); // open modal
-                                                            },
-                                                            children: "Update"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 353,
-                                                            columnNumber: 27
-                                                        }, this) : // ✅ Default Actions
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                                    onClick: ()=>openModal({
-                                                                            view: "upload",
-                                                                            phone: user === null || user === void 0 ? void 0 : user.phone
-                                                                        }),
-                                                                    className: "bg-[#044B99] text-white px-3 py-1 rounded",
-                                                                    children: "Upload File"
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 365,
-                                                                    columnNumber: 29
-                                                                }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                                    onClick: ()=>{
-                                                                        var _user_kyc;
-                                                                        return handleShow({
-                                                                            phone: user === null || user === void 0 ? void 0 : user.phone,
-                                                                            id: user === null || user === void 0 ? void 0 : (_user_kyc = user.kyc) === null || _user_kyc === void 0 ? void 0 : _user_kyc.user_id
-                                                                        });
-                                                                    },
-                                                                    className: "bg-[#044B99] text-white px-3 py-1 rounded",
-                                                                    children: "Manual EMI"
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 376,
-                                                                    columnNumber: 29
-                                                                }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                                    onClick: ()=>openModal({
-                                                                            view: "view",
-                                                                            phone: user === null || user === void 0 ? void 0 : user.phone
-                                                                        }),
-                                                                    className: "font-semibold px-3 py-1 rounded",
-                                                                    children: "View"
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 387,
-                                                                    columnNumber: 29
-                                                                }, this)
-                                                            ]
-                                                        }, void 0, true)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 349,
-                                                        columnNumber: 23
-                                                    }, this)
-                                                ]
-                                            }, idx, true, {
-                                                fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 307,
-                                                columnNumber: 21
-                                            }, this);
-                                        })
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 298,
-                                        columnNumber: 15
-                                    }, this)
-                                ]
-                            }, void 0, true, {
+                                            lineNumber: 797,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3",
+                                            children: "User ID"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/userController/page.js",
+                                            lineNumber: 809,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3",
+                                            children: "DRI User"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/userController/page.js",
+                                            lineNumber: 810,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3",
+                                            children: "Gender"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/userController/page.js",
+                                            lineNumber: 811,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3",
+                                            children: "User Mob No."
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/userController/page.js",
+                                            lineNumber: 812,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3",
+                                            children: "EMI Progress"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/userController/page.js",
+                                            lineNumber: 813,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3",
+                                            children: "Status"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/userController/page.js",
+                                            lineNumber: 814,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3 text-center",
+                                            children: "Actions"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/userController/page.js",
+                                            lineNumber: 815,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/app/userController/page.js",
+                                    lineNumber: 796,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
                                 fileName: "[project]/src/app/userController/page.js",
-                                lineNumber: 275,
+                                lineNumber: 795,
                                 columnNumber: 13
-                            }, this) : /* KYC Table */ /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
-                                className: "w-full text-sm text-left border",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
-                                        className: "bg-gray-100",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                            className: "text-center",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
-                                                    children: "DRI User"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 408,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
-                                                    children: "Gender"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 409,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
-                                                    children: "Joining Date"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 410,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
-                                                    children: "User Mob No."
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 411,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
-                                                    children: "Status"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 412,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "p-3",
-                                                    children: "Actions"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/userController/page.js",
-                                                    lineNumber: 413,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/userController/page.js",
-                                            lineNumber: 407,
-                                            columnNumber: 17
-                                        }, this)
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
+                                children: filteredEmiUsers.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                        colSpan: 9,
+                                        className: "p-4 text-center",
+                                        children: "No Users Found"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 406,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
-                                        children: filteredKycUsers.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                colSpan: 6,
-                                                className: "p-4 text-center",
-                                                children: "No Users Found"
+                                        lineNumber: 821,
+                                        columnNumber: 19
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/userController/page.js",
+                                    lineNumber: 820,
+                                    columnNumber: 17
+                                }, this) : filteredEmiUsers.map((user, idx)=>{
+                                    var _user_kyc, _user_status, _user_status1, _user_status2, _user_status3, _user_kyc1;
+                                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                        className: "border-t text-center",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    type: "checkbox",
+                                                    checked: selectedUsers.includes((user === null || user === void 0 ? void 0 : (_user_kyc = user.kyc) === null || _user_kyc === void 0 ? void 0 : _user_kyc.user_id) || (user === null || user === void 0 ? void 0 : user.phone)),
+                                                    onChange: ()=>handleSelectOne(user)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/userController/page.js",
+                                                    lineNumber: 829,
+                                                    columnNumber: 23
+                                                }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 419,
+                                                lineNumber: 828,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                className: "p-3",
+                                                children: user === null || user === void 0 ? void 0 : user.id
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 837,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                className: "p-3 flex items-center gap-3",
+                                                children: user === null || user === void 0 ? void 0 : user.name
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 838,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utlis$2f$string$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toTitleCase"])(user === null || user === void 0 ? void 0 : user.gender)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 841,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                className: "p-3",
+                                                children: user === null || user === void 0 ? void 0 : user.phone
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 842,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                className: "p-3",
+                                                children: [
+                                                    user === null || user === void 0 ? void 0 : user.emiPay,
+                                                    "/",
+                                                    user === null || user === void 0 ? void 0 : user.totalEmi
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 843,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                className: "p-3",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "inline-flex items-center gap-2 ".concat(((_user_status = user.status) === null || _user_status === void 0 ? void 0 : _user_status.toLowerCase()) === "paid" ? "text-green-600" : ((_user_status1 = user.status) === null || _user_status1 === void 0 ? void 0 : _user_status1.toLowerCase()) === "pending" ? "text-red-600" : "text-blue-600"),
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "h-2 w-2 rounded-full ".concat(((_user_status2 = user.status) === null || _user_status2 === void 0 ? void 0 : _user_status2.toLowerCase()) === "paid" ? "bg-green-500" : ((_user_status3 = user.status) === null || _user_status3 === void 0 ? void 0 : _user_status3.toLowerCase()) === "pending" ? "bg-red-500" : "bg-blue-500")
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/app/userController/page.js",
+                                                            lineNumber: 856,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        user.status
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/src/app/userController/page.js",
+                                                    lineNumber: 847,
+                                                    columnNumber: 23
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 846,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                className: "p-3 flex gap-3 justify-center",
+                                                children: selectedUsers.length === 1 && selectedUsers.includes((user === null || user === void 0 ? void 0 : (_user_kyc1 = user.kyc) === null || _user_kyc1 === void 0 ? void 0 : _user_kyc1.user_id) || (user === null || user === void 0 ? void 0 : user.phone)) ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    className: "bg-[#044B99] text-white px-3 py-1 rounded",
+                                                    onClick: ()=>{
+                                                        setUpdateUser(user);
+                                                        setUpdateModalOpen(true);
+                                                    },
+                                                    children: "Update"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/userController/page.js",
+                                                    lineNumber: 873,
+                                                    columnNumber: 25
+                                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            onClick: ()=>openModal({
+                                                                    view: "upload",
+                                                                    phone: user === null || user === void 0 ? void 0 : user.phone
+                                                                }),
+                                                            className: "bg-[#044B99] text-white px-3 py-1 rounded",
+                                                            children: "Upload File"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/app/userController/page.js",
+                                                            lineNumber: 884,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            onClick: ()=>{
+                                                                var _user_kyc;
+                                                                return handleShow({
+                                                                    phone: user === null || user === void 0 ? void 0 : user.phone,
+                                                                    id: user === null || user === void 0 ? void 0 : (_user_kyc = user.kyc) === null || _user_kyc === void 0 ? void 0 : _user_kyc.user_id
+                                                                });
+                                                            },
+                                                            className: "bg-[#044B99] text-white px-3 py-1 rounded",
+                                                            children: "Manual EMI"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/app/userController/page.js",
+                                                            lineNumber: 892,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            onClick: ()=>openModal({
+                                                                    view: "view",
+                                                                    phone: user === null || user === void 0 ? void 0 : user.phone
+                                                                }),
+                                                            className: "font-semibold px-3 py-1 rounded",
+                                                            children: "View"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/app/userController/page.js",
+                                                            lineNumber: 903,
+                                                            columnNumber: 27
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 868,
                                                 columnNumber: 21
                                             }, this)
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/userController/page.js",
-                                            lineNumber: 418,
-                                            columnNumber: 19
-                                        }, this) : filteredKycUsers.map((user, idx)=>{
-                                            var _user_user_id, _user_status, _user_status1;
-                                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                className: "border-t text-center",
-                                                children: [
-                                                    console.log("user", user),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "p-3 flex items-center justify-center gap-3",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            className: "font-medium",
-                                                            children: user === null || user === void 0 ? void 0 : user.name
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 428,
-                                                            columnNumber: 25
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 427,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utlis$2f$string$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toTitleCase"])(user === null || user === void 0 ? void 0 : user.gender)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 430,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "p-3",
-                                                        children: (user === null || user === void 0 ? void 0 : user.date) || formatDate(user === null || user === void 0 ? void 0 : user.joinDate)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 431,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "p-3",
-                                                        children: user === null || user === void 0 ? void 0 : (_user_user_id = user.user_id) === null || _user_user_id === void 0 ? void 0 : _user_user_id.phone
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 434,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "p-3",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            className: "inline-flex items-center gap-2 ".concat(((_user_status = user.status) === null || _user_status === void 0 ? void 0 : _user_status.toLowerCase()) === "approve" ? "text-green-600" : "text-red-600"),
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    className: "h-2 w-2 rounded-full ".concat(((_user_status1 = user.status) === null || _user_status1 === void 0 ? void 0 : _user_status1.toLowerCase()) === "approve" ? "bg-green-500" : "bg-red-500")
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/src/app/userController/page.js",
-                                                                    lineNumber: 443,
-                                                                    columnNumber: 27
-                                                                }, this),
-                                                                user.status
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 436,
-                                                            columnNumber: 25
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 435,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "p-3",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                            onClick: ()=>{
-                                                                setSelectedUser(user);
-                                                                setReviewModalOpen(true);
-                                                            },
-                                                            className: "bg-[#044B99] text-white px-4 py-1 rounded-lg",
-                                                            children: "Review & Assign"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/userController/page.js",
-                                                            lineNumber: 454,
-                                                            columnNumber: 25
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/userController/page.js",
-                                                        lineNumber: 453,
-                                                        columnNumber: 23
-                                                    }, this)
-                                                ]
-                                            }, idx, true, {
-                                                fileName: "[project]/src/app/userController/page.js",
-                                                lineNumber: 425,
-                                                columnNumber: 21
-                                            }, this);
-                                        })
-                                    }, void 0, false, {
+                                        ]
+                                    }, idx, true, {
                                         fileName: "[project]/src/app/userController/page.js",
-                                        lineNumber: 416,
-                                        columnNumber: 15
-                                    }, this)
-                                ]
-                            }, void 0, true, {
+                                        lineNumber: 827,
+                                        columnNumber: 19
+                                    }, this);
+                                })
+                            }, void 0, false, {
                                 fileName: "[project]/src/app/userController/page.js",
-                                lineNumber: 405,
+                                lineNumber: 818,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/userController/page.js",
-                        lineNumber: 215,
-                        columnNumber: 9
+                        lineNumber: 794,
+                        columnNumber: 11
+                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
+                        className: "w-full text-sm text-left border",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
+                                className: "bg-gray-100",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                    className: "text-center",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3",
+                                            children: "DRI User"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/userController/page.js",
+                                            lineNumber: 923,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3",
+                                            children: "Gender"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/userController/page.js",
+                                            lineNumber: 924,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3",
+                                            children: "Joining Date"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/userController/page.js",
+                                            lineNumber: 925,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3",
+                                            children: "User Mob No."
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/userController/page.js",
+                                            lineNumber: 926,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3",
+                                            children: "Status"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/userController/page.js",
+                                            lineNumber: 927,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                            className: "p-3",
+                                            children: "Actions"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/userController/page.js",
+                                            lineNumber: 928,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/app/userController/page.js",
+                                    lineNumber: 922,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/userController/page.js",
+                                lineNumber: 921,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
+                                children: filteredKycUsers.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                        colSpan: 6,
+                                        className: "p-4 text-center",
+                                        children: "No Users Found"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/userController/page.js",
+                                        lineNumber: 934,
+                                        columnNumber: 19
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/userController/page.js",
+                                    lineNumber: 933,
+                                    columnNumber: 17
+                                }, this) : filteredKycUsers.map((user, idx)=>{
+                                    var _user_kyc_user_id, _user_kyc, _user_status, _user_status1;
+                                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                        className: "border-t text-center",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                className: "p-3 flex items-center justify-center gap-3",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "font-medium",
+                                                    children: user === null || user === void 0 ? void 0 : user.name
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/userController/page.js",
+                                                    lineNumber: 942,
+                                                    columnNumber: 23
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 941,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utlis$2f$string$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toTitleCase"])(user === null || user === void 0 ? void 0 : user.gender)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 944,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                className: "p-3",
+                                                children: (user === null || user === void 0 ? void 0 : user.date) || formatDate(user === null || user === void 0 ? void 0 : user.joinDate)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 945,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                className: "p-3",
+                                                children: (user === null || user === void 0 ? void 0 : (_user_kyc = user.kyc) === null || _user_kyc === void 0 ? void 0 : (_user_kyc_user_id = _user_kyc.user_id) === null || _user_kyc_user_id === void 0 ? void 0 : _user_kyc_user_id.phone) || (user === null || user === void 0 ? void 0 : user.phone)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 948,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                className: "p-3",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "inline-flex items-center gap-2 ".concat(((_user_status = user.status) === null || _user_status === void 0 ? void 0 : _user_status.toLowerCase()) === "approve" ? "text-green-600" : "text-red-600"),
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "h-2 w-2 rounded-full ".concat(((_user_status1 = user.status) === null || _user_status1 === void 0 ? void 0 : _user_status1.toLowerCase()) === "approve" ? "bg-green-500" : "bg-red-500")
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/app/userController/page.js",
+                                                            lineNumber: 959,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        user.status
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/src/app/userController/page.js",
+                                                    lineNumber: 952,
+                                                    columnNumber: 23
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 951,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                className: "p-3",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    onClick: ()=>{
+                                                        setSelectedUser(user);
+                                                        setReviewModalOpen(true);
+                                                    },
+                                                    className: "bg-[#044B99] text-white px-4 py-1 rounded-lg",
+                                                    children: "Review & Assign"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/userController/page.js",
+                                                    lineNumber: 970,
+                                                    columnNumber: 23
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/userController/page.js",
+                                                lineNumber: 969,
+                                                columnNumber: 21
+                                            }, this)
+                                        ]
+                                    }, idx, true, {
+                                        fileName: "[project]/src/app/userController/page.js",
+                                        lineNumber: 940,
+                                        columnNumber: 19
+                                    }, this);
+                                })
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/userController/page.js",
+                                lineNumber: 931,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/userController/page.js",
+                        lineNumber: 920,
+                        columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 189,
+                lineNumber: 710,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$UploadEMIModal$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4495,7 +4991,7 @@ function DashboardPage() {
                 refreshFun: handleRefresh
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 474,
+                lineNumber: 989,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ReviewAssignModal$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4504,7 +5000,7 @@ function DashboardPage() {
                 userData: selectedUser
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 480,
+                lineNumber: 995,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$PaytoDri$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4512,25 +5008,23 @@ function DashboardPage() {
                 phone: selectedPhone,
                 handleClose: ()=>{
                     handleClose();
-                    getAllDriUers();
-                    GetAllKycUser();
+                    fetchAllUsers();
                 }
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 485,
+                lineNumber: 1000,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$uploadUsersFromCSV$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 isOpen: csvModalOpen,
                 onClose: ()=>{
                     setCsvModalOpen(false);
-                    getAllDriUers();
-                    GetAllKycUser();
+                    fetchAllUsers();
                 },
                 types: type
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 494,
+                lineNumber: 1008,
                 columnNumber: 7
             }, this),
             updateModalOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$UpdateProfile$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4539,17 +5033,17 @@ function DashboardPage() {
                 userData: updateUser
             }, void 0, false, {
                 fileName: "[project]/src/app/userController/page.js",
-                lineNumber: 504,
+                lineNumber: 1017,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/userController/page.js",
-        lineNumber: 186,
+        lineNumber: 707,
         columnNumber: 5
     }, this);
 }
-_s(DashboardPage, "RdIy4g5zHK8rNm6/hZg8eECxRhg=");
+_s(DashboardPage, "w86R3syqbvzCaCTbvZcMd1BZXrM=");
 _c = DashboardPage;
 var _c;
 __turbopack_context__.k.register(_c, "DashboardPage");

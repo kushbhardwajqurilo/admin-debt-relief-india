@@ -64,6 +64,7 @@ export const ApiRute = {
     addUser: "/driuser",
     delete: "/driuser/delete-user",
     update: "/driuser/update-user",
+    permanentDelete: "/driuser/permanent-delete",
   },
   adminProfileImage: "/admin/adminProfileBanner",
   emi: {
@@ -73,6 +74,8 @@ export const ApiRute = {
     bulkinsert: "/emi/bulk-insert",
     outstanding: "/emi/outstand",
     getPaidService: "/emi/get-paid-service",
+    updateDueDate: "/emi/update-date",
+    addLoan: "/emi/add-single-loan",
   },
   userLoan: {
     addloan: "/loan/create",
@@ -108,6 +111,7 @@ export const ApiRute = {
     singerSubscription: "/subcription/get-substouser",
     markaspaid: "/subcription/markAsPaid",
     paidSubs: "/subcription/getPaidSubscriptions",
+    updateDueDate: "/subcription/update-date",
   },
   user: {
     single: "/user/get-user-saving",

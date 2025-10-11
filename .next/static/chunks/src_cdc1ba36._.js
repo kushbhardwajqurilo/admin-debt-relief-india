@@ -73,7 +73,8 @@ const ApiRute = {
         singe: "/driuser/single",
         addUser: "/driuser",
         delete: "/driuser/delete-user",
-        update: "/driuser/update-user"
+        update: "/driuser/update-user",
+        permanentDelete: "/driuser/permanent-delete"
     },
     adminProfileImage: "/admin/adminProfileBanner",
     emi: {
@@ -82,7 +83,9 @@ const ApiRute = {
         markaspaid: "/emi/mark-as-paid",
         bulkinsert: "/emi/bulk-insert",
         outstanding: "/emi/outstand",
-        getPaidService: "/emi/get-paid-service"
+        getPaidService: "/emi/get-paid-service",
+        updateDueDate: "/emi/update-date",
+        addLoan: "/emi/add-single-loan"
     },
     userLoan: {
         addloan: "/loan/create"
@@ -117,7 +120,8 @@ const ApiRute = {
         getuser: "/subcription/subscription-users",
         singerSubscription: "/subcription/get-substouser",
         markaspaid: "/subcription/markAsPaid",
-        paidSubs: "/subcription/getPaidSubscriptions"
+        paidSubs: "/subcription/getPaidSubscriptions",
+        updateDueDate: "/subcription/update-date"
     },
     user: {
         single: "/user/get-user-saving"
@@ -1401,6 +1405,8 @@ var { k: __turbopack_refresh__, m: module } = __turbopack_context__;
 //   );
 // }
 __turbopack_context__.s({
+    "UpdateDateModal": ()=>UpdateDateModal,
+    "UpdateServiceDateModal": ()=>UpdateServiceDateModal,
     "default": ()=>UserDashboard
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
@@ -1412,7 +1418,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react-hot-toast/dist/index.mjs [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$Header$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/app/components/Header.js [app-client] (ecmascript)");
 ;
-var _s = __turbopack_context__.k.signature();
+var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature(), _s2 = __turbopack_context__.k.signature();
 "use client";
 ;
 ;
@@ -1429,6 +1435,56 @@ const formatDate = (dateStr)=>{
     const year = d.getFullYear();
     return "".concat(day, "/").concat(month, "/").concat(year);
 };
+const months = [
+    {
+        month: "01",
+        val: "January"
+    },
+    {
+        month: "02",
+        val: "February"
+    },
+    {
+        month: "03",
+        val: "March"
+    },
+    {
+        month: "04",
+        val: "April"
+    },
+    {
+        month: "05",
+        val: "May"
+    },
+    {
+        month: "06",
+        val: "June"
+    },
+    {
+        month: "07",
+        val: "July"
+    },
+    {
+        month: "08",
+        val: "August"
+    },
+    {
+        month: "09",
+        val: "September"
+    },
+    {
+        month: "10",
+        val: "October"
+    },
+    {
+        month: "11",
+        val: "November"
+    },
+    {
+        month: "12",
+        val: "December"
+    }
+];
 const formatPaidServiceDate = (isoStr)=>{
     if (!isoStr) return "N/A";
     const d = new Date(isoStr);
@@ -1444,9 +1500,291 @@ function PaidFormate(date) {
     return dateObj;
 }
 _c = PaidFormate;
+function UpdateDateModal(param) {
+    let { isOpen, onClose, onUpdate, userId } = param;
+    _s();
+    const [selectedDate, setSelectedDate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [days, setdays] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+    ]);
+    const handleSelectDate = (date)=>{
+        setSelectedDate(date);
+    };
+    const handleUpdate = async ()=>{
+        if (!selectedDate) return alert("Please select a date!");
+        onUpdate(selectedDate);
+        try {
+            const response = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].subscription.updateDueDate), {
+                method: "PATCH",
+                headers: {
+                    "content-type": "application/json",
+                    authorization: "Bearer ".concat((0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getStroage"])().token)
+                },
+                body: JSON.stringify({
+                    date: selectedDate,
+                    user_id: userId
+                })
+            });
+            const result = await response.json();
+            if (result === null || result === void 0 ? void 0 : result.success) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success(result === null || result === void 0 ? void 0 : result.message);
+            } else {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(result === null || result === void 0 ? void 0 : result.message);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally{
+            setSelectedDate("");
+            onClose();
+        }
+    };
+    if (!isOpen) return null; // hide modal if not open
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "fixed inset-0 bg-white-1 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50",
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "bg-white rounded-xl shadow-lg p-6 w-96",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                    className: "text-lg font-semibold mb-4",
+                    children: "Select Date to Update"
+                }, void 0, false, {
+                    fileName: "[project]/src/app/components/[details]/page.js",
+                    lineNumber: 629,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex w-full flex-wrap  p-2 gap-2 mb-2 border-gray-400 rounded-sm border-1 ",
+                    children: days === null || days === void 0 ? void 0 : days.map((val, pos)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            onClick: ()=>handleSelectDate(val),
+                            value: selectedDate,
+                            className: "flex-1 text-center p-2 rounded hover:bg-indigo-400 cursor-pointer transition hover:text-white ".concat(selectedDate == val ? "bg-indigo-400 text-white" : ""),
+                            children: val
+                        }, pos, false, {
+                            fileName: "[project]/src/app/components/[details]/page.js",
+                            lineNumber: 633,
+                            columnNumber: 13
+                        }, this))
+                }, void 0, false, {
+                    fileName: "[project]/src/app/components/[details]/page.js",
+                    lineNumber: 631,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex justify-end gap-3",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: onClose,
+                            className: "px-4 py-2 rounded bg-gray-200 hover:bg-gray-300",
+                            children: "Cancel"
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/components/[details]/page.js",
+                            lineNumber: 646,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: handleUpdate,
+                            className: "px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600",
+                            children: "Update"
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/components/[details]/page.js",
+                            lineNumber: 652,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/app/components/[details]/page.js",
+                    lineNumber: 645,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/src/app/components/[details]/page.js",
+            lineNumber: 628,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/src/app/components/[details]/page.js",
+        lineNumber: 627,
+        columnNumber: 5
+    }, this);
+}
+_s(UpdateDateModal, "D3QOYEiQPRlYK2oxt6wZ3xNh4zE=");
+_c1 = UpdateDateModal;
+function UpdateServiceDateModal(param) {
+    let { isOpen, onClose, onUpdate, phone } = param;
+    _s1();
+    const [selectedDate, setSelectedDate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [days, setdays] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+    ]);
+    const handleSelectDate = (date)=>{
+        setSelectedDate(date);
+    };
+    const handleUpdate = async ()=>{
+        if (!selectedDate) return alert("Please select a date!");
+        onUpdate(selectedDate);
+        try {
+            const response = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].emi.updateDueDate), {
+                method: "PATCH",
+                headers: {
+                    "content-type": "application/json",
+                    authorization: "Bearer ".concat((0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$storage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getStroage"])().token)
+                },
+                body: JSON.stringify({
+                    date: selectedDate,
+                    phone
+                })
+            });
+            const result = await response.json();
+            if (result === null || result === void 0 ? void 0 : result.success) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].success(result === null || result === void 0 ? void 0 : result.message);
+            } else {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error(result === null || result === void 0 ? void 0 : result.message);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally{
+            setSelectedDate("");
+            onClose();
+        }
+    };
+    if (!isOpen) return null; // hide modal if not open
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "fixed inset-0 bg-white-1 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50",
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "bg-white rounded-xl shadow-lg p-6 w-96",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                    className: "text-lg font-semibold mb-4",
+                    children: "Select Date to Update"
+                }, void 0, false, {
+                    fileName: "[project]/src/app/components/[details]/page.js",
+                    lineNumber: 707,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex w-full flex-wrap  p-2 gap-2 mb-2 border-gray-400 rounded-sm border-1 ",
+                    children: days === null || days === void 0 ? void 0 : days.map((val, pos)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            onClick: ()=>handleSelectDate(val),
+                            value: selectedDate,
+                            className: "flex-1 text-center p-2 rounded hover:bg-indigo-400 cursor-pointer transition hover:text-white ".concat(selectedDate == val ? "bg-indigo-400 text-white" : ""),
+                            children: val
+                        }, pos, false, {
+                            fileName: "[project]/src/app/components/[details]/page.js",
+                            lineNumber: 711,
+                            columnNumber: 13
+                        }, this))
+                }, void 0, false, {
+                    fileName: "[project]/src/app/components/[details]/page.js",
+                    lineNumber: 709,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex justify-end gap-3",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: onClose,
+                            className: "px-4 py-2 rounded bg-gray-200 hover:bg-gray-300",
+                            children: "Cancel"
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/components/[details]/page.js",
+                            lineNumber: 724,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: handleUpdate,
+                            className: "px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600",
+                            children: "Update"
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/components/[details]/page.js",
+                            lineNumber: 730,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/app/components/[details]/page.js",
+                    lineNumber: 723,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/src/app/components/[details]/page.js",
+            lineNumber: 706,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/src/app/components/[details]/page.js",
+        lineNumber: 705,
+        columnNumber: 5
+    }, this);
+}
+_s1(UpdateServiceDateModal, "D3QOYEiQPRlYK2oxt6wZ3xNh4zE=");
+_c2 = UpdateServiceDateModal;
 function UserDashboard() {
     var _currentServices_;
-    _s();
+    _s2();
+    const [isModalOpen, setIsModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [isServiceModalOpen, setIsServiceModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const { details } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useParams"])();
     const [usesrId, setUserId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [phone, setPhone] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
@@ -1459,6 +1797,14 @@ function UserDashboard() {
     // ✅ Separate states for services
     const [currentServices, setCurrentServices] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [paidServices, setPaidServices] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const handleUpdateDate = (date)=>{
+        console.log("Updated date:", date);
+    // call API or update state here
+    };
+    const handleServiceUpdateDate = (date)=>{
+        console.log("Updated date:", date);
+    // call API or update state here
+    };
     const fetchUserId = async ()=>{
         try {
             const response = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].user.single), {
@@ -1553,22 +1899,23 @@ function UserDashboard() {
             });
             const result = await response.json();
             if (result === null || result === void 0 ? void 0 : result.success) {
-                var _result_data, _result_data1, _result_data2, _result_data3, _result_data4, _result_data5, _result_data6;
+                var _result_data, _result_data1, _result_data2, _result_data3, _result_data4, _result_data5, _result_data6, _result_data7, _result_data8;
                 const [day, month, year] = result === null || result === void 0 ? void 0 : (_result_data = result.data) === null || _result_data === void 0 ? void 0 : _result_data.dueDate.split("-").map(Number);
                 const dateObj = new Date(year, month - 1, day);
+                const serviceType = !(result === null || result === void 0 ? void 0 : (_result_data1 = result.data) === null || _result_data1 === void 0 ? void 0 : _result_data1.Service_Fees) || (result === null || result === void 0 ? void 0 : (_result_data2 = result.data) === null || _result_data2 === void 0 ? void 0 : _result_data2.Service_Fees) === 0 || (result === null || result === void 0 ? void 0 : (_result_data3 = result.data) === null || _result_data3 === void 0 ? void 0 : _result_data3.Service_Fees) === "" ? "service Advance" : "service Fees";
                 const payload = [
                     {
-                        emiPay: result === null || result === void 0 ? void 0 : (_result_data1 = result.data) === null || _result_data1 === void 0 ? void 0 : _result_data1.emiPay,
-                        userId: result === null || result === void 0 ? void 0 : (_result_data2 = result.data) === null || _result_data2 === void 0 ? void 0 : _result_data2.id,
+                        emiPay: result === null || result === void 0 ? void 0 : (_result_data4 = result.data) === null || _result_data4 === void 0 ? void 0 : _result_data4.emiPay,
+                        userId: result === null || result === void 0 ? void 0 : (_result_data5 = result.data) === null || _result_data5 === void 0 ? void 0 : _result_data5.id,
                         dueDate: dateObj,
                         paidForMonth: dateObj.toLocaleString("default", {
                             month: "long",
                             year: "numeric"
                         }),
-                        totalEMI: result === null || result === void 0 ? void 0 : (_result_data3 = result.data) === null || _result_data3 === void 0 ? void 0 : _result_data3.totalEmi,
-                        emiAmount: result === null || result === void 0 ? void 0 : (_result_data4 = result.data) === null || _result_data4 === void 0 ? void 0 : _result_data4.monthlyEmi,
-                        status: (result === null || result === void 0 ? void 0 : (_result_data5 = result.data) === null || _result_data5 === void 0 ? void 0 : _result_data5.status) || "pending",
-                        serviceType: !(result === null || result === void 0 ? void 0 : (_result_data6 = result.data) === null || _result_data6 === void 0 ? void 0 : _result_data6.serviceFees) ? "service Advance" : "service"
+                        totalEMI: result === null || result === void 0 ? void 0 : (_result_data6 = result.data) === null || _result_data6 === void 0 ? void 0 : _result_data6.totalEmi,
+                        emiAmount: result === null || result === void 0 ? void 0 : (_result_data7 = result.data) === null || _result_data7 === void 0 ? void 0 : _result_data7.monthlyEmi,
+                        status: (result === null || result === void 0 ? void 0 : (_result_data8 = result.data) === null || _result_data8 === void 0 ? void 0 : _result_data8.status) || "pending",
+                        serviceType: serviceType
                     }
                 ];
                 setCurrentServices(payload);
@@ -1592,20 +1939,18 @@ function UserDashboard() {
             const result = await response.json();
             if (result.data && result.data.length > 0) {
                 setPaidServices(result.data.map((svc)=>{
-                    const dateObj = new Date(svc.date); // assuming svc.date exists
+                    const strMonth = months === null || months === void 0 ? void 0 : months.find((month)=>(month === null || month === void 0 ? void 0 : month.month) === (svc === null || svc === void 0 ? void 0 : svc.date.split("/")[1]));
                     return {
                         ...svc,
                         status: "paid",
-                        paidForMonth: dateObj.toLocaleString("default", {
-                            month: "long",
-                            year: "numeric"
-                        })
+                        paidForMonth: strMonth === null || strMonth === void 0 ? void 0 : strMonth.val
                     };
                 }));
             } else {
                 setPaidServices([]);
             }
         } catch (err) {
+            console.log("user", err);
             console.error("Error fetching paid services.");
         }
     };
@@ -1653,7 +1998,6 @@ function UserDashboard() {
     const servicesToShow = serviceTab === "paid" ? paidServices : currentServices;
     const markAsPaid = async ()=>{
         try {
-            alert("hello");
             const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].emi.markaspaid), {
                 method: "PUT",
                 headers: {
@@ -1682,13 +2026,15 @@ function UserDashboard() {
             fetchUserId();
         }
     }["UserDashboard.useEffect"], [
-        details
+        details,
+        isModalOpen,
+        isServiceModalOpen
     ]);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$Header$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/components/[details]/page.js",
-                lineNumber: 829,
+                lineNumber: 1016,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1706,7 +2052,7 @@ function UserDashboard() {
                                         children: "Monthly Subscriptions"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 835,
+                                        lineNumber: 1022,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -1718,7 +2064,7 @@ function UserDashboard() {
                                                 children: "Current"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 839,
+                                                lineNumber: 1026,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -1730,13 +2076,13 @@ function UserDashboard() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 849,
+                                                lineNumber: 1036,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 838,
+                                        lineNumber: 1025,
                                         columnNumber: 15
                                     }, this),
                                     subscriptionTab === "current" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1746,7 +2092,7 @@ function UserDashboard() {
                                             children: "No subscriptions found."
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/[details]/page.js",
-                                            lineNumber: 867,
+                                            lineNumber: 1054,
                                             columnNumber: 21
                                         }, this) : currentSubscriptions.map((sub, index)=>{
                                             var _sub_status;
@@ -1758,7 +2104,7 @@ function UserDashboard() {
                                                         children: (sub === null || sub === void 0 ? void 0 : sub.status.charAt(0).toUpperCase()) + (sub === null || sub === void 0 ? void 0 : (_sub_status = sub.status) === null || _sub_status === void 0 ? void 0 : _sub_status.slice(1).toLowerCase())
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 876,
+                                                        lineNumber: 1063,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1768,7 +2114,7 @@ function UserDashboard() {
                                                                 children: sub.paidForMonth
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 886,
+                                                                lineNumber: 1073,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1780,13 +2126,13 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 889,
+                                                                lineNumber: 1076,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 885,
+                                                        lineNumber: 1072,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1799,7 +2145,7 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 896,
+                                                                lineNumber: 1083,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1810,7 +2156,7 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 897,
+                                                                lineNumber: 1084,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1820,41 +2166,52 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 898,
+                                                                lineNumber: 1085,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 895,
+                                                        lineNumber: 1082,
                                                         columnNumber: 25
                                                     }, this),
                                                     (sub === null || sub === void 0 ? void 0 : sub.status) === "pending" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "mt-4 flex justify-start",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                            onClick: ()=>subscriptionMarkAsPaid(sub),
-                                                            className: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm",
-                                                            children: "Mark as Paid"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/components/[details]/page.js",
-                                                            lineNumber: 903,
-                                                            columnNumber: 29
-                                                        }, this)
-                                                    }, void 0, false, {
+                                                        className: "mt-4 flex bg-red-50 w-[230px] justify-between",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                onClick: ()=>subscriptionMarkAsPaid(sub),
+                                                                className: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm",
+                                                                children: "Mark as Paid"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/components/[details]/page.js",
+                                                                lineNumber: 1090,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                onClick: ()=>setIsModalOpen(true),
+                                                                className: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm",
+                                                                children: "Update Date"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/components/[details]/page.js",
+                                                                lineNumber: 1096,
+                                                                columnNumber: 29
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 902,
+                                                        lineNumber: 1089,
                                                         columnNumber: 27
                                                     }, this)
                                                 ]
                                             }, index, true, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 872,
+                                                lineNumber: 1059,
                                                 columnNumber: 23
                                             }, this);
                                         })
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 865,
+                                        lineNumber: 1052,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "max-h-[250px] overflow-y-auto space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50",
@@ -1863,7 +2220,7 @@ function UserDashboard() {
                                             children: "No paid subscriptions found."
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/[details]/page.js",
-                                            lineNumber: 918,
+                                            lineNumber: 1111,
                                             columnNumber: 21
                                         }, this) : paidSubscriptions.map((sub, index)=>{
                                             var _sub_status, _sub_subscriptionId, _sub_subscriptionId1;
@@ -1875,7 +2232,7 @@ function UserDashboard() {
                                                         children: (sub === null || sub === void 0 ? void 0 : sub.status.charAt(0).toUpperCase()) + (sub === null || sub === void 0 ? void 0 : (_sub_status = sub.status) === null || _sub_status === void 0 ? void 0 : _sub_status.slice(1).toLowerCase())
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 927,
+                                                        lineNumber: 1120,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1885,7 +2242,7 @@ function UserDashboard() {
                                                                 children: sub.paidForMonth
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 937,
+                                                                lineNumber: 1130,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1897,13 +2254,13 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 940,
+                                                                lineNumber: 1133,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 936,
+                                                        lineNumber: 1129,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1916,7 +2273,7 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 947,
+                                                                lineNumber: 1140,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1927,7 +2284,7 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 948,
+                                                                lineNumber: 1141,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1937,47 +2294,31 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 949,
+                                                                lineNumber: 1142,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 946,
+                                                        lineNumber: 1139,
                                                         columnNumber: 25
-                                                    }, this),
-                                                    (sub === null || sub === void 0 ? void 0 : sub.status) === "pending" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "mt-4 flex justify-start",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                            onClick: ()=>subscriptionMarkAsPaid(sub),
-                                                            className: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm",
-                                                            children: "Mark as Paid"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/components/[details]/page.js",
-                                                            lineNumber: 954,
-                                                            columnNumber: 29
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 953,
-                                                        columnNumber: 27
                                                     }, this)
                                                 ]
                                             }, index, true, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 923,
+                                                lineNumber: 1116,
                                                 columnNumber: 23
                                             }, this);
                                         })
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 916,
+                                        lineNumber: 1109,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                lineNumber: 834,
+                                lineNumber: 1021,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1988,7 +2329,7 @@ function UserDashboard() {
                                         children: (_currentServices_ = currentServices[0]) === null || _currentServices_ === void 0 ? void 0 : _currentServices_.serviceType
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 971,
+                                        lineNumber: 1153,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -2000,7 +2341,7 @@ function UserDashboard() {
                                                 children: "Current"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 975,
+                                                lineNumber: 1157,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -2009,13 +2350,13 @@ function UserDashboard() {
                                                 children: "Paid"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 985,
+                                                lineNumber: 1167,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 974,
+                                        lineNumber: 1156,
                                         columnNumber: 15
                                     }, this),
                                     serviceTab === "current" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2025,7 +2366,7 @@ function UserDashboard() {
                                             children: "No Current Services"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/[details]/page.js",
-                                            lineNumber: 1001,
+                                            lineNumber: 1183,
                                             columnNumber: 21
                                         }, this) : currentServices.map((service, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "p-4 border rounded-xl bg-white hover:bg-gray-100 transition relative",
@@ -2035,17 +2376,17 @@ function UserDashboard() {
                                                         children: service.status.charAt(0).toUpperCase() + service.status.slice(1).toLowerCase()
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 1008,
+                                                        lineNumber: 1190,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 className: "font-semibold text-gray-800",
-                                                                children: service.paidForMonth
+                                                                children: service === null || service === void 0 ? void 0 : service.paidForMonth
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 1018,
+                                                                lineNumber: 1200,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2057,13 +2398,13 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 1021,
+                                                                lineNumber: 1203,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 1017,
+                                                        lineNumber: 1199,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2076,17 +2417,17 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 1030,
+                                                                lineNumber: 1212,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 children: [
                                                                     "EMI: ",
-                                                                    service.emiPay || "N/A"
+                                                                    service.emiPay
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 1031,
+                                                                lineNumber: 1213,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2096,40 +2437,51 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 1032,
+                                                                lineNumber: 1214,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 1029,
+                                                        lineNumber: 1211,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "mt-4 flex justify-start",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                            onClick: markAsPaid,
-                                                            className: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm",
-                                                            children: "Mark as Paid"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/components/[details]/page.js",
-                                                            lineNumber: 1036,
-                                                            columnNumber: 27
-                                                        }, this)
-                                                    }, void 0, false, {
+                                                        className: "mt-4 flex bg-red-50 w-[230px] justify-between",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                onClick: markAsPaid,
+                                                                className: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm",
+                                                                children: "Mark as Paid"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/components/[details]/page.js",
+                                                                lineNumber: 1218,
+                                                                columnNumber: 27
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                onClick: ()=>setIsServiceModalOpen(true),
+                                                                className: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm",
+                                                                children: "Update Date"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/components/[details]/page.js",
+                                                                lineNumber: 1224,
+                                                                columnNumber: 27
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 1035,
+                                                        lineNumber: 1217,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, index, true, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 1004,
+                                                lineNumber: 1186,
                                                 columnNumber: 23
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 999,
+                                        lineNumber: 1181,
                                         columnNumber: 17
                                     }, this) : // Paid Services
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2139,7 +2491,7 @@ function UserDashboard() {
                                             children: "No Paid Services"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/[details]/page.js",
-                                            lineNumber: 1051,
+                                            lineNumber: 1239,
                                             columnNumber: 21
                                         }, this) : paidServices.map((service, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "p-4 border rounded-xl bg-white hover:bg-gray-100 transition relative",
@@ -2149,7 +2501,7 @@ function UserDashboard() {
                                                         children: service.status.charAt(0).toUpperCase() + service.status.slice(1).toLowerCase()
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 1058,
+                                                        lineNumber: 1246,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2159,7 +2511,7 @@ function UserDashboard() {
                                                                 children: service.paidForMonth || "N/A"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 1068,
+                                                                lineNumber: 1256,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2170,13 +2522,13 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 1072,
+                                                                lineNumber: 1260,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 1067,
+                                                        lineNumber: 1255,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2189,7 +2541,7 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 1078,
+                                                                lineNumber: 1266,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2199,60 +2551,82 @@ function UserDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                                lineNumber: 1079,
+                                                                lineNumber: 1267,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                                        lineNumber: 1077,
+                                                        lineNumber: 1265,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, index, true, {
                                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                                lineNumber: 1054,
+                                                lineNumber: 1242,
                                                 columnNumber: 23
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/[details]/page.js",
-                                        lineNumber: 1049,
+                                        lineNumber: 1237,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/[details]/page.js",
-                                lineNumber: 970,
+                                lineNumber: 1152,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/[details]/page.js",
-                        lineNumber: 832,
+                        lineNumber: 1019,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/[details]/page.js",
-                    lineNumber: 831,
+                    lineNumber: 1018,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/components/[details]/page.js",
-                lineNumber: 830,
+                lineNumber: 1017,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(UpdateDateModal, {
+                isOpen: isModalOpen,
+                onClose: ()=>setIsModalOpen(false),
+                onUpdate: handleUpdateDate,
+                userId: details
+            }, void 0, false, {
+                fileName: "[project]/src/app/components/[details]/page.js",
+                lineNumber: 1279,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(UpdateServiceDateModal, {
+                isOpen: isServiceModalOpen,
+                onClose: ()=>setIsServiceModalOpen(false),
+                onUpdate: handleServiceUpdateDate,
+                phone: phone
+            }, void 0, false, {
+                fileName: "[project]/src/app/components/[details]/page.js",
+                lineNumber: 1285,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true);
 }
-_s(UserDashboard, "9PD8up3GIdXottpzw+tnH6CH5sk=", false, function() {
+_s2(UserDashboard, "uBGjv2RU6+rff76G2VsvUq6SXPo=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useParams"]
     ];
 });
-_c1 = UserDashboard;
-var _c, _c1;
+_c3 = UserDashboard;
+var _c, _c1, _c2, _c3;
 __turbopack_context__.k.register(_c, "PaidFormate");
-__turbopack_context__.k.register(_c1, "UserDashboard");
+__turbopack_context__.k.register(_c1, "UpdateDateModal");
+__turbopack_context__.k.register(_c2, "UpdateServiceDateModal");
+__turbopack_context__.k.register(_c3, "UserDashboard");
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
 }

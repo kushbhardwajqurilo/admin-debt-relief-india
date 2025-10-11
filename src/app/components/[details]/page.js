@@ -549,6 +549,21 @@ const formatDate = (dateStr) => {
   const year = d.getFullYear();
   return `${day}/${month}/${year}`;
 };
+const months = [
+  { month: "01", val: "January" },
+  { month: "02", val: "February" },
+  { month: "03", val: "March" },
+  { month: "04", val: "April" },
+  { month: "05", val: "May" },
+  { month: "06", val: "June" },
+  { month: "07", val: "July" },
+  { month: "08", val: "August" },
+  { month: "09", val: "September" },
+  { month: "10", val: "October" },
+  { month: "11", val: "November" },
+  { month: "12", val: "December" },
+];
+
 const formatPaidServiceDate = (isoStr) => {
   if (!isoStr) return "N/A";
   const d = new Date(isoStr);
@@ -566,7 +581,170 @@ function PaidFormate(date) {
   const dateObj = new Date(year, month - 1, day);
   return dateObj;
 }
+
+// update date modal
+export function UpdateDateModal({ isOpen, onClose, onUpdate, userId }) {
+  const [selectedDate, setSelectedDate] = useState("");
+  const [days, setdays] = useState([
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+  ]);
+  const handleSelectDate = (date) => {
+    setSelectedDate(date);
+  };
+  const handleUpdate = async () => {
+    if (!selectedDate) return alert("Please select a date!");
+    onUpdate(selectedDate);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}${ApiRute.subscription.updateDueDate}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${getStroage().token}`,
+          },
+          body: JSON.stringify({ date: selectedDate, user_id: userId }),
+        }
+      );
+      const result = await response.json();
+      if (result?.success) {
+        toast.success(result?.message);
+      } else {
+        toast.error(result?.message);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSelectedDate("");
+      onClose();
+    }
+  };
+
+  if (!isOpen) return null; // hide modal if not open
+
+  return (
+    <div className="fixed inset-0 bg-white-1 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl shadow-lg p-6 w-96">
+        <h2 className="text-lg font-semibold mb-4">Select Date to Update</h2>
+
+        <div className="flex w-full flex-wrap  p-2 gap-2 mb-2 border-gray-400 rounded-sm border-1 ">
+          {days?.map((val, pos) => (
+            <span
+              onClick={() => handleSelectDate(val)}
+              key={pos}
+              value={selectedDate}
+              className={`flex-1 text-center p-2 rounded hover:bg-indigo-400 cursor-pointer transition hover:text-white ${
+                selectedDate == val ? "bg-indigo-400 text-white" : ""
+              }`}
+            >
+              {val}
+            </span>
+          ))}
+        </div>
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleUpdate}
+            className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function UpdateServiceDateModal({ isOpen, onClose, onUpdate, phone }) {
+  const [selectedDate, setSelectedDate] = useState("");
+  const [days, setdays] = useState([
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+  ]);
+  const handleSelectDate = (date) => {
+    setSelectedDate(date);
+  };
+  const handleUpdate = async () => {
+    if (!selectedDate) return alert("Please select a date!");
+    onUpdate(selectedDate);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}${ApiRute.emi.updateDueDate}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${getStroage().token}`,
+          },
+          body: JSON.stringify({ date: selectedDate, phone }),
+        }
+      );
+      const result = await response.json();
+      if (result?.success) {
+        toast.success(result?.message);
+      } else {
+        toast.error(result?.message);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSelectedDate("");
+      onClose();
+    }
+  };
+
+  if (!isOpen) return null; // hide modal if not open
+
+  return (
+    <div className="fixed inset-0 bg-white-1 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl shadow-lg p-6 w-96">
+        <h2 className="text-lg font-semibold mb-4">Select Date to Update</h2>
+
+        <div className="flex w-full flex-wrap  p-2 gap-2 mb-2 border-gray-400 rounded-sm border-1 ">
+          {days?.map((val, pos) => (
+            <span
+              onClick={() => handleSelectDate(val)}
+              key={pos}
+              value={selectedDate}
+              className={`flex-1 text-center p-2 rounded hover:bg-indigo-400 cursor-pointer transition hover:text-white ${
+                selectedDate == val ? "bg-indigo-400 text-white" : ""
+              }`}
+            >
+              {val}
+            </span>
+          ))}
+        </div>
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleUpdate}
+            className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// update date modal end
+
+// user dashboard for admin to check service and subscription details
 export default function UserDashboard() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
   const { details } = useParams();
   const [usesrId, setUserId] = useState("");
   const [phone, setPhone] = useState(0);
@@ -582,6 +760,14 @@ export default function UserDashboard() {
   const [currentServices, setCurrentServices] = useState([]);
   const [paidServices, setPaidServices] = useState([]);
 
+  const handleUpdateDate = (date) => {
+    console.log("Updated date:", date);
+    // call API or update state here
+  };
+  const handleServiceUpdateDate = (date) => {
+    console.log("Updated date:", date);
+    // call API or update state here
+  };
   const fetchUserId = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}${ApiRute.user.single}`, {
@@ -683,7 +869,12 @@ export default function UserDashboard() {
       if (result?.success) {
         const [day, month, year] = result?.data?.dueDate.split("-").map(Number);
         const dateObj = new Date(year, month - 1, day);
-
+        const serviceType =
+          !result?.data?.Service_Fees ||
+          result?.data?.Service_Fees === 0 ||
+          result?.data?.Service_Fees === ""
+            ? "service Advance"
+            : "service Fees";
         const payload = [
           {
             emiPay: result?.data?.emiPay,
@@ -696,9 +887,7 @@ export default function UserDashboard() {
             totalEMI: result?.data?.totalEmi,
             emiAmount: result?.data?.monthlyEmi,
             status: result?.data?.status || "pending", // fallback
-            serviceType: !result?.data?.serviceFees
-              ? "service Advance"
-              : "service",
+            serviceType: serviceType,
           },
         ];
 
@@ -725,18 +914,16 @@ export default function UserDashboard() {
         }
       );
       const result = await response.json();
-
       if (result.data && result.data.length > 0) {
         setPaidServices(
           result.data.map((svc) => {
-            const dateObj = new Date(svc.date); // assuming svc.date exists
+            const strMonth = months?.find(
+              (month) => month?.month === svc?.date.split("/")[1]
+            );
             return {
               ...svc,
               status: "paid",
-              paidForMonth: dateObj.toLocaleString("default", {
-                month: "long",
-                year: "numeric",
-              }),
+              paidForMonth: strMonth?.val,
             };
           })
         );
@@ -744,6 +931,7 @@ export default function UserDashboard() {
         setPaidServices([]);
       }
     } catch (err) {
+      console.log("user", err);
       console.error("Error fetching paid services.");
     }
   };
@@ -793,7 +981,6 @@ export default function UserDashboard() {
 
   const markAsPaid = async () => {
     try {
-      alert("hello");
       const res = await fetch(`${API_BASE_URL}${ApiRute.emi.markaspaid}`, {
         method: "PUT",
         headers: {
@@ -822,7 +1009,7 @@ export default function UserDashboard() {
     fetchCurrentSubscriptions();
     fetchPaidSubscriptions();
     fetchUserId();
-  }, [details]);
+  }, [details, isModalOpen, isServiceModalOpen]);
 
   return (
     <>
@@ -899,12 +1086,18 @@ export default function UserDashboard() {
                         </div>
 
                         {sub?.status === "pending" && (
-                          <div className="mt-4 flex justify-start">
+                          <div className="mt-4 flex bg-red-50 w-[230px] justify-between">
                             <button
                               onClick={() => subscriptionMarkAsPaid(sub)}
                               className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
                             >
                               Mark as Paid
+                            </button>
+                            <button
+                              onClick={() => setIsModalOpen(true)}
+                              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
+                            >
+                              Update Date
                             </button>
                           </div>
                         )}
@@ -948,17 +1141,6 @@ export default function UserDashboard() {
                           <p>GST: {sub?.gst}%</p>
                           <p>Total: ₹{sub?.subscriptionId?.amount}</p>
                         </div>
-
-                        {sub?.status === "pending" && (
-                          <div className="mt-4 flex justify-start">
-                            <button
-                              onClick={() => subscriptionMarkAsPaid(sub)}
-                              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
-                            >
-                              Mark as Paid
-                            </button>
-                          </div>
-                        )}
                       </div>
                     ))
                   )}
@@ -1016,7 +1198,7 @@ export default function UserDashboard() {
 
                         <div>
                           <p className="font-semibold text-gray-800">
-                            {service.paidForMonth}
+                            {service?.paidForMonth}
                           </p>
                           <p className="text-sm text-red-500">
                             Due Date:{" "}
@@ -1028,16 +1210,22 @@ export default function UserDashboard() {
 
                         <div className="mt-2 flex text-sm text-gray-700 justify-between items-start">
                           <p>Total EMI: {service.totalEMI || "N/A"}</p>
-                          <p>EMI: {service.emiPay || "N/A"}</p>
+                          <p>EMI: {service.emiPay}</p>
                           <p>EMI Amount: ₹ {service.emiAmount || "N/A"}</p>
                         </div>
 
-                        <div className="mt-4 flex justify-start">
+                        <div className="mt-4 flex bg-red-50 w-[230px] justify-between">
                           <button
                             onClick={markAsPaid}
                             className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
                           >
                             Mark as Paid
+                          </button>
+                          <button
+                            onClick={() => setIsServiceModalOpen(true)}
+                            className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-green-700 transition text-sm"
+                          >
+                            Update Date
                           </button>
                         </div>
                       </div>
@@ -1087,6 +1275,19 @@ export default function UserDashboard() {
           </div>
         </div>
       </div>
+
+      <UpdateDateModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onUpdate={handleUpdateDate}
+        userId={details}
+      />
+      <UpdateServiceDateModal
+        isOpen={isServiceModalOpen}
+        onClose={() => setIsServiceModalOpen(false)}
+        onUpdate={handleServiceUpdateDate}
+        phone={phone}
+      />
     </>
   );
 }
