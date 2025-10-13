@@ -3,6 +3,7 @@
 import CurrentImages from "@/app/components/CurrentImages";
 import Header from "@/app/components/Header";
 import HowDRIWorks from "@/app/components/HowDRIWorks";
+import PaidDialBox from "@/app/components/paidDialbox";
 import PaymentGateway from "@/app/components/PaymentGateway";
 import RecentFeatures from "@/app/components/RecentFeatures";
 import ServiceAndSubscription from "@/app/components/Service";
@@ -37,7 +38,10 @@ export default function AdminPage() {
 
             <div className=" w-[100%] flex justify-between">
               <HowDRIWorks />
-              <Whatsapp />
+              <div className="flex bg-red flex-col">
+                <Whatsapp />
+                <PaidDialBox />
+              </div>
             </div>
           </div>
         </div>

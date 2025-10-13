@@ -11,6 +11,8 @@ export const ApiRute = {
     verifyOtp: "/admin/verify-otp",
     changepassword: "/admin/change-password",
     outstanding: "/outstanding/add-outstanding",
+    adddialboxContent: "/admin/add-content",
+    getdialbox: "/admin/get-content",
   },
   currentImage: {
     upload: "/banner/upload",
