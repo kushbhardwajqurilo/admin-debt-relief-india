@@ -672,7 +672,6 @@ export default function DashboardPage() {
       toast.error("No users selected");
       return;
     }
-    console.log("se", { userIds, phones });
     try {
       const res = await fetch(
         `${API_BASE_URL}${ApiRute.driUser.permanentDelete}`,
@@ -692,6 +691,7 @@ export default function DashboardPage() {
         setUserIds([]);
         setPhones([]);
         fetchAllUsers();
+        handleRefresh();
       } else {
         toast.error(result?.message);
       }
