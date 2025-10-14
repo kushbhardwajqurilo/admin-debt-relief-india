@@ -9,8 +9,15 @@ export default function PaidDialBox() {
   const [dialboxContent, setdialboxContent] = useState("");
   const getDialBoxContent = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}${ApiRute.admin.getdialbox}`);
+      const res = await fetch(`${API_BASE_URL}${ApiRute.admin.getdialbox}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${getStroage().token}`,
+        },
+      });
       const result = await res.json();
+      console.log("dd", result);
       setcontent(result?.data || "");
     } catch (error) {
       console.error(error);

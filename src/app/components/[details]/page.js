@@ -685,7 +685,7 @@ export default function UserDashboard() {
 
                         <div className="mt-2 flex text-sm text-gray-700 justify-between items-start">
                           <p>Total EMI: {service.totalEMI || "N/A"}</p>
-                          <p>EMI: {service.emiPay}</p>
+                          <p>Paid EMI: {service.emiPay}</p>
                           <p>EMI Amount: ₹ {service.emiAmount || "N/A"}</p>
                         </div>
 

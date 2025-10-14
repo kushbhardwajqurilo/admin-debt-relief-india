@@ -12,7 +12,7 @@ export const ApiRute = {
     changepassword: "/admin/change-password",
     outstanding: "/outstanding/add-outstanding",
     adddialboxContent: "/admin/add-content",
-    getdialbox: "/admin/get-content",
+    getdialbox: "/admin/get-content-admin",
   },
   currentImage: {
     upload: "/banner/upload",
