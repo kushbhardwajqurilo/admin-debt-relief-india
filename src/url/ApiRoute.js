@@ -13,6 +13,7 @@ export const ApiRute = {
     outstanding: "/outstanding/add-outstanding",
     adddialboxContent: "/admin/add-content",
     getdialbox: "/admin/get-content-admin",
+    backup: "/admin/backup",
   },
   currentImage: {
     upload: "/banner/upload",

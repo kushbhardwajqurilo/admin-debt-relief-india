@@ -195,9 +195,8 @@ export default function ServiceAndSubscription() {
               <option
                 className="p-2 hover:bg-blue-300 cursor-pointer"
                 value={val?.user_id}
-                key={val?.id}
+                key={val?.user_id}
               >
-                {console.log("subs", val)}
                 {val?.name}&nbsp;({val?.id})
               </option>
             ))}
