@@ -221,7 +221,7 @@ export default function UserDashboard() {
   // ✅ Separate states for subscriptions
   const [currentSubscriptions, setCurrentSubscriptions] = useState([]);
   const [paidSubscriptions, setPaidSubscriptions] = useState([]);
-
+  console.log("details", details);
   // ✅ Separate states for services
   const [currentServices, setCurrentServices] = useState([]);
   const [paidServices, setPaidServices] = useState([]);
@@ -332,9 +332,18 @@ export default function UserDashboard() {
       );
 
       const result = await response.json();
-      if (result?.success) {
-        const [day, month, year] = result?.data?.dueDate.split("-").map(Number);
-        const dateObj = new Date(year, month - 1, day);
+      if (result?.success === true) {
+        let dateObj = null;
+        if (result?.data?.dueDate) {
+          const parts = String(result.data.dueDate).split("-");
+          if (parts.length === 3) {
+            const [day, month, year] = parts.map(Number);
+            dateObj = new Date(year, month - 1, day);
+          } else {
+            dateObj = new Date(result.data.dueDate);
+          }
+        }
+
         const serviceType =
           !result?.data?.Service_Fees ||
           result?.data?.Service_Fees === 0 ||
@@ -342,29 +351,29 @@ export default function UserDashboard() {
             ? "service Advance"
             : "service Fees";
 
-        let status;
-        if (result?.data?.totalEmi == result?.data?.emiPay) {
-          status = "closed";
-          setIsButton(true);
-        } else {
-          status = "pending";
-          setIsButton(false);
-        }
+        const status =
+          result?.data?.totalEmi == result?.data?.emiPay ? "closed" : "pending";
+
+        setIsButton(status === "closed");
+
         const payload = [
           {
             emiPay: result?.data?.emiPay,
             userId: result?.data?.id,
-            dueDate: dateObj, // ✅ assign Date object
-            paidForMonth: dateObj.toLocaleString("default", {
-              month: "long",
-              year: "numeric",
-            }),
+            dueDate: dateObj,
+            paidForMonth: dateObj
+              ? dateObj.toLocaleString("default", {
+                  month: "long",
+                  year: "numeric",
+                })
+              : "N/A",
             totalEMI: result?.data?.totalEmi,
             emiAmount: result?.data?.monthlyEmi,
-            status: status,
-            serviceType: serviceType,
+            status,
+            serviceType,
           },
         ];
+
         console.log("payload", payload);
         setCurrentServices(payload);
       } else {

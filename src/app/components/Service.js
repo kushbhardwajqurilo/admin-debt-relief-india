@@ -41,7 +41,6 @@ export default function ServiceAndSubscription() {
         }
       );
       const result = await res.json();
-      console.log("result", result);
       if (result?.success) {
         setClientList(result?.data);
       }
@@ -195,9 +194,10 @@ export default function ServiceAndSubscription() {
             {clientList?.map((val) => (
               <option
                 className="p-2 hover:bg-blue-300 cursor-pointer"
-                value={val?._id}
-                key={val._id}
+                value={val?.user_id}
+                key={val?.id}
               >
+                {console.log("subs", val)}
                 {val?.name}&nbsp;({val?.id})
               </option>
             ))}

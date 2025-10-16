@@ -17,7 +17,6 @@ export default function PaidDialBox() {
         },
       });
       const result = await res.json();
-      console.log("dd", result);
       setcontent(result?.data || "");
     } catch (error) {
       console.error(error);
