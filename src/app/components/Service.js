@@ -201,7 +201,7 @@ export default function ServiceAndSubscription() {
               </option>
             ))}
           </select>
-
+          {/*  */}
           <button
             onClick={addSubscription}
             className="w-25 bg-[#2B7FFF] text-white capitalize cursor-pointer rounded p-1.5 ml-1 mt-2 disabled:opacity-50"
