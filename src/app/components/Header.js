@@ -124,7 +124,8 @@ import { useEffect, useState } from "react";
 import { FaPowerOff } from "react-icons/fa";
 import { FiSettings } from "react-icons/fi";
 import { PiBellDuotone } from "react-icons/pi";
-import { getStroage } from "@/url/storage";
+import { clearStorage, getStroage } from "@/url/storage";
+import toast from "react-hot-toast";
 
 export default function Header({ data }) {
   const pathname = usePathname();
@@ -173,6 +174,13 @@ export default function Header({ data }) {
       if (result?.success) {
         setProfileImage(result?.data?.image || "");
       } else {
+        console.log("err", result);
+        if (result?.message == "Token expired") {
+          toast.error(
+            "Your session has expired. Please log in again to continue."
+          );
+          clearStorage();
+        }
         console.error("Admin detail fetch error:", result);
       }
     } catch (err) {
@@ -233,10 +241,10 @@ export default function Header({ data }) {
       {/* Right: Notification, Logout, Profile */}
       <div className="flex items-center space-x-4">
         {/* Notification Bell */}
-        <div className="relative">
+        {/* <div className="relative">
           <PiBellDuotone className="text-yellow-500 text-2xl bg-blue-100 rounded-full p-1" />
           <span className="absolute top-0 right-0 h-3 w-3 bg-red-500 rounded-full"></span>
-        </div>
+        </div> */}
 
         {/* Logout Button */}
         <button

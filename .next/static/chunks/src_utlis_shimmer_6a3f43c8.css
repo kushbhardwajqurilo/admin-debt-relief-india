@@ -1,0 +1,17 @@
+/* [project]/src/utlis/shimmer.css [app-client] (css) */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%) 0 0 / 1000px 100%;
+  animation: 2s linear infinite shimmer;
+}
+
+/*# sourceMappingURL=src_utlis_shimmer_6a3f43c8.css.map*/

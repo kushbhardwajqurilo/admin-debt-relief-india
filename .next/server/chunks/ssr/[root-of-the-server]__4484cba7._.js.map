@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 37, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/deves/Desktop/deploye%20testing/aws_amplify_admin_dri/src/app/components/middleware/ProtectedRoute.js"],"sourcesContent":["'use client';\n\nimport { useRouter } from 'next/navigation';\nimport { useEffect } from 'react';\n\nexport default function ProtectedRoute({ children }) {\n  const router = useRouter();\n\n  useEffect(() => {\n    const token = localStorage.getItem(\"token\");\n    if (!token) {\n      router.push(\"/\");\n    }\n  }, [router]);\n\n  return <>{children}</>;\n}\n"],"names":[],"mappings":";;;;AAEA;AACA;AAHA;;;;AAKe,SAAS,eAAe,EAAE,QAAQ,EAAE;IACjD,MAAM,SAAS,CAAA,GAAA,kIAAA,CAAA,YAAS,AAAD;IAEvB,CAAA,GAAA,qMAAA,CAAA,YAAS,AAAD,EAAE;QACR,MAAM,QAAQ,aAAa,OAAO,CAAC;QACnC,IAAI,CAAC,OAAO;YACV,OAAO,IAAI,CAAC;QACd;IACF,GAAG;QAAC;KAAO;IAEX,qBAAO;kBAAG;;AACZ","debugId":null}}]
+}

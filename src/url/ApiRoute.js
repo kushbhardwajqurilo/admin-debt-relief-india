@@ -14,6 +14,8 @@ export const ApiRute = {
     adddialboxContent: "/admin/add-content",
     getdialbox: "/admin/get-content-admin",
     backup: "/admin/backup",
+    requestAdminOtp: "/admin/get-otp",
+    forgetPassword: "/admin/forget-password",
   },
   currentImage: {
     upload: "/banner/upload",

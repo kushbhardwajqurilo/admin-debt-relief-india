@@ -22,3 +22,9 @@ export const getForgetStorage = () => {
     return false;
   }
 };
+
+export const clearStorage = () => {
+  if (localStorage.getItem(key)) {
+    localStorage.removeItem(key);
+  } else localStorage.removeItem(key);
+};

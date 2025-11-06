@@ -121,7 +121,6 @@ export default function UploadEMIModal({ isOpen, onClose, mode, refreshFun }) {
         ? toast.success(result?.message)
         : toast.error(result?.message);
     } catch (err) {
-      console.error(err);
     } finally {
       refreshFun();
       setOff(false);
