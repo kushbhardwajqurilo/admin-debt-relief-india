@@ -1,9 +1,6 @@
 {
   "/Setting/page": "app/Setting/page.js",
-  "/_not-found/page": "app/_not-found/page.js",
   "/admin/dashboard/page": "app/admin/dashboard/page.js",
-  "/advocateService/page": "app/advocateService/page.js",
   "/page": "app/page.js",
-  "/profilePage/page": "app/profilePage/page.js",
-  "/userController/page": "app/userController/page.js"
+  "/profilePage/page": "app/profilePage/page.js"
 }

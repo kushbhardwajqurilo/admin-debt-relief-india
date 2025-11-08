@@ -22,7 +22,7 @@ const ApiRute = {
         adddialboxContent: "/admin/add-content",
         getdialbox: "/admin/get-content-admin",
         backup: "/admin/backup",
-        requestOtp: "/admin/get-otp",
+        requestAdminOtp: "/admin/get-otp",
         forgetPassword: "/admin/forget-password"
     },
     currentImage: {

@@ -169,7 +169,6 @@ export default function UserProfileAndAccount() {
   // --- Change password flow ---
   async function handleRequestOtp() {
     try {
-      setLoad(true);
       const res = await fetch(`${API_BASE_URL}${ApiRute.admin.requestOtp}`, {
         method: "POST",
         headers: {
@@ -190,13 +189,11 @@ export default function UserProfileAndAccount() {
     } catch (err) {
       console.error(err);
     } finally {
-      setLoad(false);
     }
   }
 
   async function handleVerifyOtp() {
     try {
-      setLoad(true);
       const res = await fetch(`${API_BASE_URL}${ApiRute.admin.verifyOtp}`, {
         method: "POST",
         headers: {
@@ -217,13 +214,11 @@ export default function UserProfileAndAccount() {
     } catch (err) {
       console.error(err);
     } finally {
-      setLoad(false);
     }
   }
 
   async function handleChangePassword() {
     try {
-      setLoad(true);
       const res = await fetch(
         `${API_BASE_URL}${ApiRute.admin.changepassword}`,
         {
@@ -247,14 +242,12 @@ export default function UserProfileAndAccount() {
     } catch (err) {
       console.error(err);
     } finally {
-      setLoad(false);
     }
   }
 
   // backup
   async function backup() {
     try {
-      setLoad(true);
       setProgress(0);
       setShowProgress(true);
 
@@ -296,8 +289,6 @@ export default function UserProfileAndAccount() {
       console.error(error);
       toast.error("Backup failed due to server error");
       setShowProgress(false);
-    } finally {
-      setLoad(false);
     }
   }
 
@@ -504,19 +495,20 @@ export default function UserProfileAndAccount() {
                 Backup
               </button>
             </div>
+            {showProgress && (
+              <div className="w-full bg-gray-200 rounded-full h-4 mt-4 overflow-hidden">
+                <div
+                  className="bg-green-500 h-4 text-xs text-white text-center transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                >
+                  {progress}%
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
-      {showProgress && (
-        <div className="w-full bg-gray-200 rounded-full h-4 mt-4 overflow-hidden">
-          <div
-            className="bg-green-500 h-4 text-xs text-white text-center transition-all duration-300"
-            style={{ width: `${progress}%` }}
-          >
-            {progress}%
-          </div>
-        </div>
-      )}
+
       {/* Step 1: Request OTP Modal */}
       {showOtpModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-50 z-50">

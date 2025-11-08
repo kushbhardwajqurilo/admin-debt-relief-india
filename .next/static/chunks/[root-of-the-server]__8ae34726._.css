@@ -1386,10 +1386,6 @@
     width: 300px;
   }
 
-  .w-\[350px\] {
-    width: 350px;
-  }
-
   .w-\[380px\] {
     width: 380px;
   }
@@ -2788,12 +2784,6 @@
   @media (hover: hover) {
     .hover\:bg-\[\#033c73\]:hover {
       background-color: #033c73;
-    }
-  }
-
-  @media (hover: hover) {
-    .hover\:bg-\[\#044B99\]:hover {
-      background-color: #044b99;
     }
   }
 

@@ -1217,7 +1217,6 @@ function UserProfileAndAccount() {
     // --- Change password flow ---
     async function handleRequestOtp() {
         try {
-            setLoad(true);
             const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].admin.requestOtp), {
                 method: "POST",
                 headers: {
@@ -1239,13 +1238,10 @@ function UserProfileAndAccount() {
             }
         } catch (err) {
             console.error(err);
-        } finally{
-            setLoad(false);
-        }
+        } finally{}
     }
     async function handleVerifyOtp() {
         try {
-            setLoad(true);
             const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].admin.verifyOtp), {
                 method: "POST",
                 headers: {
@@ -1268,13 +1264,10 @@ function UserProfileAndAccount() {
             }
         } catch (err) {
             console.error(err);
-        } finally{
-            setLoad(false);
-        }
+        } finally{}
     }
     async function handleChangePassword() {
         try {
-            setLoad(true);
             const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$BaseURL$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["API_BASE_URL"]).concat(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$url$2f$ApiRoute$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ApiRute"].admin.changepassword), {
                 method: "PUT",
                 headers: {
@@ -1297,14 +1290,11 @@ function UserProfileAndAccount() {
             }
         } catch (err) {
             console.error(err);
-        } finally{
-            setLoad(false);
-        }
+        } finally{}
     }
     // backup
     async function backup() {
         try {
-            setLoad(true);
             setProgress(0);
             setShowProgress(true);
             // Start simulated progress until backend finishes
@@ -1337,8 +1327,6 @@ function UserProfileAndAccount() {
             console.error(error);
             __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hot$2d$toast$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].error("Backup failed due to server error");
             setShowProgress(false);
-        } finally{
-            setLoad(false);
         }
     }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1347,7 +1335,7 @@ function UserProfileAndAccount() {
                 data: adminDetails === null || adminDetails === void 0 ? void 0 : (_adminDetails_data = adminDetails.data) === null || _adminDetails_data === void 0 ? void 0 : _adminDetails_data.image
             }, void 0, false, {
                 fileName: "[project]/src/app/profilePage/page.js",
-                lineNumber: 306,
+                lineNumber: 297,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1372,7 +1360,7 @@ function UserProfileAndAccount() {
                                             className: "object-contain"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 319,
+                                            lineNumber: 310,
                                             columnNumber: 17
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                             src: "/login.png",
@@ -1382,7 +1370,7 @@ function UserProfileAndAccount() {
                                             className: "object-contain"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 327,
+                                            lineNumber: 318,
                                             columnNumber: 17
                                         }, this),
                                         isUploading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1391,18 +1379,18 @@ function UserProfileAndAccount() {
                                                 className: "w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/profilePage/page.js",
-                                                lineNumber: 337,
+                                                lineNumber: 328,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 336,
+                                            lineNumber: 327,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/profilePage/page.js",
-                                    lineNumber: 317,
+                                    lineNumber: 308,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -1412,14 +1400,14 @@ function UserProfileAndAccount() {
                                             className: "h-4 w-4"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 343,
+                                            lineNumber: 334,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                             children: "Upload Photo"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 344,
+                                            lineNumber: 335,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1429,13 +1417,13 @@ function UserProfileAndAccount() {
                                             hidden: true
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 345,
+                                            lineNumber: 336,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/profilePage/page.js",
-                                    lineNumber: 342,
+                                    lineNumber: 333,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1449,7 +1437,7 @@ function UserProfileAndAccount() {
                                             children: adminDetails === null || adminDetails === void 0 ? void 0 : (_adminDetails_data3 = adminDetails.data) === null || _adminDetails_data3 === void 0 ? void 0 : _adminDetails_data3.name
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 368,
+                                            lineNumber: 359,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1461,25 +1449,25 @@ function UserProfileAndAccount() {
                                                         className: "w-4 h-4 "
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/profilePage/page.js",
-                                                        lineNumber: 373,
+                                                        lineNumber: 364,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: email
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/profilePage/page.js",
-                                                        lineNumber: 374,
+                                                        lineNumber: 365,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/profilePage/page.js",
-                                                lineNumber: 372,
+                                                lineNumber: 363,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 371,
+                                            lineNumber: 362,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
@@ -1492,7 +1480,7 @@ function UserProfileAndAccount() {
                                                         className: "w-4 h-4 "
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/profilePage/page.js",
-                                                        lineNumber: 383,
+                                                        lineNumber: 374,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1500,30 +1488,30 @@ function UserProfileAndAccount() {
                                                         children: "Change Password"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/profilePage/page.js",
-                                                        lineNumber: 384,
+                                                        lineNumber: 375,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/profilePage/page.js",
-                                                lineNumber: 382,
+                                                lineNumber: 373,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 378,
+                                            lineNumber: 369,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/profilePage/page.js",
-                                    lineNumber: 362,
+                                    lineNumber: 353,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 316,
+                            lineNumber: 307,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1538,7 +1526,7 @@ function UserProfileAndAccount() {
                                     children: "Account Settings"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/profilePage/page.js",
-                                    lineNumber: 400,
+                                    lineNumber: 391,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1549,7 +1537,7 @@ function UserProfileAndAccount() {
                                             children: "Update E-mail:"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 404,
+                                            lineNumber: 395,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1563,7 +1551,7 @@ function UserProfileAndAccount() {
                                                     className: "w-full border rounded-md py-2 px-4 focus:outline-none pr-12 transition-all duration-300\n                    ".concat(isEditingEmail ? "border-blue-500 ring-2 ring-blue-500" : "border-gray-300", "\n                    ").concat(lightModeEnabled ? "placeholder:text-black text-black bg-white" : "placeholder:text-white text-white bg-black", "\n                  ")
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/profilePage/page.js",
-                                                    lineNumber: 408,
+                                                    lineNumber: 399,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1573,24 +1561,24 @@ function UserProfileAndAccount() {
                                                         className: "h-5 w-5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/profilePage/page.js",
-                                                        lineNumber: 430,
+                                                        lineNumber: 421,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/profilePage/page.js",
-                                                    lineNumber: 426,
+                                                    lineNumber: 417,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 407,
+                                            lineNumber: 398,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/profilePage/page.js",
-                                    lineNumber: 403,
+                                    lineNumber: 394,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1601,7 +1589,7 @@ function UserProfileAndAccount() {
                                             children: "Update Mobile No:"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 437,
+                                            lineNumber: 428,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1615,7 +1603,7 @@ function UserProfileAndAccount() {
                                                     className: "w-full border rounded-md py-2 px-4 focus:outline-none pr-12 transition-all duration-300\n                    ".concat(isEditingPhone ? "border-blue-500 ring-2 ring-blue-500" : "border-gray-300", "\n                    ").concat(lightModeEnabled ? "placeholder:text-black text-black bg-white" : "placeholder:text-white text-white bg-black", "\n                  ")
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/profilePage/page.js",
-                                                    lineNumber: 441,
+                                                    lineNumber: 432,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1625,31 +1613,31 @@ function UserProfileAndAccount() {
                                                         className: "h-5 w-5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/profilePage/page.js",
-                                                        lineNumber: 463,
+                                                        lineNumber: 454,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/profilePage/page.js",
-                                                    lineNumber: 459,
+                                                    lineNumber: 450,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 440,
+                                            lineNumber: 431,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/profilePage/page.js",
-                                    lineNumber: 436,
+                                    lineNumber: 427,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("hr", {
                                     className: "my-8 border-gray-200"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/profilePage/page.js",
-                                    lineNumber: 468,
+                                    lineNumber: 459,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1661,7 +1649,7 @@ function UserProfileAndAccount() {
                                             children: load ? "Saving...." : "Save Changes"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 494,
+                                            lineNumber: 485,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1670,52 +1658,52 @@ function UserProfileAndAccount() {
                                             children: "Backup"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/profilePage/page.js",
-                                            lineNumber: 500,
+                                            lineNumber: 491,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/profilePage/page.js",
-                                    lineNumber: 493,
+                                    lineNumber: 484,
                                     columnNumber: 13
+                                }, this),
+                                showProgress && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "w-full bg-gray-200 rounded-full h-4 mt-4 overflow-hidden",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-green-500 h-4 text-xs text-white text-center transition-all duration-300",
+                                        style: {
+                                            width: "".concat(progress, "%")
+                                        },
+                                        children: [
+                                            progress,
+                                            "%"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/profilePage/page.js",
+                                        lineNumber: 500,
+                                        columnNumber: 17
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/profilePage/page.js",
+                                    lineNumber: 499,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 393,
+                            lineNumber: 384,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/profilePage/page.js",
-                    lineNumber: 314,
+                    lineNumber: 305,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/profilePage/page.js",
-                lineNumber: 308,
+                lineNumber: 299,
                 columnNumber: 7
-            }, this),
-            showProgress && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "w-full bg-gray-200 rounded-full h-4 mt-4 overflow-hidden",
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "bg-green-500 h-4 text-xs text-white text-center transition-all duration-300",
-                    style: {
-                        width: "".concat(progress, "%")
-                    },
-                    children: [
-                        progress,
-                        "%"
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/src/app/profilePage/page.js",
-                    lineNumber: 512,
-                    columnNumber: 11
-                }, this)
-            }, void 0, false, {
-                fileName: "[project]/src/app/profilePage/page.js",
-                lineNumber: 511,
-                columnNumber: 9
             }, this),
             showOtpModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-50 z-50",
@@ -1727,7 +1715,7 @@ function UserProfileAndAccount() {
                             onClick: ()=>setShowOtpModal(false)
                         }, void 0, false, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 524,
+                            lineNumber: 516,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -1735,7 +1723,7 @@ function UserProfileAndAccount() {
                             children: "Request OTP"
                         }, void 0, false, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 528,
+                            lineNumber: 520,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1745,7 +1733,7 @@ function UserProfileAndAccount() {
                             className: "w-full border px-3 py-2 mb-4 rounded"
                         }, void 0, false, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 529,
+                            lineNumber: 521,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1754,18 +1742,18 @@ function UserProfileAndAccount() {
                             children: load ? "Wait.." : "Send OTP"
                         }, void 0, false, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 535,
+                            lineNumber: 527,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/profilePage/page.js",
-                    lineNumber: 523,
+                    lineNumber: 515,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/profilePage/page.js",
-                lineNumber: 522,
+                lineNumber: 514,
                 columnNumber: 9
             }, this),
             showVerifyOtpModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1778,7 +1766,7 @@ function UserProfileAndAccount() {
                             onClick: ()=>setShowVerifyOtpModal(false)
                         }, void 0, false, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 549,
+                            lineNumber: 541,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -1786,7 +1774,7 @@ function UserProfileAndAccount() {
                             children: "Verify OTP"
                         }, void 0, false, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 553,
+                            lineNumber: 545,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1796,7 +1784,7 @@ function UserProfileAndAccount() {
                             className: "w-full border px-3 py-2 mb-4 rounded"
                         }, void 0, false, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 554,
+                            lineNumber: 546,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1807,7 +1795,7 @@ function UserProfileAndAccount() {
                             className: "w-full border px-3 py-2 mb-4 rounded"
                         }, void 0, false, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 560,
+                            lineNumber: 552,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1816,18 +1804,18 @@ function UserProfileAndAccount() {
                             children: load ? "Wait..." : " Verify OTP"
                         }, void 0, false, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 567,
+                            lineNumber: 559,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/profilePage/page.js",
-                    lineNumber: 548,
+                    lineNumber: 540,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/profilePage/page.js",
-                lineNumber: 547,
+                lineNumber: 539,
                 columnNumber: 9
             }, this),
             showNewPassModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1840,7 +1828,7 @@ function UserProfileAndAccount() {
                             onClick: ()=>setShowNewPassModal(false)
                         }, void 0, false, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 581,
+                            lineNumber: 573,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -1848,7 +1836,7 @@ function UserProfileAndAccount() {
                             children: "Set New Password"
                         }, void 0, false, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 585,
+                            lineNumber: 577,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1859,7 +1847,7 @@ function UserProfileAndAccount() {
                             className: "w-full border px-3 py-2 mb-4 rounded"
                         }, void 0, false, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 586,
+                            lineNumber: 578,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1868,24 +1856,24 @@ function UserProfileAndAccount() {
                             children: load ? "wait..." : " Change Password"
                         }, void 0, false, {
                             fileName: "[project]/src/app/profilePage/page.js",
-                            lineNumber: 593,
+                            lineNumber: 585,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/profilePage/page.js",
-                    lineNumber: 580,
+                    lineNumber: 572,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/profilePage/page.js",
-                lineNumber: 579,
+                lineNumber: 571,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/profilePage/page.js",
-        lineNumber: 305,
+        lineNumber: 296,
         columnNumber: 5
     }, this);
 } // "use client";
