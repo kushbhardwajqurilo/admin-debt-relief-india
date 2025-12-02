@@ -208,7 +208,7 @@ export default function Header({ data }) {
       {/* Left: Logo/Profile */}
       <div className="flex items-center ms-20">
         <div className="flex items-center ms-20">
-          <Image src="/deptlogo.png" alt="Logo" height={200} width={250} />{" "}
+          <Image src="/deptlogos.png" alt="Logo" height={200} width={250} />{" "}
         </div>
       </div>
 
