@@ -7,7 +7,7 @@ module.exports = {
 __turbopack_context__.s({
     "API_BASE_URL": ()=>API_BASE_URL
 });
-const API_BASE_URL = ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : "https://4frnn03l-5000.inc1.devtunnels.ms/api/v1";
+const API_BASE_URL = ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : "http://localhost:5000/api/v1";
 }),
 "[project]/src/url/ApiRoute.js [app-ssr] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
@@ -122,7 +122,8 @@ const ApiRute = {
         custome: {
             all: "/notification/custom-notification",
             get: "/notification/get-custom-notification"
-        }
+        },
+        single: "/notification/single-user-notification"
     },
     service: {
         addService: "/service/"

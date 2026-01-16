@@ -10,7 +10,7 @@ __turbopack_context__.s({
     "API_BASE_URL": ()=>API_BASE_URL
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
-const API_BASE_URL = ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : "https://4frnn03l-5000.inc1.devtunnels.ms/api/v1";
+const API_BASE_URL = ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : "http://localhost:5000/api/v1";
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
 }
@@ -130,7 +130,8 @@ const ApiRute = {
         custome: {
             all: "/notification/custom-notification",
             get: "/notification/get-custom-notification"
-        }
+        },
+        single: "/notification/single-user-notification"
     },
     service: {
         addService: "/service/"

@@ -106,6 +106,7 @@ export const ApiRute = {
       all: "/notification/custom-notification",
       get: "/notification/get-custom-notification",
     },
+    single: "/notification/single-user-notification",
   },
   service: {
     addService: "/service/",
