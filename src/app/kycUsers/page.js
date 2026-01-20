@@ -74,7 +74,7 @@ export default function KycApproval() {
               .filter(
                 (user) =>
                   (!statusFilter || user.status === statusFilter) &&
-                  (!genderFilter || user.gender === genderFilter)
+                  (!genderFilter || user.gender === genderFilter),
               )
               .map((user, idx) => (
                 <tr key={idx} className="border-t">

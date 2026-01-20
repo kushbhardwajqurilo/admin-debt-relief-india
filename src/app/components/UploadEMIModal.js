@@ -74,6 +74,7 @@ export default function UploadEMIModal({ isOpen, onClose, mode, refreshFun }) {
         body: JSON.stringify({ phone }),
       });
       const result = await res.json();
+      console.log("ss", result);
       setUserData(result?.data);
     } catch (err) {
       console.error(err);
@@ -85,7 +86,7 @@ export default function UploadEMIModal({ isOpen, onClose, mode, refreshFun }) {
   const getAssignedAdvocate = async (id) => {
     try {
       const res = await fetch(
-        `${API_BASE_URL}${ApiRute.advocate.single}/${id}`
+        `${API_BASE_URL}${ApiRute.advocate.single}/${id}`,
       );
       const result = await res.json();
       console.log("advocate assign", result);
@@ -225,7 +226,7 @@ export default function UploadEMIModal({ isOpen, onClose, mode, refreshFun }) {
                   <div className="flex flex-col items-center">
                     <h2 className="text-l font-bold mt-2 bg-gradient-to-r from-blue-600 to-cyan-400 text-white w-full text-center rounded-t-xl py-2">
                       {`${toTitleCase(userData?.name)} ${toTitleCase(
-                        userData?.kyc?.lastname
+                        userData?.kyc?.lastname,
                       )}`}
                     </h2>
                   </div>
@@ -248,7 +249,7 @@ export default function UploadEMIModal({ isOpen, onClose, mode, refreshFun }) {
                         router.push(
                           `./components/${
                             userData?.userId || userData?.kyc?.user_id
-                          }`
+                          }`,
                         )
                       }
                     >

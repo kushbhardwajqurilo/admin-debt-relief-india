@@ -598,7 +598,7 @@ export default function DashboardPage() {
     (user) =>
       user?.id?.toString().includes(search) ||
       user?.name?.toLowerCase().includes(search.toLowerCase()) ||
-      user?.phone?.toString().includes(search)
+      user?.phone?.toString().includes(search),
   );
 
   const filteredKycUsers = keycUsers.filter(
@@ -609,10 +609,10 @@ export default function DashboardPage() {
         user.gender?.toLowerCase() === genderFilter.toLowerCase()) &&
       (user?.id?.toString().includes(search) ||
         user?.name?.toLowerCase().includes(search.toLowerCase()) ||
-        user?.kyc?.user_id?.toString().includes(search))
+        user?.kyc?.user_id?.toString().includes(search)),
   );
 
-  // ✅ Select All
+  // ✅ Select All (works for both tabs)
   const handleSelectAll = () => {
     const usersToSelect = isEMI ? filteredEmiUsers : filteredKycUsers;
 
@@ -626,7 +626,6 @@ export default function DashboardPage() {
 
     const allSelectedCount = allUserIds.length + allPhones.length;
 
-    // Toggle: if all are already selected, unselect all
     if (selectedUsers.length === allSelectedCount) {
       setSelectedUsers([]);
       setUserIds([]);
@@ -637,7 +636,8 @@ export default function DashboardPage() {
       setPhones(allPhones);
     }
   };
-  // ✅ Select One
+
+  // ✅ Select One (works for both tabs)
   const handleSelectOne = (user) => {
     const idForDelete = user?.kyc?.user_id;
     const phone = user?.phone;
@@ -647,26 +647,26 @@ export default function DashboardPage() {
     setSelectedUsers((prev) =>
       prev.includes(idOrPhone)
         ? prev.filter((u) => u !== idOrPhone)
-        : [...prev, idOrPhone]
+        : [...prev, idOrPhone],
     );
 
     if (idForDelete) {
       setUserIds((prev) =>
         prev.includes(idForDelete)
           ? prev.filter((u) => u !== idForDelete)
-          : [...prev, idForDelete]
+          : [...prev, idForDelete],
       );
     }
     if (phone) {
       setPhones((prev) =>
         prev.includes(phone)
           ? prev.filter((p) => p !== phone)
-          : [...prev, phone]
+          : [...prev, phone],
       );
     }
   };
 
-  // ✅ Delete
+  // ✅ Delete (already good – works for both now)
   const handleDelete = async () => {
     if (!selectedUsers.length) {
       toast.error("No users selected");
@@ -681,8 +681,8 @@ export default function DashboardPage() {
             "content-type": "application/json",
             authorization: `Bearer ${getStroage().token}`,
           },
-          body: JSON.stringify({ userIds, phones }), // only user_id and phone
-        }
+          body: JSON.stringify({ userIds, phones }),
+        },
       );
       const result = await res.json();
       if (result?.success) {
@@ -801,7 +801,7 @@ export default function DashboardPage() {
                     checked={
                       selectedUsers.length ===
                         filteredEmiUsers.filter(
-                          (u) => u?.phone || u?.kyc?.user_id
+                          (u) => u?.phone || u?.kyc?.user_id,
                         ).length && filteredEmiUsers.length > 0
                     }
                   />
@@ -829,7 +829,7 @@ export default function DashboardPage() {
                       <input
                         type="checkbox"
                         checked={selectedUsers.includes(
-                          user?.kyc?.user_id || user?.phone
+                          user?.kyc?.user_id || user?.phone,
                         )}
                         onChange={() => handleSelectOne(user)}
                       />
@@ -849,8 +849,8 @@ export default function DashboardPage() {
                           user.status?.toLowerCase() === "paid"
                             ? "text-green-600"
                             : user.status?.toLowerCase() === "pending"
-                            ? "text-red-600"
-                            : "text-blue-600"
+                              ? "text-red-600"
+                              : "text-blue-600"
                         }`}
                       >
                         <span
@@ -858,8 +858,8 @@ export default function DashboardPage() {
                             user.status?.toLowerCase() === "paid"
                               ? "bg-green-500"
                               : user.status?.toLowerCase() === "pending"
-                              ? "bg-red-500"
-                              : "bg-blue-500"
+                                ? "bg-red-500"
+                                : "bg-blue-500"
                           }`}
                         ></span>
                         {user.status}
@@ -868,7 +868,7 @@ export default function DashboardPage() {
                     <td className="p-3 flex gap-3 justify-center">
                       {selectedUsers.length === 1 &&
                       selectedUsers.includes(
-                        user?.kyc?.user_id || user?.phone
+                        user?.kyc?.user_id || user?.phone,
                       ) ? (
                         <button
                           className="bg-[#044B99] text-white px-3 py-1 rounded"
@@ -920,6 +920,18 @@ export default function DashboardPage() {
           <table className="w-full text-sm text-left border">
             <thead className="bg-gray-100">
               <tr className="text-center">
+                <th className="p-3">
+                  <input
+                    type="checkbox"
+                    onChange={handleSelectAll}
+                    checked={
+                      selectedUsers.length ===
+                        filteredKycUsers.filter(
+                          (u) => u?.kyc?.user_id || u?.phone,
+                        ).length && filteredKycUsers.length > 0
+                    }
+                  />
+                </th>
                 <th className="p-3">DRI User</th>
                 <th className="p-3">Gender</th>
                 <th className="p-3">Joining Date</th>
@@ -931,13 +943,25 @@ export default function DashboardPage() {
             <tbody>
               {filteredKycUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-4 text-center">
+                  <td colSpan={7} className="p-4 text-center">
                     No Users Found
                   </td>
                 </tr>
               ) : (
                 filteredKycUsers.map((user, idx) => (
-                  <tr key={idx} className="border-t text-center">
+                  <tr
+                    key={user?.kyc?.user_id || user?.phone || idx}
+                    className="border-t text-center"
+                  >
+                    <td className="p-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedUsers.includes(
+                          user?.kyc?.user_id || user?.phone,
+                        )}
+                        onChange={() => handleSelectOne(user)}
+                      />
+                    </td>
                     <td className="p-3 flex items-center justify-center gap-3">
                       <div className="font-medium">{user?.name}</div>
                     </td>
