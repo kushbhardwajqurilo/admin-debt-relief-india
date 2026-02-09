@@ -833,10 +833,6 @@
 @layer components;
 
 @layer utilities {
-  .visible {
-    visibility: visible;
-  }
-
   .sr-only {
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
@@ -1104,10 +1100,6 @@
 
   .inline-flex {
     display: inline-flex;
-  }
-
-  .table {
-    display: table;
   }
 
   .h-1 {
@@ -1448,10 +1440,6 @@
 
   .max-w-xl {
     max-width: var(--container-xl);
-  }
-
-  .min-w-\[140px\] {
-    min-width: 140px;
   }
 
   .flex-1 {
@@ -1816,10 +1804,6 @@
     border-style: none;
   }
 
-  .border-\[\#044b99\] {
-    border-color: #044b99;
-  }
-
   .border-\[\#47ff6c\] {
     border-color: #47ff6c;
   }
@@ -1866,10 +1850,6 @@
 
   .border-red-500 {
     border-color: var(--color-red-500);
-  }
-
-  .border-red-600 {
-    border-color: var(--color-red-600);
   }
 
   .border-white {
@@ -2924,12 +2904,6 @@
   @media (hover: hover) {
     .hover\:text-red-400:hover {
       color: var(--color-red-400);
-    }
-  }
-
-  @media (hover: hover) {
-    .hover\:text-red-600:hover {
-      color: var(--color-red-600);
     }
   }
 

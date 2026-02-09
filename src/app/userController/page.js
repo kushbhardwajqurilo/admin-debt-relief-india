@@ -673,6 +673,7 @@ export default function DashboardPage() {
       return;
     }
     try {
+      const deleteType = isEMI ? "emi" : "kyc";
       const res = await fetch(
         `${API_BASE_URL}${ApiRute.driUser.permanentDelete}`,
         {
@@ -681,7 +682,7 @@ export default function DashboardPage() {
             "content-type": "application/json",
             authorization: `Bearer ${getStroage().token}`,
           },
-          body: JSON.stringify({ userIds, phones }),
+          body: JSON.stringify({ userIds, phones, type: deleteType }),
         },
       );
       const result = await res.json();
